@@ -1,0 +1,808 @@
+{
+  "project": "Myndset MVP",
+  "branchName": "main",
+  "description": "AI-powered meditation platform positioned as performance enhancement tool for ambitious professionals. Freemium PWA optimized for mobile that generates personalized, AI-scripted meditation audio based on comprehensive psychological assessment.",
+  "productVision": "Meditation for boardrooms, not yoga studios - reframing meditation from stress relief to performance optimization and competitive advantage",
+  "targetAudience": "Ambitious professionals aged 22-32 (entrepreneurs, sales professionals, athletes, executives) who view meditation as competitive advantage",
+  "technicalStack": {
+    "frontend": "Next.js 14+ with TypeScript, Tailwind CSS",
+    "backend": "Supabase (PostgreSQL, Auth, Storage)",
+    "aiServices": "Anthropic Claude (script generation), ElevenLabs (voice synthesis)",
+    "payments": "Stripe",
+    "hosting": "Vercel",
+    "email": "Resend or SendGrid",
+    "analytics": "PostHog or Mixpanel"
+  },
+  "phases": [
+    {
+      "id": "phase-1",
+      "name": "Foundation & Setup",
+      "description": "Development environment, accounts, and initial project structure",
+      "estimatedWeeks": "1 week"
+    },
+    {
+      "id": "phase-2", 
+      "name": "Core Authentication & Questionnaire",
+      "description": "Landing page, questionnaire system, and magic link authentication",
+      "estimatedWeeks": "2-3 weeks"
+    },
+    {
+      "id": "phase-3",
+      "name": "AI Generation Pipeline",
+      "description": "Admin dashboard, AI script generation, voice synthesis integration",
+      "estimatedWeeks": "2 weeks"
+    },
+    {
+      "id": "phase-4",
+      "name": "Meditation Library & Playback",
+      "description": "User dashboard, audio player, remix feature, storage",
+      "estimatedWeeks": "2 weeks"
+    },
+    {
+      "id": "phase-5",
+      "name": "Payments & Subscription System",
+      "description": "Stripe integration, usage tracking, tier enforcement",
+      "estimatedWeeks": "2 weeks"
+    },
+    {
+      "id": "phase-6",
+      "name": "Testing, Polish & Launch",
+      "description": "End-to-end testing, bug fixes, beta testing, launch preparation",
+      "estimatedWeeks": "3 weeks"
+    }
+  ],
+  "userStories": [
+    {
+      "id": "US-001",
+      "phase": "phase-1",
+      "title": "Set up development environment and repository",
+      "description": "As a developer, I need to initialize the project with proper tooling and version control so that development can begin with best practices",
+      "acceptanceCriteria": [
+        "Node.js 18+ installed and verified",
+        "GitHub repository created at github.com/Heiny002/myndset",
+        "Repository cloned locally in Cursor IDE",
+        "Git configured with proper user credentials",
+        "README.md created with project overview"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "dependsOn": []
+    },
+    {
+      "id": "US-002",
+      "phase": "phase-1",
+      "title": "Create required service accounts",
+      "description": "As a developer, I need to set up all third-party service accounts so that integrations can be configured",
+      "acceptanceCriteria": [
+        "Vercel account created and linked to GitHub",
+        "Supabase project created",
+        "Stripe account created (test mode enabled)",
+        "Resend or SendGrid account created",
+        "Anthropic API key obtained",
+        "ElevenLabs account created",
+        "All API keys documented in secure location (not in repo)"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-001"]
+    },
+    {
+      "id": "US-003",
+      "phase": "phase-1",
+      "title": "Register and configure domain",
+      "description": "As a product owner, I need the domain TryMyndset.com registered and configured so that the app is accessible at the brand URL",
+      "acceptanceCriteria": [
+        "Domain TryMyndset.com registered",
+        "DNS configured to point to Vercel",
+        "SSL certificate automatically provisioned",
+        "Domain resolves successfully"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Domain already registered - verify and configure",
+      "dependsOn": ["US-002"]
+    },
+    {
+      "id": "US-004",
+      "phase": "phase-2",
+      "title": "Initialize Next.js project with TypeScript and Tailwind",
+      "description": "As a developer, I need a Next.js project scaffolded with TypeScript and Tailwind CSS so that development follows modern best practices",
+      "acceptanceCriteria": [
+        "Next.js 14+ initialized with App Router",
+        "TypeScript configured with strict mode",
+        "Tailwind CSS installed and configured",
+        "Project runs locally on localhost:3000",
+        "Basic folder structure created (/app, /components, /lib, /types)",
+        "Environment variables template created (.env.example)",
+        "Prettier and ESLint configured"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-001"]
+    },
+    {
+      "id": "US-005",
+      "phase": "phase-2",
+      "title": "Configure Supabase database and authentication",
+      "description": "As a developer, I need Supabase configured with database schema and authentication so that users can securely create accounts",
+      "acceptanceCriteria": [
+        "Supabase client library installed",
+        "Database schema created (users, questionnaires, meditations, subscriptions tables)",
+        "Row-level security policies configured",
+        "Magic link authentication enabled in Supabase",
+        "Email templates customized for magic links",
+        "Connection tested from Next.js app",
+        "Type definitions generated from schema"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-002", "US-004"]
+    },
+    {
+      "id": "US-006",
+      "phase": "phase-2",
+      "title": "Build landing page with value proposition",
+      "description": "As a potential user, I need to see a compelling landing page that explains Myndset's value so that I understand why I should try it",
+      "acceptanceCriteria": [
+        "Hero section with headline: performance-focused value prop",
+        "Primary CTA button: 'Get Your Free Personalized Meditation'",
+        "Mobile-first responsive design (works on all screen sizes)",
+        "Cyber minimalism design aesthetic applied",
+        "Fast page load (< 2 seconds)",
+        "SEO meta tags configured",
+        "Analytics tracking implemented"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-004"]
+    },
+    {
+      "id": "US-007",
+      "phase": "phase-2",
+      "title": "Build Tier 1 questionnaire (8 essential questions)",
+      "description": "As a new user, I need to answer 8 core questions so that my meditation can be personalized to my goals and challenges",
+      "acceptanceCriteria": [
+        "Question flow UI with 8 questions from questionnaire design",
+        "Progress indicator showing completion (1/8, 2/8, etc.)",
+        "Mobile-optimized form inputs (appropriate keyboard types)",
+        "Validation for required fields",
+        "Data persisted to Supabase on submission",
+        "Clear, performance-focused copy for each question",
+        "Next/Previous navigation between questions"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-005", "US-006"]
+    },
+    {
+      "id": "US-008",
+      "phase": "phase-2",
+      "title": "Implement magic link authentication flow",
+      "description": "As a user, I need to log in via email magic link so that I can access my account securely without passwords",
+      "acceptanceCriteria": [
+        "Email input field on landing page",
+        "Magic link sent via Supabase Auth",
+        "User receives email with login link",
+        "Clicking link authenticates user and redirects to dashboard",
+        "Session persists for 30 days",
+        "Error handling for invalid/expired links",
+        "Loading states during authentication"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-005"]
+    },
+    {
+      "id": "US-009",
+      "phase": "phase-2",
+      "title": "Build Tier 2 and Tier 3 questionnaire extensions",
+      "description": "As a user, I need the option to answer additional questions (Tier 2: +5, Tier 3: +10) so that my meditation can be even more personalized",
+      "acceptanceCriteria": [
+        "After Tier 1 completion, show benefit statement CTA",
+        "Tier 2 adds 5 deeper questions with progress indicator",
+        "Tier 3 adds 10 deep-dive questions with progress indicator",
+        "Users can skip additional tiers and proceed with Tier 1 only",
+        "Tier completion tracked in database",
+        "Benefit statements are compelling (e.g., 'Unlock 30% more personalization')"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-007"]
+    },
+    {
+      "id": "US-010",
+      "phase": "phase-3",
+      "title": "Set up Anthropic Claude API integration",
+      "description": "As a developer, I need Claude API integrated so that AI can generate meditation scripts based on questionnaire responses",
+      "acceptanceCriteria": [
+        "Anthropic SDK installed and configured",
+        "API key stored securely in environment variables",
+        "Test API call successfully generates text",
+        "Error handling for API failures",
+        "Rate limiting considerations documented",
+        "Cost tracking mechanism implemented"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-002", "US-004"]
+    },
+    {
+      "id": "US-011",
+      "phase": "phase-3",
+      "title": "Create meditation component knowledge base",
+      "description": "As a system, I need a structured knowledge base of meditation techniques so that AI can select appropriate components for each user",
+      "acceptanceCriteria": [
+        "Knowledge base document created with all meditation components",
+        "Each component includes: name, function, neuroscience mechanism, evidence level",
+        "Hypnotic language patterns documented",
+        "Copywriting frameworks for performance messaging included",
+        "Session structure templates (2-3 min, 5-10 min, 15-30 min) defined",
+        "Knowledge base accessible to Claude API prompts"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Reference: MASTER-meditation-components-framework.md",
+      "dependsOn": ["US-010"]
+    },
+    {
+      "id": "US-012",
+      "phase": "phase-3",
+      "title": "Build two-step AI generation workflow (plan then script)",
+      "description": "As an admin, I need a two-step process where AI first creates a meditation plan for approval before generating the full script",
+      "acceptanceCriteria": [
+        "Step 1: AI analyzes questionnaire and generates 'meditation plan'",
+        "Plan includes: selected components, rationale for each, session structure",
+        "Plan stored in database with 'pending_approval' status",
+        "Step 2: After approval, AI generates full script text",
+        "Script follows performance-focused messaging guidelines",
+        "Both plan and script are versioned in database"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-010", "US-011"]
+    },
+    {
+      "id": "US-013",
+      "phase": "phase-3",
+      "title": "Build admin dashboard for reviewing questionnaires and plans",
+      "description": "As an admin (Jim), I need a dashboard to view incoming questionnaires and meditation plans so that I can approve or edit them before generation",
+      "acceptanceCriteria": [
+        "Admin-only route protected by authentication",
+        "List view of all pending questionnaires",
+        "Detail view showing full questionnaire responses",
+        "Button to trigger AI plan generation",
+        "Meditation plan display with component breakdown",
+        "Approve/Regenerate/Edit buttons for plans",
+        "Status indicators (pending, approved, generating, complete)",
+        "Notification when new questionnaires arrive"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-012"]
+    },
+    {
+      "id": "US-014",
+      "phase": "phase-3",
+      "title": "Build script review and approval interface",
+      "description": "As an admin, I need to review and approve the final script text before it's sent to voice synthesis",
+      "acceptanceCriteria": [
+        "Script display with readable formatting",
+        "Edit capability (inline or textarea)",
+        "Approve button to proceed to voice generation",
+        "Regenerate button to create new script version",
+        "Version history of script edits",
+        "Word count and estimated duration display"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-013"]
+    },
+    {
+      "id": "US-015",
+      "phase": "phase-3",
+      "title": "Integrate ElevenLabs voice synthesis API",
+      "description": "As a system, I need to convert approved scripts to professional audio so that users can listen to their meditations",
+      "acceptanceCriteria": [
+        "ElevenLabs SDK installed and configured",
+        "API key stored securely",
+        "2-3 voice options configured (professional, clear, energizing)",
+        "Script text successfully converts to audio file",
+        "Audio file saved to Supabase Storage",
+        "Audio URL stored in database",
+        "Error handling for synthesis failures",
+        "Cost tracking per synthesis"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-014"]
+    },
+    {
+      "id": "US-016",
+      "phase": "phase-3",
+      "title": "Build user notification system for meditation readiness",
+      "description": "As a user, I need to be notified via email when my personalized meditation is ready so that I know when to return to the app",
+      "acceptanceCriteria": [
+        "Email template created for 'Your meditation is ready'",
+        "Email sent automatically after audio generation completes",
+        "Email includes direct link to meditation in dashboard",
+        "Delivery tracking (sent, delivered, opened)",
+        "Unsubscribe link included per regulations"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-015"]
+    },
+    {
+      "id": "US-017",
+      "phase": "phase-4",
+      "title": "Build user meditation library dashboard",
+      "description": "As a user, I need a dashboard showing all my generated meditations so that I can access them anytime",
+      "acceptanceCriteria": [
+        "Protected route requiring authentication",
+        "List view of all user's meditations",
+        "Each meditation shows: title, date generated, duration, goal/purpose",
+        "Thumbnail or icon for visual distinction",
+        "Search/filter capability (by goal, date, duration)",
+        "Empty state for new users",
+        "Mobile-optimized grid layout"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-008", "US-015"]
+    },
+    {
+      "id": "US-018",
+      "phase": "phase-4",
+      "title": "Build audio player with controls",
+      "description": "As a user, I need to play my meditation audio with standard playback controls so that I can listen effectively",
+      "acceptanceCriteria": [
+        "Audio player component (consider Howler.js or native HTML5)",
+        "Play/pause button",
+        "Timeline scrubber showing progress",
+        "Current time and total duration display",
+        "Playback speed control (0.8x, 1x, 1.2x)",
+        "Volume control",
+        "Download button to save audio locally",
+        "Works on mobile browsers",
+        "Remembers playback position if interrupted"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-017"]
+    },
+    {
+      "id": "US-019",
+      "phase": "phase-4",
+      "title": "Configure Supabase Storage for audio files",
+      "description": "As a system, I need secure cloud storage for meditation audio files so that users can stream them reliably",
+      "acceptanceCriteria": [
+        "Supabase Storage bucket created (public or authenticated)",
+        "Audio files uploaded after ElevenLabs generation",
+        "Signed URLs generated for authenticated access",
+        "File naming convention implemented (user_id/meditation_id.mp3)",
+        "Storage policies configured for access control",
+        "Bandwidth monitoring enabled"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-015"]
+    },
+    {
+      "id": "US-020",
+      "phase": "phase-4",
+      "title": "Build remix feature for script section regeneration",
+      "description": "As a user, I need to select a specific section of my meditation script and request changes so that I can fine-tune content I don't like",
+      "acceptanceCriteria": [
+        "Script text display with selectable sections",
+        "User can highlight/select specific paragraph or section",
+        "Feedback textarea appears for selected section",
+        "Submit button triggers AI regeneration of ONLY that section",
+        "New audio generated with updated section",
+        "Remix count tracked per user",
+        "Tier limits enforced (Free: 1-2, Basic: 10/month, Premium: 30-45/month)",
+        "Original version preserved (version history)"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-017", "US-018"]
+    },
+    {
+      "id": "US-021",
+      "phase": "phase-4",
+      "title": "Test complete generation pipeline end-to-end",
+      "description": "As a developer, I need to verify the full pipeline works from questionnaire to audio delivery so that I can identify integration issues",
+      "acceptanceCriteria": [
+        "Complete user journey tested: questionnaire → plan → script → audio → notification → playback",
+        "Test with all three questionnaire tiers",
+        "Test with different voice options",
+        "Verify audio quality and clarity",
+        "Confirm email delivery works",
+        "Document any issues or bottlenecks",
+        "Measure total time from submission to delivery"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-016", "US-018", "US-020"]
+    },
+    {
+      "id": "US-022",
+      "phase": "phase-5",
+      "title": "Set up Stripe integration and product configuration",
+      "description": "As a developer, I need Stripe configured with subscription products so that users can purchase paid tiers",
+      "acceptanceCriteria": [
+        "Stripe SDK installed and configured",
+        "Three products created: Free (default), Basic ($9/month), Premium ($19/month)",
+        "Monthly and annual pricing options (annual = 2 months free)",
+        "Test mode enabled initially",
+        "Webhook endpoint configured to receive events",
+        "Customer portal enabled for subscription management"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-002", "US-004"]
+    },
+    {
+      "id": "US-023",
+      "phase": "phase-5",
+      "title": "Build checkout flow and payment handling",
+      "description": "As a user, I need to purchase a subscription tier so that I can generate more meditations",
+      "acceptanceCriteria": [
+        "Pricing page showing three tiers with features",
+        "Select plan button triggers Stripe Checkout",
+        "Successful payment creates subscription in database",
+        "User redirected to dashboard with success message",
+        "Failed payment shows error and allows retry",
+        "Receipt email sent automatically by Stripe"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-022"]
+    },
+    {
+      "id": "US-024",
+      "phase": "phase-5",
+      "title": "Implement usage tracking system",
+      "description": "As a system, I need to track meditation generation and remix counts per user per billing cycle so that limits can be enforced",
+      "acceptanceCriteria": [
+        "Database schema includes usage tracking fields",
+        "Meditation generation count incremented on creation",
+        "Remix count incremented on remix submission",
+        "Usage resets monthly based on subscription anniversary date",
+        "Dashboard displays current usage (e.g., '3/10 meditations this month')",
+        "Usage history queryable for analytics"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-022"]
+    },
+    {
+      "id": "US-025",
+      "phase": "phase-5",
+      "title": "Enforce tier limits and trigger upgrade prompts",
+      "description": "As a system, I need to block meditation generation when users hit their tier limits and prompt them to upgrade",
+      "acceptanceCriteria": [
+        "Middleware checks user tier and current usage before generation",
+        "Free tier blocked after 1 meditation",
+        "Basic tier blocked after 10 meditations per month",
+        "Premium tier blocked after 45 meditations per month",
+        "User shown upgrade modal when limit reached",
+        "Upgrade flow seamlessly transitions to Stripe Checkout",
+        "After upgrade, user can immediately generate new meditation"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-023", "US-024"]
+    },
+    {
+      "id": "US-026",
+      "phase": "phase-5",
+      "title": "Set up Stripe webhooks for subscription events",
+      "description": "As a system, I need to handle Stripe webhook events so that subscriptions are kept in sync with database state",
+      "acceptanceCriteria": [
+        "Webhook endpoint created at /api/webhooks/stripe",
+        "Webhook signature verification implemented",
+        "Handle subscription_created event (update user tier)",
+        "Handle subscription_updated event (plan changes)",
+        "Handle subscription_canceled event (downgrade to free)",
+        "Handle payment_failed event (notify user, retry logic)",
+        "All events logged for debugging",
+        "Idempotency keys used to prevent duplicate processing"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-023"]
+    },
+    {
+      "id": "US-027",
+      "phase": "phase-5",
+      "title": "Build subscription management interface",
+      "description": "As a user, I need to manage my subscription (upgrade, downgrade, cancel) so that I have control over my billing",
+      "acceptanceCriteria": [
+        "Account settings page with subscription section",
+        "Current plan displayed with features",
+        "Upgrade/downgrade buttons leading to Stripe Checkout",
+        "Cancel subscription button with confirmation",
+        "Billing history visible",
+        "Next billing date shown",
+        "Link to Stripe Customer Portal for invoice management"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-023", "US-026"]
+    },
+    {
+      "id": "US-028",
+      "phase": "phase-6",
+      "title": "Conduct end-to-end testing of complete user journey",
+      "description": "As a developer, I need to test the entire application flow to identify and fix bugs before launch",
+      "acceptanceCriteria": [
+        "Test full new user journey: landing → questionnaire → auth → dashboard → meditation",
+        "Test all three subscription tiers",
+        "Test payment success and failure scenarios",
+        "Test remix feature with limit enforcement",
+        "Test mobile experience on iOS and Android",
+        "Test email deliverability and links",
+        "Test webhook processing",
+        "Document all bugs found in GitHub issues",
+        "All critical bugs resolved"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-021", "US-027"]
+    },
+    {
+      "id": "US-029",
+      "phase": "phase-6",
+      "title": "Optimize mobile responsiveness and UX",
+      "description": "As a mobile user, I need the app to work flawlessly on my phone so that I can use Myndset on-the-go",
+      "acceptanceCriteria": [
+        "All pages responsive on mobile (320px to 768px widths)",
+        "Touch targets minimum 44x44px",
+        "Forms use appropriate mobile keyboards",
+        "Audio player optimized for mobile browsers",
+        "Fast page loads on 3G/4G (< 3 seconds)",
+        "No horizontal scrolling",
+        "PWA manifest configured (installable on home screen)",
+        "Tested on iOS Safari and Android Chrome"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-028"]
+    },
+    {
+      "id": "US-030",
+      "phase": "phase-6",
+      "title": "Set up analytics and event tracking",
+      "description": "As a product owner, I need analytics to understand user behavior so that I can optimize conversion and retention",
+      "acceptanceCriteria": [
+        "PostHog or Mixpanel integrated",
+        "Key events tracked: page views, questionnaire started, questionnaire completed, meditation generated, meditation played, subscription started, subscription canceled",
+        "User properties tracked: signup date, tier, usage count",
+        "Funnel analysis configured (landing → signup → generation → subscription)",
+        "Analytics dashboard accessible",
+        "GDPR-compliant tracking (cookie consent if EU users)"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-004"]
+    },
+    {
+      "id": "US-031",
+      "phase": "phase-6",
+      "title": "Write all user-facing copy and messaging",
+      "description": "As a product owner, I need compelling, performance-focused copy across the app so that messaging resonates with the target audience",
+      "acceptanceCriteria": [
+        "Landing page hero copy finalized",
+        "Questionnaire question copy optimized for clarity and brevity",
+        "Email templates written (magic link, meditation ready, welcome series)",
+        "Dashboard empty states with motivational copy",
+        "Pricing page benefit statements compelling",
+        "Error messages helpful and on-brand",
+        "All copy reviewed for performance positioning (not wellness)",
+        "Copy tested with 2-3 target users for clarity"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-028"]
+    },
+    {
+      "id": "US-032",
+      "phase": "phase-6",
+      "title": "Create legal documents (Terms of Service, Privacy Policy)",
+      "description": "As a business owner, I need legal documents to comply with regulations and protect the business",
+      "acceptanceCriteria": [
+        "Terms of Service drafted (use template or legal service)",
+        "Privacy Policy drafted (GDPR and CCPA compliant)",
+        "Cookie policy created if tracking EU users",
+        "Documents linked in footer of website",
+        "User acceptance tracked on signup",
+        "Documents stored in version control"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Consider using TermsFeed or consulting lawyer",
+      "dependsOn": ["US-028"]
+    },
+    {
+      "id": "US-033",
+      "phase": "phase-6",
+      "title": "Conduct beta testing with 5-10 target users",
+      "description": "As a product owner, I need real users to test the app so that I can identify issues and gather feedback before public launch",
+      "acceptanceCriteria": [
+        "Recruit 5-10 beta testers from target audience",
+        "Provide beta testers with free premium access",
+        "Collect structured feedback via survey",
+        "Observe beta tester usage via analytics",
+        "Document all feedback and prioritize fixes",
+        "Fix critical issues before launch",
+        "Thank beta testers and consider ongoing advisory role"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-028", "US-030"]
+    },
+    {
+      "id": "US-034",
+      "phase": "phase-6",
+      "title": "Prepare launch content and marketing materials",
+      "description": "As a product owner, I need launch content ready so that I can announce Myndset effectively on launch day",
+      "acceptanceCriteria": [
+        "Social media posts written (Twitter, LinkedIn)",
+        "Launch email drafted for existing audience (if any)",
+        "Product Hunt listing prepared (if planning to launch there)",
+        "Screenshots and demo video created",
+        "Press release or blog post written",
+        "Personal network outreach list prepared",
+        "Launch day schedule planned (timing of posts)"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-033"]
+    },
+    {
+      "id": "US-035",
+      "phase": "phase-6",
+      "title": "Complete pre-launch checklist and deploy to production",
+      "description": "As a developer, I need to verify all systems are ready and deploy to production so that the app is live for launch",
+      "acceptanceCriteria": [
+        "DNS configured and verified",
+        "SSL certificate active and valid",
+        "All API accounts funded and ready (Stripe live mode, ElevenLabs credits, etc.)",
+        "Environment variables set in production (not test mode)",
+        "Database backups configured",
+        "Customer support email set up and monitored",
+        "Analytics tracking verified in production",
+        "All tests passing",
+        "Vercel deployment successful",
+        "Production app accessible at TryMyndset.com"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-033", "US-034"]
+    },
+    {
+      "id": "US-036",
+      "phase": "phase-6",
+      "title": "Execute launch and monitor initial performance",
+      "description": "As a product owner, I need to launch the product and monitor its performance so that I can respond quickly to issues",
+      "acceptanceCriteria": [
+        "Launch announcement posted on social media",
+        "Personal network notified",
+        "App monitored continuously for first 48 hours",
+        "Support requests answered within 2 hours",
+        "Bugs triaged and fixed immediately if critical",
+        "Analytics reviewed daily for first week",
+        "User feedback collected and documented",
+        "First 10 users successfully complete full journey"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "",
+      "dependsOn": ["US-035"]
+    }
+  ],
+  "successMetrics": {
+    "phase1Launch": {
+      "timeline": "First 30 days",
+      "targets": [
+        "100+ landing page visitors",
+        "20+ questionnaire completions",
+        "10+ generated meditations",
+        "5+ paid subscribers",
+        "1+ organic referral"
+      ]
+    },
+    "phase2Growth": {
+      "timeline": "Months 2-3",
+      "targets": [
+        "500+ landing page visitors",
+        "100+ questionnaire completions",
+        "50+ generated meditations",
+        "25+ paid subscribers",
+        "$250+ MRR"
+      ]
+    },
+    "mvpValidation": {
+      "timeline": "Months 4-6",
+      "targets": [
+        "2000+ landing page visitors",
+        "500+ questionnaire completions",
+        "200+ generated meditations",
+        "100+ paid subscribers",
+        "$1500+ MRR",
+        "Product-market fit signals (retention, referrals, testimonials)"
+      ]
+    }
+  },
+  "technicalConstraints": {
+    "budget": "$100/month initially",
+    "development": "Solo founder (Jim)",
+    "timeline": "12-13 weeks to launch",
+    "deployment": "Serverless (Vercel, Supabase)",
+    "scaling": "Must be cost-effective until revenue validates model"
+  },
+  "futureRoadmap": [
+    {
+      "phase": "Post-MVP Phase 1 (Months 4-6)",
+      "features": [
+        "Background music integration (Suno AI/AIVA/Soundraw)",
+        "Native iOS app with offline support",
+        "HealthKit integration",
+        "Advanced tier questionnaires (educational background adaptation)",
+        "Meditation templates library"
+      ]
+    },
+    {
+      "phase": "Post-MVP Phase 2 (Months 7-9)",
+      "features": [
+        "Famous Mindsets feature (expert-validated)",
+        "Expert interview pipeline",
+        "Social features (share achievements, leaderboards)",
+        "Meditation streaks and gamification",
+        "Native Android app"
+      ]
+    },
+    {
+      "phase": "Post-MVP Phase 3 (Months 10-12)",
+      "features": [
+        "B2B corporate wellness partnerships",
+        "Team/organization accounts",
+        "API for third-party integrations",
+        "White-label opportunities",
+        "Physical goods (merch, journals)"
+      ]
+    }
+  ]
+}

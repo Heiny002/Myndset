@@ -1,0 +1,192 @@
+# Myndset MVP - Progress Log
+Started: January 21, 2025
+Project Owner: Jim Heiny
+
+## Codebase Patterns
+
+### Project Architecture Principles
+- **Performance positioning over wellness**: Every feature, copy, and design decision reinforces competitive advantage framing
+- **Mobile-first PWA initially**: Speed to market with web app before native development
+- **Manual approval workflow during MVP**: AI generates plans and scripts, but Jim reviews before delivery to ensure quality
+- **Freemium with immediate value**: One free meditation to prove value, then conversion to paid tiers
+- **Evidence-based personalization**: Component selection must map to psychological assessment, not generic content
+
+### Technical Stack Decisions
+- **Frontend**: Next.js 14+ with App Router for modern React patterns and excellent Vercel deployment
+- **Database**: Supabase for integrated auth, PostgreSQL, and storage in one platform
+- **AI Services**: Anthropic Claude for script generation (sophisticated reasoning), ElevenLabs for voice synthesis
+- **Payments**: Stripe for reliable subscription management and customer portal
+- **Hosting**: Vercel for seamless Next.js deployment and edge functions
+
+### Development Best Practices
+- **Typecheck always passes**: No commits without TypeScript validation
+- **Mobile testing required**: Every feature must work on iOS Safari and Android Chrome
+- **Cost tracking critical**: Monitor API usage (Claude, ElevenLabs) to stay within bootstrap budget
+- **Security first**: API keys in environment variables only, row-level security in Supabase, webhook signature verification
+- **User feedback loop**: Beta testing before launch, analytics from day one, iterative improvements
+
+### Component Selection Algorithm
+- User assessment maps to specific meditation techniques based on resistance patterns and goals
+- Session length determines structure (Quick: 2-3min, Standard: 5-10min, Deep: 15-30min)
+- Educational background informs script vocabulary and complexity
+- Mental/emotional state determines technique selection (e.g., high-energy → dynamic techniques)
+
+---
+
+## Project Context
+
+### Product Vision
+Myndset reframes meditation from wellness/stress-relief to **performance optimization tool** for ambitious professionals. Target audience: entrepreneurs, sales professionals, athletes, executives aged 22-32 who view meditation as competitive advantage and business investment.
+
+### Core Differentiation
+1. AI-driven personalization based on comprehensive psychological assessment
+2. State-specific meditations for various mental states (high-energy, intense, focused)
+3. Goal-oriented outcomes (close deals, win competitions, nail presentations)
+4. Performance-focused messaging: "meditation for boardrooms, not yoga studios"
+5. Future: Famous Mindsets - embody mental frameworks of legendary performers
+
+### MVP Scope
+- Progressive Web App (mobile-optimized, installable)
+- Three-tier questionnaire system (8 + 5 + 10 questions)
+- Two-step AI generation (plan approval → script generation)
+- Magic link authentication (passwordless)
+- Freemium model: 1 free meditation, then $9 Basic or $19 Premium tiers
+- Remix feature: regenerate specific script sections
+- Manual admin approval during validation phase
+
+### Success Criteria
+- **First 30 days**: 100+ visitors, 20+ completions, 10+ meditations, 5+ paid subscribers
+- **Months 2-3**: 500+ visitors, 100+ completions, 50+ meditations, 25+ subscribers, $250 MRR
+- **Months 4-6**: 2000+ visitors, 500+ completions, 200+ meditations, 100+ subscribers, $1500 MRR
+
+---
+
+## Iteration Log
+
+### Iteration 0 - Initial Setup
+- Created Ralph-structured prd.json from comprehensive PRD document
+- Organized 36 user stories across 6 phases
+- Established dependency chain for systematic execution
+- Defined success metrics and technical constraints
+
+**Key Learnings:**
+- Breaking down large PRD into discrete, testable user stories enables autonomous iteration
+- Each story has clear acceptance criteria that can be programmatically verified
+- Priority ordering ensures critical path features are built first
+- Dependency tracking prevents attempting tasks before prerequisites are complete
+
+**Next Priority Stories:**
+1. US-001: Set up development environment (Priority 1, Phase 1)
+2. US-002: Create service accounts (Priority 2, Phase 1)
+3. US-003: Configure domain (Priority 3, Phase 1)
+
+---
+
+## Architecture Decisions
+
+### Why PWA Before Native App?
+- Speed to market: weeks instead of months
+- Cross-platform from day one (iOS + Android)
+- Lower initial development cost
+- Easier iteration and testing
+- Can always convert to native in Phase 4 after market validation
+
+### Why Manual Approval Workflow?
+- Quality control during market validation phase
+- Learn from user responses to improve AI prompts
+- Catch edge cases before they reach users
+- Build institutional knowledge about what works
+- Can automate later after proven patterns emerge
+
+### Why ElevenLabs Over Other TTS?
+- Professional voice quality (not robotic)
+- Emotional range for meditation context
+- Reasonable API pricing for bootstrap budget
+- Reliable uptime and fast synthesis
+- Industry-leading naturalness
+
+### Why Supabase Over Custom Backend?
+- Integrated auth, database, and storage in one platform
+- PostgreSQL with full SQL capabilities
+- Row-level security built-in
+- Generous free tier, predictable pricing
+- Excellent TypeScript support
+- Real-time subscriptions for future features
+
+---
+
+## Known Risks & Mitigation Strategies
+
+### Technical Risks
+1. **AI generation quality**: Mitigated by manual review workflow, iterative prompt improvement
+2. **Voice synthesis costs**: Mitigated by cost tracking, tier limits, optimization after validation
+3. **Storage costs for audio**: Mitigated by compression, CDN caching, usage-based pricing awareness
+4. **Database query performance**: Mitigated by proper indexing, row-level security optimization
+
+### Market Risks
+1. **Conversion from free to paid**: Mitigated by proving value with first meditation, clear upgrade benefits
+2. **Target audience identification**: Mitigated by beta testing, analytics, iterative positioning
+3. **Competition from established apps**: Mitigated by differentiated positioning, unique personalization
+4. **User retention after novelty**: Mitigated by remix feature, new meditation generation, future Famous Mindsets
+
+### Business Risks
+1. **Solo founder bandwidth**: Mitigated by MVP scope discipline, automation where possible, future hiring
+2. **Bootstrap budget constraints**: Mitigated by cost tracking, freemium model for rapid user feedback
+3. **Time to market**: Mitigated by phased approach, manual workflows initially, launch-and-iterate
+
+---
+
+## Reference Documentation
+
+### Key Project Files
+- `prd.json`: This Ralph-structured file with all user stories
+- `MASTER-meditation-components-framework.md`: Evidence-based meditation techniques and components
+- `Basic_Personal_Meditation_Questionnaire.md`: 8-question Tier 1 questionnaire
+- `Comprehensive_Advanced_Meditation_Questionnaire.md`: Extended tiers (Tier 2 + Tier 3)
+- `Famous_Mindsets__The_Psychology_of_Legendary_Performance.md`: Future feature concept
+- `Expert_Interview_Strategy__Authentic_Famous_Mindsets_Development.md`: Post-MVP content strategy
+
+### External Resources
+- Next.js Documentation: https://nextjs.org/docs
+- Supabase Documentation: https://supabase.com/docs
+- Anthropic Claude API: https://docs.anthropic.com
+- ElevenLabs API: https://elevenlabs.io/docs
+- Stripe Subscriptions Guide: https://stripe.com/docs/billing/subscriptions/overview
+
+---
+
+## Future Iteration Templates
+
+When completing each user story, append the following structure:
+
+```
+---
+## Iteration [N] - [Story ID]
+Date: [YYYY-MM-DD]
+Story: [Title]
+Status: ✅ Complete / ⚠️ Blocked / 🔄 In Progress
+
+**What was accomplished:**
+- [Acceptance criteria met]
+- [Additional work done]
+
+**Learnings:**
+- [Discoveries about codebase, patterns, techniques]
+- [Problems encountered and solutions]
+
+**Codebase changes:**
+- [New files created]
+- [Files modified]
+- [Dependencies added]
+
+**Testing notes:**
+- [How it was tested]
+- [Edge cases covered]
+
+**Next story dependencies met:**
+- [Stories now unblocked: US-XXX, US-YYY]
+```
+
+---
+
+**End of Progress Log**
