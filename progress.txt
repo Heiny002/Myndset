@@ -189,4 +189,83 @@ Status: ✅ Complete / ⚠️ Blocked / 🔄 In Progress
 
 ---
 
+## Iteration 1 - US-001
+Date: 2025-01-21
+Story: Set up development environment and repository
+Status: ✅ Complete
+
+**What was accomplished:**
+- Node.js 18+ installed and verified (v23.10.0)
+- Git repository initialized locally
+- Remote configured to github.com/Heiny002/myndset
+- Git configured with user credentials
+- README.md created with comprehensive project overview
+
+**Learnings:**
+- GitHub CLI (gh) not installed on system - used standard git commands instead
+- Working directory was not initially a git repo, initialized fresh
+
+**Codebase changes:**
+- New files created: README.md, .gitignore
+- Initial commit with all project files
+
+**Testing notes:**
+- `node --version` returns v23.10.0 (exceeds 18+ requirement)
+- `git status` shows clean working tree
+- `git remote -v` confirms origin set correctly
+
+**Next story dependencies met:**
+- Stories now unblocked: US-002, US-004
+
+---
+
+## Iteration 2 - US-004
+Date: 2025-01-21
+Story: Initialize Next.js project with TypeScript and Tailwind
+Status: ✅ Complete
+
+**What was accomplished:**
+- Next.js 16.1.4 initialized with App Router
+- TypeScript configured with strict mode
+- Tailwind CSS v4 installed and configured
+- Project runs locally on localhost:3000 (verified HTTP 200 response)
+- Folder structure created: /components, /lib, /types (with .gitkeep files)
+- .env.example created with all required environment variables
+- Prettier configured with eslint-config-prettier integration
+- ESLint running clean (no errors)
+
+**Learnings:**
+- create-next-app requires lowercase package names (npm restriction) - worked around by creating in temp directory
+- Next.js 16.1.4 uses Turbopack by default for faster dev builds
+- ESLint 9 uses new flat config format (eslint.config.mjs)
+- Had to do clean reinstall of node_modules after copying project files
+
+**Codebase changes:**
+- New files created:
+  - /app/layout.tsx, /app/page.tsx, /app/globals.css
+  - /components/.gitkeep, /lib/.gitkeep, /types/.gitkeep
+  - .env.example
+  - .prettierrc, .prettierignore
+  - eslint.config.mjs, tsconfig.json, next.config.ts
+  - postcss.config.mjs, tailwind.config.ts (Tailwind v4)
+- Files modified:
+  - package.json (added format scripts, prettier deps)
+  - eslint.config.mjs (added eslint-config-prettier)
+- Dependencies added:
+  - next@16.1.4, react@19.2.3, react-dom@19.2.3
+  - typescript@5, tailwindcss@4, @tailwindcss/postcss@4
+  - eslint@9, eslint-config-next@16.1.4
+  - prettier@3.8.1, eslint-config-prettier@10.1.8
+
+**Testing notes:**
+- `npm run lint` runs without errors
+- `npm run dev` starts server successfully on port 3000
+- Verified HTTP 200 response from localhost:3000
+- All acceptance criteria verified
+
+**Next story dependencies met:**
+- Stories now unblocked: US-005, US-006, US-010, US-022, US-030
+
+---
+
 **End of Progress Log**

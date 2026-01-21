@@ -65,8 +65,8 @@
         "README.md created with project overview"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": "",
+      "passes": true,
+      "notes": "Completed 2025-01-21. Node.js v23.10.0 verified, Git repo initialized, README.md created, remote set to github.com/Heiny002/myndset",
       "dependsOn": []
     },
     {
@@ -119,8 +119,8 @@
         "Prettier and ESLint configured"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": "",
+      "passes": true,
+      "notes": "Completed 2025-01-21. Next.js 16.1.4 with App Router, TypeScript strict mode, Tailwind CSS v4, Prettier, ESLint with eslint-config-prettier. Folder structure created (/components, /lib, /types with .gitkeep). .env.example template with Supabase, Anthropic, ElevenLabs, Stripe, and app config placeholders.",
       "dependsOn": ["US-001"]
     },
     {

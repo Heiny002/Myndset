@@ -49,6 +49,8 @@ cp .env.example .env.local
 npm run dev
 ```
 
+Open [http://localhost:3000](http://localhost:3000) to see the app.
+
 ## Project Structure
 
 ```
@@ -57,6 +59,13 @@ npm run dev
 /lib          - Utility functions and configurations
 /types        - TypeScript type definitions
 ```
+
+## Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
 
 ## Environment Variables
 
