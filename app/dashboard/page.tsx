@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { isAdmin } from '@/lib/auth/admin';
 import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
@@ -13,6 +14,12 @@ export default async function DashboardPage() {
 
   if (!user) {
     redirect('/auth/signup?redirect=/dashboard');
+  }
+
+  // Redirect admins to admin dashboard
+  const userIsAdmin = await isAdmin();
+  if (userIsAdmin) {
+    redirect('/admin');
   }
 
   // Get all user's meditations

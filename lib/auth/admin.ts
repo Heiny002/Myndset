@@ -27,10 +27,11 @@ export async function isAdmin(): Promise<boolean> {
     const adminEmails = [
       'jim@trymyndset.com',
       'heiny002@gmail.com',
+      'jimheiniger@gmail.com',
       // Add other admin emails as needed
     ];
 
-    return adminEmails.includes(user.email || '');
+    return adminEmails.includes(user.email?.toLowerCase() || '');
   } catch (error) {
     console.error('Error checking admin status:', error);
     return false;
