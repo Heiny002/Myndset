@@ -457,8 +457,8 @@
         "Customer portal enabled for subscription management"
       ],
       "priority": 1,
-      "passes": false,
-      "notes": "",
+      "passes": true,
+      "notes": "Completed 2025-01-22. Full Stripe integration: Stripe SDK (v20.2.0) installed. Client utilities (lib/stripe/client.ts) with STRIPE_PLANS configuration, price ID getters, savings calculator. Setup script (scripts/setup-stripe-products.ts) for creating products/prices. Pricing page (/pricing) with three tiers, billing toggle, FAQ section. Checkout session API (/api/stripe/create-checkout-session) with customer creation. Webhook endpoint (/api/stripe/webhook) handling subscription.created, subscription.updated, subscription.deleted, payment_failed events. Free ($0), Basic ($9/mo or $90/yr - save $18), Premium ($19/mo or $190/yr - save $38). Test mode enabled. Build passes with 26 routes.",
       "dependsOn": ["US-002", "US-004"]
     },
     {

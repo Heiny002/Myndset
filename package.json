@@ -9,7 +9,8 @@
     "lint": "eslint",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clear-users": "tsx scripts/clear-test-users.ts"
+    "clear-users": "tsx scripts/clear-test-users.ts",
+    "setup-stripe": "tsx scripts/setup-stripe-products.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
@@ -19,7 +20,8 @@
     "next": "16.1.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "resend": "^6.8.0"
+    "resend": "^6.8.0",
+    "stripe": "^20.2.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
