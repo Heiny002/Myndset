@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 interface Meditation {
   id: string;
   title: string;
@@ -57,9 +59,11 @@ export default function MeditationCard({ meditation, onPlay }: MeditationCardPro
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className="mb-1 truncate text-lg font-semibold text-white">
-            {meditation.title}
-          </h3>
+          <Link href={`/dashboard/meditation/${meditation.id}`}>
+            <h3 className="mb-1 truncate text-lg font-semibold text-white hover:text-primary transition-colors cursor-pointer">
+              {meditation.title}
+            </h3>
+          </Link>
           {meditation.description && (
             <p className="mb-3 line-clamp-2 text-sm text-neutral-400">
               {meditation.description}

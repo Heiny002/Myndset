@@ -400,8 +400,8 @@
         "Bandwidth monitoring enabled"
       ],
       "priority": 3,
-      "passes": false,
-      "notes": "",
+      "passes": true,
+      "notes": "Completed during US-015 (2025-01-21). Storage bucket 'meditation-audio' created with 50MB file size limit, public access, mime types (audio/mpeg, audio/mp3, audio/wav, audio/ogg). File naming: {user_id}/{meditation_id}.mp3. Storage policies: public SELECT, authenticated INSERT/UPDATE/DELETE. Audio uploaded in /api/admin/generate-audio route. Public URLs stored in database. Bandwidth monitoring available in Supabase dashboard.",
       "dependsOn": ["US-015"]
     },
     {
@@ -420,8 +420,8 @@
         "Original version preserved (version history)"
       ],
       "priority": 4,
-      "passes": false,
-      "notes": "",
+      "passes": true,
+      "notes": "Completed 2025-01-22. Full remix feature implementation: meditation_remixes table with RLS policies. AI section regeneration (lib/ai/section-remix.ts) with Claude script editing, context preservation, hypnotic language patterns. API endpoint /api/user/remix-section with tier limit enforcement (Free: 2, Basic: 10, Premium: 45). ScriptRemixer component with text selection UI, instructions textarea, regenerate audio option. Meditation detail page (/dashboard/meditation/[id]) with script display and remix button. Usage tracking per billing cycle. Audio regeneration optional with cost tracking. Version history in techniques metadata. Build passes with 23 routes.",
       "dependsOn": ["US-017", "US-018"]
     },
     {
