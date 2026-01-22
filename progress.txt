@@ -304,4 +304,36 @@ Status: ✅ Complete
 
 ---
 
+## Iteration 4 - US-002
+Date: 2025-01-21
+Story: Create required service accounts
+Status: ✅ Complete
+
+**What was accomplished:**
+- Vercel account created and linked to GitHub (Myndset repo imported)
+- Supabase project created (project ref: crhduxupcvfbvchslbcn)
+- Stripe account created with test mode enabled
+- Resend account created for transactional emails
+- Anthropic API key obtained for Claude script generation
+- ElevenLabs account created with Text-to-Speech and Voices access
+- All API keys stored in .env.local (gitignored, never committed)
+
+**Learnings:**
+- ElevenLabs API key permissions can be scoped - only need Text to Speech, Voices (Read), and Voice Generation for MVP
+- Stripe test mode keys start with pk_test_ and sk_test_
+- Supabase provides both anon (public) and service_role (server-side) keys
+
+**Codebase changes:**
+- New files created:
+  - .env.local (contains all API keys, gitignored)
+
+**Testing notes:**
+- Verified .env.local is in .gitignore
+- All API keys formatted correctly in environment file
+
+**Next story dependencies met:**
+- Stories now unblocked: US-003, US-005, US-010, US-022
+
+---
+
 **End of Progress Log**
