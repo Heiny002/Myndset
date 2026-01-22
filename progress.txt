@@ -1167,3 +1167,42 @@ Status: ✅ Complete
 ---
 
 **End of Progress Log**
+
+## 2025-01-22 - US-019 and US-020 Complete
+
+### US-019: Configure Supabase Storage for Audio Files
+- **Status**: ✅ Complete (was already done during US-015)
+- Storage bucket 'meditation-audio' with 50MB limit
+- Public access with authenticated upload/update/delete policies
+- File naming: {user_id}/{meditation_id}.mp3
+- Bandwidth monitoring in Supabase dashboard
+
+### US-020: Build Remix Feature for Script Section Regeneration
+- **Status**: ✅ Complete
+- **Key Components**:
+  - meditation_remixes table with full RLS policies
+  - lib/ai/section-remix.ts - AI section regeneration with context preservation
+  - /api/user/remix-section - Tier limit enforcement (Free: 2, Basic: 10, Premium: 45)
+  - ScriptRemixer component - Text selection UI with instructions
+  - Meditation detail page - /dashboard/meditation/[id] with script display
+  - MeditationCard updated to link to detail view
+  - Usage tracking per billing cycle
+  - Optional audio regeneration with cost tracking
+  - Version history in techniques metadata
+- **Build**: ✅ Passes with 23 routes
+- **Files Created**:
+  - app/api/user/remix-section/route.ts
+  - app/dashboard/meditation/[id]/page.tsx
+  - app/dashboard/meditation/[id]/MeditationDetailClient.tsx
+  - components/ScriptRemixer.tsx
+  - lib/ai/section-remix.ts
+  - scripts/clear-test-users.ts (utility)
+  - app/auth/debug/page.tsx (debugging utility)
+
+**Phase 4 (Meditation Library & Playback) Progress**: 3/5 stories complete
+- ✅ US-017: User meditation library dashboard
+- ✅ US-018: Audio player with controls
+- ✅ US-019: Supabase Storage configuration
+- ✅ US-020: Remix feature
+- ❌ US-021: Test complete generation pipeline
+
