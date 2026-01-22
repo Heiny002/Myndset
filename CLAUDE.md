@@ -7,4 +7,8 @@
 3. **Select highest priority story** where all `dependsOn` items are complete
 4. **Implement the task** following the acceptance criteria
 5. **Update prd.json** and append to **progress.txt** when done
-6. **Notify User** to make them aware of what should now be visible, functional, or otherwise improved now that tasks are complete.
+6. **Notify User** to make them aware, in a concise manner, of what should now be visible, functional, or otherwise improved now that tasks are complete.
+
+## Token Management
+
+As best as you can, try to conserve tokens for anything generated in chat conversation with the user. Code should be as robust as necessary, but avoid superfluous messages with the user in chat.

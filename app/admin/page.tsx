@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/auth/admin';
 
 export default async function AdminDashboard() {
@@ -10,6 +10,7 @@ export default async function AdminDashboard() {
   }
 
   const supabase = await createClient();
+  const adminClient = createAdminClient();
 
   // Fetch all questionnaire responses
   const { data: questionnaires, error: questionnairesError } = await supabase
@@ -30,6 +31,29 @@ export default async function AdminDashboard() {
   if (plansError) {
     console.error('Error fetching plans:', plansError);
   }
+
+  // Fetch all meditations (completed)
+  const { data: meditations } = await supabase
+    .from('meditations')
+    .select('id, user_id, created_at')
+    .order('created_at', { ascending: false });
+
+  // Fetch user count from auth
+  const { data: allUsers } = await adminClient.auth.admin.listUsers();
+  const totalUsers = allUsers?.users?.length || 0;
+
+  // Get unique users who have submitted questionnaires
+  const uniqueQuestionnaireUsers = new Set(questionnaires?.map((q) => q.user_id) || []);
+  const activeUsers = uniqueQuestionnaireUsers.size;
+
+  // Calculate completion rate (questionnaires that have completed meditations)
+  const meditationUserIds = new Set(meditations?.map((m) => m.user_id) || []);
+  const completedQuestionnaires = questionnaires?.filter((q) =>
+    meditationUserIds.has(q.user_id)
+  ) || [];
+  const completionRate = questionnaires && questionnaires.length > 0
+    ? Math.round((completedQuestionnaires.length / questionnaires.length) * 100)
+    : 0;
 
   // Count pending items
   const pendingQuestionnaires = questionnaires?.filter(
@@ -73,14 +97,33 @@ export default async function AdminDashboard() {
             highlight={pendingPlans.length > 0}
           />
           <StatCard
+            title="Total Users"
+            value={totalUsers}
+            subtitle={`${activeUsers} active`}
+          />
+          <StatCard
+            title="Completion Rate"
+            value={`${completionRate}%`}
+            subtitle={`${meditations?.length || 0} completed`}
+          />
+        </div>
+
+        {/* Secondary Stats */}
+        <div className="mb-8 grid gap-4 sm:grid-cols-3">
+          <StatCard
             title="Total Questionnaires"
             value={questionnaires?.length || 0}
-            subtitle="All time"
+            subtitle="All submissions"
           />
           <StatCard
             title="Total Plans"
             value={plans?.length || 0}
-            subtitle="All time"
+            subtitle="Generated plans"
+          />
+          <StatCard
+            title="Total Meditations"
+            value={meditations?.length || 0}
+            subtitle="Delivered content"
           />
         </div>
 
@@ -156,7 +199,7 @@ function StatCard({
   highlight = false,
 }: {
   title: string;
-  value: number;
+  value: number | string;
   subtitle: string;
   highlight?: boolean;
 }) {

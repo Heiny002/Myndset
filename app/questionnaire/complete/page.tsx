@@ -156,7 +156,7 @@ export default function QuestionnaireCompletePage() {
           )}
 
           <Link
-            href="/"
+            href={isAuthenticated ? "/dashboard" : "/"}
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,7 +167,7 @@ export default function QuestionnaireCompletePage() {
                 d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
-            Back to Home
+            {isAuthenticated ? "Go to Dashboard" : "Back to Home"}
           </Link>
         </div>
       </main>
