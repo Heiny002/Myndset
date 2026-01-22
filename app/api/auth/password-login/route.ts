@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { verifyWhitelistedPassword, getWhitelistedAccount } from '@/lib/auth/whitelist';
 
 /**
@@ -40,9 +40,10 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Check if user already exists in Supabase Auth
-    const { data: existingUser } = await supabase.auth.admin.listUsers();
+    const { data: existingUser } = await adminClient.auth.admin.listUsers();
     const user = existingUser?.users?.find(
       (u) => u.email?.toLowerCase() === email.toLowerCase()
     );
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
       userId = user.id;
 
       // Create session by updating user
-      const { error: signInError } = await supabase.auth.admin.updateUserById(user.id, {
+      const { error: signInError } = await adminClient.auth.admin.updateUserById(user.id, {
         email_confirm: true,
       });
 
@@ -72,7 +73,7 @@ export async function POST(request: NextRequest) {
       if (sessionError) {
         // If password sign-in fails, user may not have a password set
         // In this case, we need to update the user with a password
-        const { error: updateError } = await supabase.auth.admin.updateUserById(user.id, {
+        const { error: updateError } = await adminClient.auth.admin.updateUserById(user.id, {
           password: password,
           email_confirm: true,
         });
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // User doesn't exist - create them
-      const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+      const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
         email: email.toLowerCase(),
         password: password,
         email_confirm: true,
