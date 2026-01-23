@@ -51,7 +51,7 @@ const QUESTIONNAIRE_TEMPLATES = [
   {
     primaryGoal: 'Sharpen focus for high-stakes deals',
     currentChallenge: 'Staying calm under pressure during negotiations',
-    sessionLength: '10 minutes',
+    sessionLength: 'quick',
     experienceLevel: 'Beginner - never meditated before',
     skepticismLevel: 3,
     performanceContext: 'Corporate executive closing multi-million dollar deals',
@@ -61,7 +61,7 @@ const QUESTIONNAIRE_TEMPLATES = [
   {
     primaryGoal: 'Improve athletic performance',
     currentChallenge: 'Pre-game anxiety and overthinking',
-    sessionLength: '15 minutes',
+    sessionLength: 'standard',
     experienceLevel: 'Intermediate - meditated a few times',
     skepticismLevel: 2,
     performanceContext: 'Professional athlete preparing for competitions',
@@ -71,7 +71,7 @@ const QUESTIONNAIRE_TEMPLATES = [
   {
     primaryGoal: 'Reduce entrepreneurial stress',
     currentChallenge: 'Managing overwhelm from running a startup',
-    sessionLength: '20 minutes',
+    sessionLength: 'deep',
     experienceLevel: 'Advanced - regular practice',
     skepticismLevel: 4,
     performanceContext: 'Startup founder juggling multiple responsibilities',
@@ -81,7 +81,7 @@ const QUESTIONNAIRE_TEMPLATES = [
   {
     primaryGoal: 'Enhance creative problem-solving',
     currentChallenge: 'Mental fatigue and creative blocks',
-    sessionLength: '10 minutes',
+    sessionLength: 'quick',
     experienceLevel: 'Beginner - never meditated before',
     skepticismLevel: 5,
     performanceContext: 'Software engineer tackling complex technical challenges',
@@ -91,7 +91,7 @@ const QUESTIONNAIRE_TEMPLATES = [
   {
     primaryGoal: 'Prepare for public speaking',
     currentChallenge: 'Stage fright and nervous energy before presentations',
-    sessionLength: '15 minutes',
+    sessionLength: 'standard',
     experienceLevel: 'Intermediate - meditated a few times',
     skepticismLevel: 1,
     performanceContext: 'Sales leader presenting to large audiences',

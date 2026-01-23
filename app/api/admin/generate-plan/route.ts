@@ -6,10 +6,14 @@ import { logAPIUsage } from '@/lib/ai/cost-tracking';
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('[generate-plan] Starting plan generation...');
+
     // Verify admin access
     await requireAdmin();
+    console.log('[generate-plan] Admin access verified');
 
     const { questionnaireId } = await request.json();
+    console.log('[generate-plan] Questionnaire ID:', questionnaireId);
 
     if (!questionnaireId) {
       return NextResponse.json(
@@ -19,8 +23,10 @@ export async function POST(request: NextRequest) {
     }
 
     const adminClient = createAdminClient();
+    console.log('[generate-plan] Admin client created');
 
     // Fetch questionnaire (use admin client to bypass RLS)
+    console.log('[generate-plan] Fetching questionnaire...');
     const { data: questionnaire, error: questionnaireError } = await adminClient
       .from('questionnaire_responses')
       .select('*')
@@ -28,11 +34,14 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (questionnaireError || !questionnaire) {
+      console.error('[generate-plan] Questionnaire not found:', questionnaireError);
       return NextResponse.json(
         { error: 'Questionnaire not found' },
         { status: 404 }
       );
     }
+
+    console.log('[generate-plan] Questionnaire found:', questionnaire.id);
 
     // Check if plan already exists (use admin client to bypass RLS)
     const { data: existingPlan } = await adminClient
@@ -49,6 +58,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate meditation plan using AI
+    console.log('[generate-plan] Starting AI generation...');
     const responses = questionnaire.responses as Record<string, any>;
     const { plan, aiResponse } = await generateMeditationPlanFromQuestionnaire({
       id: questionnaire.id,
@@ -121,14 +131,17 @@ export async function POST(request: NextRequest) {
       plan: savedPlan,
     });
   } catch (error) {
-    console.error('Error generating plan:', error);
+    console.error('[generate-plan] ERROR:', error);
+    console.error('[generate-plan] Error stack:', error instanceof Error ? error.stack : 'No stack');
 
     if (error instanceof Error && error.message.includes('Unauthorized')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
     }
 
+    // Return detailed error message
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to generate meditation plan' },
+      { error: `Failed to generate meditation plan: ${errorMessage}` },
       { status: 500 }
     );
   }

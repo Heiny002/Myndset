@@ -18,7 +18,14 @@ export async function isAdmin(): Promise<boolean> {
 
     const { data: { user }, error } = await supabase.auth.getUser();
 
+    console.log('[isAdmin] User check:', {
+      hasUser: !!user,
+      email: user?.email,
+      error: error?.message
+    });
+
     if (error || !user) {
+      console.log('[isAdmin] No user found or error');
       return false;
     }
 
@@ -31,7 +38,13 @@ export async function isAdmin(): Promise<boolean> {
       // Add other admin emails as needed
     ];
 
-    return adminEmails.includes(user.email?.toLowerCase() || '');
+    const isAdminUser = adminEmails.includes(user.email?.toLowerCase() || '');
+    console.log('[isAdmin] Result:', {
+      userEmail: user.email,
+      isAdmin: isAdminUser
+    });
+
+    return isAdminUser;
   } catch (error) {
     console.error('Error checking admin status:', error);
     return false;
