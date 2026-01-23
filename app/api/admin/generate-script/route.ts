@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { generateMeditationScript } from '@/lib/ai/script-generator';
 import { logAPIUsage } from '@/lib/ai/cost-tracking';
@@ -15,10 +15,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'planId is required' }, { status: 400 });
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
-    // Fetch approved plan
-    const { data: plan, error: planError } = await supabase
+    // Fetch approved plan (use admin client to bypass RLS)
+    const { data: plan, error: planError } = await adminClient
       .from('meditation_plans')
       .select('*')
       .eq('id', planId)
@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if script already exists
-    const { data: existingScript } = await supabase
+    // Check if script already exists (use admin client to bypass RLS)
+    const { data: existingScript } = await adminClient
       .from('meditations')
       .select('id')
       .eq('meditation_plan_id', planId)
@@ -53,8 +53,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch questionnaire for specific outcome
-    const { data: questionnaire } = await supabase
+    // Fetch questionnaire for specific outcome (use admin client to bypass RLS)
+    const { data: questionnaire } = await adminClient
       .from('questionnaire_responses')
       .select('*')
       .eq('id', plan.questionnaire_response_id)
@@ -88,8 +88,8 @@ export async function POST(request: NextRequest) {
         : undefined
     );
 
-    // Save script to database
-    const { data: savedScript, error: saveError } = await supabase
+    // Save script to database (use admin client to bypass RLS)
+    const { data: savedScript, error: saveError } = await adminClient
       .from('meditations')
       .insert([
         {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 
 export async function POST(request: NextRequest) {
@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'planId is required' }, { status: 400 });
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Update plan status to approved
-    const { data, error } = await supabase
+    const { data, error } = await adminClient
       .from('meditation_plans')
       .update({ status: 'approved' })
       .eq('id', planId)

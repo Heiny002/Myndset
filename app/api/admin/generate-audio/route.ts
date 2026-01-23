@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import {
   synthesizeVoice,
@@ -20,10 +20,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'scriptId is required' }, { status: 400 });
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Fetch approved script
-    const { data: script, error: scriptError } = await supabase
+    const { data: script, error: scriptError } = await adminClient
       .from('meditations')
       .select('*')
       .eq('id', scriptId)
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     // Upload audio to Supabase Storage
     const fileName = `${script.user_id}/${scriptId}.mp3`;
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await adminClient.storage
       .from('meditation-audio')
       .upload(fileName, audioBuffer, {
         contentType: 'audio/mpeg',
@@ -92,12 +92,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Get public URL for the audio file
-    const { data: urlData } = supabase.storage
+    const { data: urlData } = adminClient.storage
       .from('meditation-audio')
       .getPublicUrl(fileName);
 
     // Update meditation record with audio URL and synthesis metadata
-    const { data: updatedScript, error: updateError } = await supabase
+    const { data: updatedScript, error: updateError } = await adminClient
       .from('meditations')
       .update({
         audio_url: urlData.publicUrl,
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Send email notification to user
-    const { data: userData } = await supabase.auth.admin.getUserById(script.user_id);
+    const { data: userData } = await adminClient.auth.admin.getUserById(script.user_id);
     if (userData?.user?.email) {
       const emailResult = await sendMeditationReadyEmail({
         to: userData.user.email,

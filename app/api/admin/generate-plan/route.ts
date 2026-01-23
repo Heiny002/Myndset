@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { generateMeditationPlanFromQuestionnaire } from '@/lib/ai/plan-generator';
 import { logAPIUsage } from '@/lib/ai/cost-tracking';
@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
-    // Fetch questionnaire
-    const { data: questionnaire, error: questionnaireError } = await supabase
+    // Fetch questionnaire (use admin client to bypass RLS)
+    const { data: questionnaire, error: questionnaireError } = await adminClient
       .from('questionnaire_responses')
       .select('*')
       .eq('id', questionnaireId)
@@ -34,8 +34,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if plan already exists
-    const { data: existingPlan } = await supabase
+    // Check if plan already exists (use admin client to bypass RLS)
+    const { data: existingPlan } = await adminClient
       .from('meditation_plans')
       .select('id')
       .eq('questionnaire_response_id', questionnaireId)
@@ -66,8 +66,8 @@ export async function POST(request: NextRequest) {
       createdAt: questionnaire.created_at,
     });
 
-    // Save plan to database
-    const { data: savedPlan, error: saveError } = await supabase
+    // Save plan to database (use admin client to bypass RLS)
+    const { data: savedPlan, error: saveError } = await adminClient
       .from('meditation_plans')
       .insert([
         {

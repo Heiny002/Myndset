@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 
 export async function POST(request: NextRequest) {
@@ -16,14 +16,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Calculate new metrics
     const wordCount = scriptText.split(/\s+/).filter(Boolean).length;
     const estimatedDurationSeconds = Math.round((wordCount / 145) * 60);
 
     // Fetch existing script to preserve metadata
-    const { data: existingScript } = await supabase
+    const { data: existingScript } = await adminClient
       .from('meditations')
       .select('techniques')
       .eq('id', scriptId)
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const metadata = (existingScript?.techniques as any) || {};
 
     // Update script
-    const { data, error } = await supabase
+    const { data, error } = await adminClient
       .from('meditations')
       .update({
         script_text: scriptText,

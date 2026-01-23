@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { regenerateScript } from '@/lib/ai/script-generator';
 import { logAPIUsage } from '@/lib/ai/cost-tracking';
@@ -18,10 +18,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Fetch existing script
-    const { data: existingScript, error: scriptError } = await supabase
+    const { data: existingScript, error: scriptError } = await adminClient
       .from('meditations')
       .select('*')
       .eq('id', scriptId)
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch plan
-    const { data: plan, error: planError } = await supabase
+    const { data: plan, error: planError } = await adminClient
       .from('meditation_plans')
       .select('*')
       .eq('id', existingScript.meditation_plan_id)
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch questionnaire
-    const { data: questionnaire } = await supabase
+    const { data: questionnaire } = await adminClient
       .from('questionnaire_responses')
       .select('*')
       .eq('id', plan.questionnaire_response_id)
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Update script in database
-    const { data: updatedScript, error: updateError } = await supabase
+    const { data: updatedScript, error: updateError } = await adminClient
       .from('meditations')
       .update({
         script_text: newScript.scriptText,

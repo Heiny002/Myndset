@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 
 export async function POST(request: NextRequest) {
@@ -13,10 +13,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'scriptId is required' }, { status: 400 });
     }
 
-    const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Fetch existing script to get current metadata
-    const { data: existingScript } = await supabase
+    const { data: existingScript } = await adminClient
       .from('meditations')
       .select('techniques')
       .eq('id', scriptId)
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const currentMetadata = (existingScript?.techniques as any) || {};
 
     // Update script status to approved in techniques metadata
-    const { data, error } = await supabase
+    const { data, error } = await adminClient
       .from('meditations')
       .update({
         techniques: {
