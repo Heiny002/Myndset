@@ -7,6 +7,8 @@ import { logAPIUsage } from '@/lib/ai/cost-tracking';
 export async function POST(request: NextRequest) {
   try {
     console.log('[generate-plan] Starting plan generation...');
+    console.log('[generate-plan] ENV check - ANTHROPIC_API_KEY exists:', !!process.env.ANTHROPIC_API_KEY);
+    console.log('[generate-plan] ENV check - length:', process.env.ANTHROPIC_API_KEY?.length || 0);
 
     // Verify admin access
     await requireAdmin();

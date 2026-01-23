@@ -1,4 +1,25 @@
 import Anthropic from '@anthropic-ai/sdk';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+// WORKAROUND: Next.js Turbopack doesn't load .env.local for API routes
+// Manually read and parse the env file
+if (!process.env.ANTHROPIC_API_KEY) {
+  try {
+    const envPath = resolve(process.cwd(), '.env.local');
+    const envFile = readFileSync(envPath, 'utf8');
+    const lines = envFile.split('\n');
+    for (const line of lines) {
+      const match = line.match(/^ANTHROPIC_API_KEY=(.+)$/);
+      if (match) {
+        process.env.ANTHROPIC_API_KEY = match[1].trim();
+        break;
+      }
+    }
+  } catch (error) {
+    console.error('[claude] Failed to load .env.local:', error);
+  }
+}
 
 // Claude model configurations
 export const CLAUDE_MODELS = {
@@ -32,7 +53,14 @@ export function getAnthropicClient(): Anthropic {
   if (!anthropicClient) {
     const apiKey = process.env.ANTHROPIC_API_KEY;
 
+    console.log('[claude] API Key check:', {
+      exists: !!apiKey,
+      length: apiKey?.length || 0,
+      prefix: apiKey?.substring(0, 10) || 'none'
+    });
+
     if (!apiKey) {
+      console.error('[claude] All env vars:', Object.keys(process.env).filter(k => k.includes('ANTHROPIC')));
       throw new Error(
         'ANTHROPIC_API_KEY environment variable is not set. Please add it to your .env.local file.'
       );
