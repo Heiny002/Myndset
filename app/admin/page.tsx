@@ -13,11 +13,10 @@ export default async function AdminDashboard() {
     redirect('/dashboard');
   }
 
-  const supabase = await createClient();
   const adminClient = createAdminClient();
 
-  // Fetch all questionnaire responses
-  const { data: questionnaires, error: questionnairesError } = await supabase
+  // Fetch all questionnaire responses (use admin client to bypass RLS)
+  const { data: questionnaires, error: questionnairesError } = await adminClient
     .from('questionnaire_responses')
     .select('*')
     .order('created_at', { ascending: false });
@@ -26,8 +25,8 @@ export default async function AdminDashboard() {
     console.error('Error fetching questionnaires:', questionnairesError);
   }
 
-  // Fetch all meditation plans
-  const { data: plans, error: plansError } = await supabase
+  // Fetch all meditation plans (use admin client to bypass RLS)
+  const { data: plans, error: plansError } = await adminClient
     .from('meditation_plans')
     .select('*')
     .order('created_at', { ascending: false });
@@ -36,8 +35,8 @@ export default async function AdminDashboard() {
     console.error('Error fetching plans:', plansError);
   }
 
-  // Fetch all meditations (completed)
-  const { data: meditations } = await supabase
+  // Fetch all meditations (use admin client to bypass RLS)
+  const { data: meditations } = await adminClient
     .from('meditations')
     .select('id, user_id, created_at')
     .order('created_at', { ascending: false });
