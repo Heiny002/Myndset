@@ -12,3 +12,9 @@
 ## Token Management
 
 As best as you can, try to conserve tokens for anything generated in chat conversation with the user. Code should be as robust as necessary, but avoid superfluous messages with the user in chat.
+
+## Self Improvement
+
+If any development processes were discovered during a cycle, save them to this document under the Best Practices heading
+
+## Best Practices

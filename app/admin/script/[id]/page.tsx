@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/auth/admin';
 import ScriptActions from './ScriptActions';
 import ScriptEditor from './ScriptEditor';
@@ -17,10 +17,10 @@ export default async function ScriptReviewPage({
     redirect('/dashboard');
   }
 
-  const supabase = await createClient();
+  const adminClient = createAdminClient();
 
-  // Fetch script
-  const { data: script, error } = await supabase
+  // Fetch script (use admin client to bypass RLS)
+  const { data: script, error } = await adminClient
     .from('meditations')
     .select('*')
     .eq('id', id)
@@ -30,8 +30,8 @@ export default async function ScriptReviewPage({
     redirect('/admin');
   }
 
-  // Fetch associated plan
-  const { data: plan } = await supabase
+  // Fetch associated plan (use admin client to bypass RLS)
+  const { data: plan } = await adminClient
     .from('meditation_plans')
     .select('*')
     .eq('id', script.meditation_plan_id)
