@@ -1,6 +1,8 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import PricingClient from './PricingClient';
+import CancelBanner from './CancelBanner';
 
 export default async function PricingPage() {
   const supabase = await createClient();
@@ -22,6 +24,11 @@ export default async function PricingPage() {
 
   return (
     <div className="min-h-screen bg-neutral-950">
+      {/* Cancel Banner */}
+      <Suspense fallback={null}>
+        <CancelBanner />
+      </Suspense>
+
       {/* Navigation */}
       <nav className="border-b border-neutral-800">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">

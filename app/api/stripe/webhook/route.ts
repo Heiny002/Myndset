@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { getStripeClient } from '@/lib/stripe/client';
 import { createClient } from '@/lib/supabase/server';
+import { sendPaymentFailedEmail, sendSubscriptionCanceledEmail } from '@/lib/email/payment-notifications';
 
 /**
  * Stripe Webhook Handler
@@ -44,7 +45,30 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  console.log(`Received Stripe webhook: ${event.type}`);
+  console.log(`Received Stripe webhook: ${event.type} (${event.id})`);
+
+  const supabase = await createClient();
+
+  // Check for duplicate event (idempotency)
+  const { data: existingEvent } = await supabase
+    .from('stripe_webhook_events')
+    .select('id, status')
+    .eq('id', event.id)
+    .single();
+
+  if (existingEvent) {
+    console.log(`Webhook event ${event.id} already processed with status: ${existingEvent.status}`);
+    return NextResponse.json({ received: true, duplicate: true });
+  }
+
+  // Log the event for idempotency and debugging
+  await supabase.from('stripe_webhook_events').insert({
+    id: event.id,
+    type: event.type,
+    created: new Date(event.created * 1000).toISOString(),
+    data: event.data.object as any,
+    status: 'processing',
+  });
 
   try {
     switch (event.type) {
@@ -69,9 +93,29 @@ export async function POST(request: NextRequest) {
         console.log(`Unhandled event type: ${event.type}`);
     }
 
+    // Mark event as successfully processed
+    await supabase
+      .from('stripe_webhook_events')
+      .update({ status: 'processed', processed_at: new Date().toISOString() })
+      .eq('id', event.id);
+
+    console.log(`Successfully processed webhook ${event.type} (${event.id})`);
+
     return NextResponse.json({ received: true });
   } catch (error) {
-    console.error(`Error processing webhook ${event.type}:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`Error processing webhook ${event.type} (${event.id}):`, error);
+
+    // Mark event as failed with error details
+    await supabase
+      .from('stripe_webhook_events')
+      .update({
+        status: 'failed',
+        error_message: errorMessage,
+        processed_at: new Date().toISOString(),
+      })
+      .eq('id', event.id);
+
     return NextResponse.json(
       { error: 'Webhook handler failed' },
       { status: 500 }
@@ -186,6 +230,22 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   }
 
   console.log(`User ${userId} downgraded to free tier`);
+
+  // Send cancellation confirmation email
+  const { data: authUser } = await supabase.auth.admin.getUserById(userId);
+
+  if (authUser?.user?.email) {
+    try {
+      await sendSubscriptionCanceledEmail({
+        to: authUser.user.email,
+        cancellationDate: new Date().toLocaleDateString(),
+      });
+      console.log(`Cancellation email sent to ${authUser.user.email}`);
+    } catch (emailError) {
+      console.error('Error sending cancellation email:', emailError);
+      // Don't throw - email failure shouldn't fail the webhook
+    }
+  }
 }
 
 /**
@@ -196,10 +256,45 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   console.log(`Payment failed for customer ${customerId}, invoice ${invoice.id}`);
 
+  const supabase = await createClient();
+
+  // Find user by Stripe customer ID
+  const { data: user } = await supabase
+    .from('users')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .single();
+
+  if (!user) {
+    console.error(`User not found for customer ${customerId}`);
+    return;
+  }
+
+  // Get user email from auth
+  const { data: authUser } = await supabase.auth.admin.getUserById(user.id);
+
+  if (!authUser?.user?.email) {
+    console.error(`Email not found for user ${user.id}`);
+    return;
+  }
+
   // Note: We don't immediately downgrade on first payment failure
   // Stripe will retry the payment automatically
   // If payment ultimately fails, subscription.deleted event will be triggered
 
-  // TODO: Send email notification to user about payment failure
-  // This could be implemented in US-016 (notification system)
+  // Send email notification to user about payment failure
+  try {
+    await sendPaymentFailedEmail({
+      to: authUser.user.email,
+      invoiceUrl: invoice.hosted_invoice_url || undefined,
+      amountDue: invoice.amount_due / 100, // Convert cents to dollars
+      nextRetryDate: invoice.next_payment_attempt
+        ? new Date(invoice.next_payment_attempt * 1000).toLocaleDateString()
+        : undefined,
+    });
+    console.log(`Payment failure email sent to ${authUser.user.email}`);
+  } catch (emailError) {
+    console.error('Error sending payment failure email:', emailError);
+    // Don't throw - email failure shouldn't fail the webhook
+  }
 }

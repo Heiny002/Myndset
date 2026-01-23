@@ -15,6 +15,10 @@ export type Database = {
           stripe_subscription_id: string | null;
           meditations_generated: number;
           meditations_limit: number;
+          remixes_this_month: number;
+          remixes_limit: number;
+          billing_cycle_start: string;
+          billing_cycle_anchor: number;
           created_at: string;
           updated_at: string;
         };
@@ -29,6 +33,10 @@ export type Database = {
           stripe_subscription_id?: string | null;
           meditations_generated?: number;
           meditations_limit?: number;
+          remixes_this_month?: number;
+          remixes_limit?: number;
+          billing_cycle_start?: string;
+          billing_cycle_anchor?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -43,6 +51,10 @@ export type Database = {
           stripe_subscription_id?: string | null;
           meditations_generated?: number;
           meditations_limit?: number;
+          remixes_this_month?: number;
+          remixes_limit?: number;
+          billing_cycle_start?: string;
+          billing_cycle_anchor?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -263,6 +275,39 @@ export type Database = {
           },
         ];
       };
+      stripe_webhook_events: {
+        Row: {
+          id: string;
+          type: string;
+          created: string;
+          data: Json;
+          processed_at: string | null;
+          status: string;
+          error_message: string | null;
+          retry_count: number;
+        };
+        Insert: {
+          id: string;
+          type: string;
+          created: string;
+          data: Json;
+          processed_at?: string | null;
+          status?: string;
+          error_message?: string | null;
+          retry_count?: number;
+        };
+        Update: {
+          id?: string;
+          type?: string;
+          created?: string;
+          data?: Json;
+          processed_at?: string | null;
+          status?: string;
+          error_message?: string | null;
+          retry_count?: number;
+        };
+        Relationships: [];
+      };
       admin_users: {
         Row: {
           id: string;
@@ -298,8 +343,32 @@ export type Database = {
     };
     Functions: {
       is_admin: {
-        Args: { user_id: string };
+        Args: { check_user_id: string };
         Returns: boolean;
+      };
+      get_user_usage: {
+        Args: { check_user_id: string };
+        Returns: Array<{
+          meditations_generated: number;
+          meditations_limit: number;
+          remixes_this_month: number;
+          remixes_limit: number;
+          billing_cycle_start: string;
+          billing_cycle_anchor: number;
+          days_until_reset: number;
+        }>;
+      };
+      increment_meditation_count: {
+        Args: { check_user_id: string };
+        Returns: void;
+      };
+      increment_remix_count: {
+        Args: { check_user_id: string };
+        Returns: void;
+      };
+      reset_monthly_usage: {
+        Args: Record<string, never>;
+        Returns: void;
       };
     };
     Enums: {

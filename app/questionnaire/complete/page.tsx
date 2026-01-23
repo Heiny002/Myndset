@@ -3,9 +3,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import UpgradeModal from '@/components/UpgradeModal';
+import type { SubscriptionTier } from '@/lib/usage/tracking';
 
 export default function QuestionnaireCompletePage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [userTier, setUserTier] = useState<SubscriptionTier>('free');
+  const [usage, setUsage] = useState<{ current: number; limit: number } | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -21,12 +26,41 @@ export default function QuestionnaireCompletePage() {
         if (pendingQuestionnaire) {
           try {
             const responses = JSON.parse(pendingQuestionnaire);
+
+            // Check if user has reached limit before saving
+            const { data: userData } = await supabase
+              .from('users')
+              .select('subscription_tier, meditations_generated, meditations_limit')
+              .eq('id', user.id)
+              .single();
+
+            if (userData) {
+              setUserTier(userData.subscription_tier as SubscriptionTier);
+              setUsage({
+                current: userData.meditations_generated,
+                limit: userData.meditations_limit,
+              });
+
+              // Check if at limit
+              if (userData.meditations_generated >= userData.meditations_limit) {
+                setShowUpgradeModal(true);
+                return; // Don't save questionnaire yet
+              }
+            }
+
+            // Save questionnaire and increment count
             await supabase.from('questionnaire_responses').insert({
               user_id: user.id,
               tier: 1,
               responses: responses,
               completed_at: new Date().toISOString(),
             });
+
+            // Increment meditation count
+            await supabase.rpc('increment_meditation_count', {
+              check_user_id: user.id,
+            });
+
             sessionStorage.removeItem('pendingQuestionnaire');
           } catch (error) {
             console.error('Error saving pending questionnaire:', error);
@@ -171,6 +205,18 @@ export default function QuestionnaireCompletePage() {
           </Link>
         </div>
       </main>
+
+      {/* Upgrade Modal */}
+      {usage && (
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          currentTier={userTier}
+          limitType="meditations"
+          currentUsage={usage.current}
+          limit={usage.limit}
+        />
+      )}
 
       {/* Footer */}
       <footer className="border-t border-gray-800 py-4">

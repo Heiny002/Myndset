@@ -1,8 +1,13 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/auth/admin';
 import DashboardClient from './DashboardClient';
+import CreateMeditationButton from './CreateMeditationButton';
+import SuccessBanner from '@/components/SuccessBanner';
+import UsageStats from '@/components/UsageStats';
+import { getUserUsage, getUserTier } from '@/lib/usage/tracking';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -59,8 +64,17 @@ export default async function DashboardPage() {
   const hasPendingQuestionnaire = pendingQuestionnaires.length > 0;
   const hasMeditations = meditations && meditations.length > 0;
 
+  // Get user usage statistics
+  const usage = await getUserUsage(user.id);
+  const tier = await getUserTier(user.id);
+
   return (
     <div className="min-h-screen bg-neutral-950">
+      {/* Success Banner */}
+      <Suspense fallback={null}>
+        <SuccessBanner />
+      </Suspense>
+
       {/* Navigation */}
       <nav className="sticky top-0 z-50 border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md">
         <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
@@ -68,6 +82,12 @@ export default async function DashboardPage() {
             Myndset
           </Link>
           <div className="flex items-center gap-4">
+            <Link
+              href="/settings"
+              className="text-sm text-neutral-400 transition-colors hover:text-white"
+            >
+              Settings
+            </Link>
             <span className="hidden text-sm text-neutral-400 sm:block">
               {user.email}
             </span>
@@ -97,36 +117,9 @@ export default async function DashboardPage() {
         {/* Action Cards */}
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* New Meditation */}
-          <Link
-            href="/questionnaire"
-            className="group rounded-xl border-2 border-dashed border-neutral-700 bg-neutral-900/30 p-6 transition-all hover:border-primary hover:bg-primary/5"
-          >
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20 transition-colors group-hover:bg-primary/30">
-                <svg
-                  className="h-6 w-6 text-primary"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-semibold text-white transition-colors group-hover:text-primary">
-                  Create New Meditation
-                </h3>
-                <p className="text-sm text-neutral-400">
-                  Take the questionnaire
-                </p>
-              </div>
-            </div>
-          </Link>
+          {usage && (
+            <CreateMeditationButton usage={usage} tier={tier} />
+          )}
 
           {/* Pending Questionnaire Status */}
           {hasPendingQuestionnaire && !hasPendingPlan && (
@@ -193,10 +186,13 @@ export default async function DashboardPage() {
           )}
         </div>
 
-        {/* Meditation Library */}
-        {hasMeditations ? (
-          <DashboardClient meditations={meditations} />
-        ) : (
+        {/* Main Content Grid */}
+        <div className="grid gap-8 lg:grid-cols-3">
+          {/* Left Column - Meditation Library (2/3 width) */}
+          <div className="lg:col-span-2">
+            {hasMeditations ? (
+              <DashboardClient meditations={meditations} />
+            ) : (
           // Empty State
           <div className="rounded-xl border border-neutral-800 bg-neutral-900/30 px-4 py-12 text-center">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-neutral-800">
@@ -241,7 +237,16 @@ export default async function DashboardPage() {
               </svg>
             </Link>
           </div>
-        )}
+            )}
+          </div>
+
+          {/* Right Column - Usage Stats (1/3 width) */}
+          {usage && (
+            <div className="lg:col-span-1">
+              <UsageStats usage={usage} tier={tier} />
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

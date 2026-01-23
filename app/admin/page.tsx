@@ -2,6 +2,10 @@ import { redirect } from 'next/navigation';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/auth/admin';
 
+// Force dynamic rendering - don't cache this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminDashboard() {
   // Check admin access
   const admin = await isAdmin();

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import UpgradeModal from './UpgradeModal';
+import type { SubscriptionTier } from '@/lib/usage/tracking';
 
 interface ScriptRemixerProps {
   meditationId: string;
@@ -28,6 +30,7 @@ export default function ScriptRemixer({
   const [success, setSuccess] = useState<string | null>(null);
   const [usage, setUsage] = useState<RemixUsage | null>(null);
   const [regenerateAudio, setRegenerateAudio] = useState(true);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const scriptRef = useRef<HTMLDivElement>(null);
 
   // Fetch current usage on mount
@@ -68,7 +71,7 @@ export default function ScriptRemixer({
     }
 
     if (usage && usage.used >= usage.limit) {
-      setError(`You've reached your remix limit (${usage.limit}/${usage.limit}). Upgrade your plan for more remixes.`);
+      setShowUpgradeModal(true);
       return;
     }
 
@@ -309,15 +312,30 @@ export default function ScriptRemixer({
             <div className="text-center p-4 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
               <p className="text-yellow-300 text-sm">
                 You've used all your remixes for this month.{' '}
-                <a href="/pricing" className="text-primary hover:underline font-semibold">
+                <button
+                  onClick={() => setShowUpgradeModal(true)}
+                  className="text-primary hover:underline font-semibold"
+                >
                   Upgrade your plan
-                </a>{' '}
+                </button>{' '}
                 to get more remixes.
               </p>
             </div>
           )}
         </div>
       </div>
+
+      {/* Upgrade Modal */}
+      {usage && (
+        <UpgradeModal
+          isOpen={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          currentTier={usage.tier as SubscriptionTier}
+          limitType="remixes"
+          currentUsage={usage.used}
+          limit={usage.limit}
+        />
+      )}
     </div>
   );
 }

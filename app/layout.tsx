@@ -29,6 +29,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Myndset' }],
   creator: 'Myndset',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Myndset',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -57,13 +63,28 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
-  themeColor: '#0a0a0a',
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+    { media: '(prefers-color-scheme: light)', color: '#0a0a0a' },
+  ],
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
