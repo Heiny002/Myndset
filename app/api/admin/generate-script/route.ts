@@ -98,8 +98,8 @@ export async function POST(request: NextRequest) {
           title: `Meditation for ${planData.messagingFramework.audienceType}`,
           description: planData.overallRationale,
           script_text: script.scriptText,
-          audio_duration_seconds: script.estimatedDurationSeconds,
-          generation_cost_cents: aiResponse.costCents,
+          audio_duration_seconds: Math.round(script.estimatedDurationSeconds),
+          generation_cost_cents: Math.round(aiResponse.costCents),
           techniques: {
             status: 'pending_approval',
             word_count: script.wordCount,

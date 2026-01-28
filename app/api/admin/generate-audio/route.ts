@@ -55,7 +55,15 @@ export async function POST(request: NextRequest) {
 
     // Validate script text
     const validation = validateScriptForSynthesis(script.script_text);
+    console.log('[generate-audio] Script validation:', {
+      isValid: validation.isValid,
+      scriptLength: script.script_text.length,
+      errors: validation.errors,
+      warnings: validation.warnings,
+    });
+
     if (!validation.isValid) {
+      console.error('[generate-audio] Validation failed:', validation.errors);
       return NextResponse.json(
         {
           error: 'Script validation failed',
@@ -101,7 +109,7 @@ export async function POST(request: NextRequest) {
       .from('meditations')
       .update({
         audio_url: urlData.publicUrl,
-        audio_generation_cost_cents: costCents,
+        voice_id: voiceId,
         techniques: {
           ...scriptMetadata,
           audio_generated: true,
@@ -109,7 +117,7 @@ export async function POST(request: NextRequest) {
           audio_character_count: characterCount,
           audio_voice_id: voiceId,
           audio_voice_name: voiceName,
-          audio_cost_cents: costCents,
+          audio_cost_cents: Math.round(costCents),
         } as any,
       })
       .eq('id', scriptId)
