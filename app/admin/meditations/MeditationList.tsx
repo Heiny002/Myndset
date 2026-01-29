@@ -271,9 +271,31 @@ function MeditationCard({
   versionCount: number;
 }) {
   const [showRedoModal, setShowRedoModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const router = useRouter();
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch('/api/admin/delete-meditation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ meditationId: meditation.id }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete meditation');
+      }
+
+      setShowDeleteModal(false);
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting meditation:', error);
+      alert(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
 
   const scriptStyle = meditation.techniques?.scriptStyle || 'energizing';
   const wordCount = meditation.script_text.split(/\s+/).filter(Boolean).length;
@@ -361,6 +383,12 @@ function MeditationCard({
                 View Versions
               </a>
             )}
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="whitespace-nowrap rounded-lg border border-red-500/50 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              Delete
+            </button>
           </div>
         </div>
 
@@ -389,6 +417,16 @@ function MeditationCard({
             // Delay refresh to allow success message to show
             setTimeout(() => router.refresh(), 500);
           }}
+        />
+      )}
+
+      {/* Delete Modal */}
+      {showDeleteModal && (
+        <ConfirmDeleteModal
+          title="Delete Meditation"
+          description="This meditation and its associated audio file will be permanently deleted. This action cannot be undone."
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteModal(false)}
         />
       )}
     </>
@@ -562,6 +600,61 @@ function RedoModal({
             className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isProcessing ? 'Regenerating...' : `Redo as ${selectedMode}`}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConfirmDeleteModal({
+  title,
+  description,
+  onConfirm,
+  onCancel,
+}: {
+  title: string;
+  description: string;
+  onConfirm: () => Promise<void>;
+  onCancel: () => void;
+}) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      await onConfirm();
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div className="mx-4 w-full max-w-md rounded-lg border border-neutral-800 bg-neutral-900 p-6">
+        <h3 className="mb-2 text-xl font-bold text-white">{title}</h3>
+        <p className="mb-6 text-sm text-neutral-400">{description}</p>
+
+        <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/5 p-3">
+          <p className="text-xs text-red-400">
+            ⚠️ This action is permanent and cannot be undone.
+          </p>
+        </div>
+
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            disabled={isDeleting}
+            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={isDeleting}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isDeleting ? 'Deleting...' : 'Delete Permanently'}
           </button>
         </div>
       </div>

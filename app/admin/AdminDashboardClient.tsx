@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useMemo, useRef, Dispatch, SetStateAction } from 'react';
+import { useState, useMemo, useRef, Dispatch, SetStateAction, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 type TabType = 'questionnaires' | 'plans';
 
@@ -169,61 +170,102 @@ function TabLink({
 }
 
 function QuestionnaireCard({ questionnaire }: { questionnaire: any }) {
+  const router = useRouter();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const createdAt = new Date(questionnaire.created_at);
   const timeAgo = getTimeAgo(createdAt);
 
+  const handleDelete = async () => {
+    try {
+      const response = await fetch('/api/admin/delete-questionnaire', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questionnaireId: questionnaire.id }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete questionnaire');
+      }
+
+      setShowDeleteModal(false);
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting questionnaire:', error);
+      alert(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
+
   return (
-    <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-6">
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <div className="mb-2 flex items-center gap-3">
-            <h3 className="font-semibold text-white">
-              {questionnaire.responses?.primaryGoal || 'New Questionnaire'}
-            </h3>
-            <span className="rounded-full bg-yellow-500/10 px-2 py-1 text-xs font-medium text-yellow-500">
-              Pending
-            </span>
+    <>
+      <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-6">
+        <div className="flex items-start justify-between">
+          <div className="flex-1">
+            <div className="mb-2 flex items-center gap-3">
+              <h3 className="font-semibold text-white">
+                {questionnaire.responses?.primaryGoal || 'New Questionnaire'}
+              </h3>
+              <span className="rounded-full bg-yellow-500/10 px-2 py-1 text-xs font-medium text-yellow-500">
+                Pending
+              </span>
+            </div>
+            <div className="grid gap-2 text-sm">
+              <div className="flex gap-2">
+                <span className="text-neutral-500">Goal:</span>
+                <span className="text-neutral-300">
+                  {questionnaire.responses?.primaryGoal}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-neutral-500">Challenge:</span>
+                <span className="text-neutral-300">
+                  {questionnaire.responses?.currentChallenge}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-neutral-500">Duration:</span>
+                <span className="text-neutral-300">
+                  {questionnaire.responses?.sessionLength}
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <span className="text-neutral-500">Context:</span>
+                <span className="text-neutral-300">
+                  {questionnaire.responses?.performanceContext}
+                </span>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-neutral-500">
+              Submitted {timeAgo} • Tier {questionnaire.tier || 1}
+            </p>
           </div>
-          <div className="grid gap-2 text-sm">
-            <div className="flex gap-2">
-              <span className="text-neutral-500">Goal:</span>
-              <span className="text-neutral-300">
-                {questionnaire.responses?.primaryGoal}
-              </span>
-            </div>
-            <div className="flex gap-2">
-              <span className="text-neutral-500">Challenge:</span>
-              <span className="text-neutral-300">
-                {questionnaire.responses?.currentChallenge}
-              </span>
-            </div>
-            <div className="flex gap-2">
-              <span className="text-neutral-500">Duration:</span>
-              <span className="text-neutral-300">
-                {questionnaire.responses?.sessionLength}
-              </span>
-            </div>
-            <div className="flex gap-2">
-              <span className="text-neutral-500">Context:</span>
-              <span className="text-neutral-300">
-                {questionnaire.responses?.performanceContext}
-              </span>
-            </div>
+          <div className="ml-4 flex flex-col gap-2">
+            <Link
+              href={`/admin/questionnaire/${questionnaire.id}`}
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90"
+            >
+              Generate Plan
+            </Link>
+            <button
+              onClick={() => setShowDeleteModal(true)}
+              className="rounded-lg border border-red-500/50 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            >
+              Delete
+            </button>
           </div>
-          <p className="mt-3 text-xs text-neutral-500">
-            Submitted {timeAgo} • Tier {questionnaire.tier || 1}
-          </p>
-        </div>
-        <div className="ml-4">
-          <Link
-            href={`/admin/questionnaire/${questionnaire.id}`}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90"
-          >
-            Generate Plan
-          </Link>
         </div>
       </div>
-    </div>
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <ConfirmDeleteModal
+          title="Delete Questionnaire"
+          description="This questionnaire and any associated meditation plans will be permanently deleted. This action cannot be undone."
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteModal(false)}
+        />
+      )}
+    </>
   );
 }
 
@@ -234,10 +276,33 @@ function PlanCard({
   plan: any;
   showAudioStatus?: boolean;
 }) {
+  const router = useRouter();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const createdAt = new Date(plan.created_at);
   const timeAgo = getTimeAgo(createdAt);
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch('/api/admin/delete-plan', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: plan.id }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete plan');
+      }
+
+      setShowDeleteModal(false);
+      router.refresh();
+    } catch (error) {
+      console.error('Error deleting plan:', error);
+      alert(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  };
 
   return (
     <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-6">
@@ -287,6 +352,12 @@ function PlanCard({
               View Script & Audio
             </Link>
           )}
+          <button
+            onClick={() => setShowDeleteModal(true)}
+            className="rounded-lg border border-red-500/50 px-4 py-2 text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+          >
+            Delete
+          </button>
         </div>
       </div>
 
@@ -301,6 +372,16 @@ function PlanCard({
             duration={plan.audio_duration_seconds}
           />
         </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <ConfirmDeleteModal
+          title="Delete Meditation Plan"
+          description="This meditation plan and any associated meditations/audio will be permanently deleted. This action cannot be undone."
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteModal(false)}
+        />
       )}
     </div>
   );
@@ -472,6 +553,61 @@ function StatusBadge({ status }: { status: string }) {
     >
       {labels[status as keyof typeof labels] || status}
     </span>
+  );
+}
+
+function ConfirmDeleteModal({
+  title,
+  description,
+  onConfirm,
+  onCancel,
+}: {
+  title: string;
+  description: string;
+  onConfirm: () => Promise<void>;
+  onCancel: () => void;
+}) {
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleConfirm = async () => {
+    setIsDeleting(true);
+    try {
+      await onConfirm();
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+      <div className="mx-4 w-full max-w-md rounded-lg border border-neutral-800 bg-neutral-900 p-6">
+        <h3 className="mb-2 text-xl font-bold text-white">{title}</h3>
+        <p className="mb-6 text-sm text-neutral-400">{description}</p>
+
+        <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/5 p-3">
+          <p className="text-xs text-red-400">
+            ⚠️ This action is permanent and cannot be undone.
+          </p>
+        </div>
+
+        <div className="flex justify-end gap-3">
+          <button
+            onClick={onCancel}
+            disabled={isDeleting}
+            className="rounded-lg border border-neutral-700 px-4 py-2 text-sm font-medium text-neutral-300 hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirm}
+            disabled={isDeleting}
+            className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isDeleting ? 'Deleting...' : 'Delete Permanently'}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
