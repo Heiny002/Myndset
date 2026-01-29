@@ -1,9 +1,11 @@
 /**
- * Meditation Script Generator
+ * Script Generator (Unified Router)
  *
  * Step 2 of the two-step AI generation workflow.
- * Takes an approved meditation plan and generates the full meditation script text
- * that will be converted to audio via ElevenLabs.
+ * Routes to either energizing (PRIMARY) or calming (BACKUP) script generators.
+ *
+ * DEFAULT MODE: Energizing/Motivational (high-energy activation)
+ * BACKUP MODE: Calming/Meditative (relaxation and contemplation)
  */
 
 import { generateText, ClaudeResponse } from './claude';
@@ -13,6 +15,14 @@ import {
   SESSION_STRUCTURES,
   MEDITATION_COMPONENTS,
 } from './meditation-knowledge-base';
+import {
+  generateEnergizingScript,
+  regenerateEnergizingScript,
+  regenerateEnergizingSection,
+  EnergizingScript,
+} from './energizing-script-generator';
+
+export type ScriptStyle = 'energizing' | 'calming';
 
 export interface MeditationScript {
   id?: string;
@@ -23,6 +33,14 @@ export interface MeditationScript {
   estimatedDurationSeconds: number;
   status: 'pending_approval' | 'approved' | 'generating_audio';
   version: number;
+  scriptStyle?: ScriptStyle; // Track which generator was used
+  elevenLabsGuidance?: {
+    style: string;
+    stability: number;
+    similarityBoost: number;
+    speakingRate: string;
+    emphasis: string[];
+  };
   metadata: {
     generatedAt: string;
     model: string;
@@ -69,15 +87,20 @@ Write a complete, word-for-word meditation script that will be narrated by a pro
 # Pacing Guidelines
 
 - Average speaking pace: 140-160 words per minute
-- Include natural pauses: "..." = 1-2 second pause, "....." = 3-5 second pause
-- Use paragraph breaks for longer pauses (5-10 seconds)
+- Use SSML break tags for pauses: <break time="1.5s" /> for short pauses, <break time="3.0s" /> for longer pauses
+- Use paragraph breaks for natural breath points
+- DO NOT use ellipses ("..." or ".....") - they create inconsistent pauses
 
 # Output Format
 
 Write ONLY the meditation script text. Do NOT include:
 - Titles, headings, or labels
-- Bracketed instructions like [pause here]
 - Meta-commentary about the script
+- Parenthetical directions in asterisks or parentheses - these will be SPOKEN ALOUD
+
+You MAY include (sparingly):
+- ElevenLabs audio tags in square brackets: [whispers], [gentle], [calm], [soothing]
+- SSML break tags for precise pausing: <break time="1.5s" /> or <break time="3.0s" />
 
 Start with the first words the user will hear. End with the last words before silence.`;
 }
@@ -138,16 +161,50 @@ Script Guidelines: ${fullComponent.scriptGuidelines}`
 3. Use hypnotic language patterns naturally (not forced)
 4. Match the ${plan.messagingFramework.audienceType} messaging style
 5. Address the user's specific outcome if provided
-6. Use "..." for short pauses (1-2 sec), "....." for longer pauses (3-5 sec)
+6. Use SSML break tags for pauses: <break time="1.5s" /> for short, <break time="3.0s" /> for longer
 7. Write for spoken delivery - natural, conversational, but professional
+8. Use ElevenLabs audio tags in square brackets sparingly for emotional tone: [gentle], [calm], [soothing]
 
 Write the complete meditation script now. Start with the first words the user will hear.`;
 }
 
 /**
  * Generate a meditation script from an approved plan
+ *
+ * @param plan - The approved meditation plan
+ * @param questionnaire - Optional questionnaire data with specific outcome
+ * @param scriptStyle - 'energizing' (DEFAULT) or 'calming'
  */
 export async function generateMeditationScript(
+  plan: MeditationPlan,
+  questionnaire?: { specificOutcome?: string; scriptStyle?: ScriptStyle },
+  scriptStyle: ScriptStyle = 'energizing' // DEFAULT to energizing
+): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
+  // Determine style from parameter or questionnaire, default to energizing
+  const resolvedStyle = scriptStyle || questionnaire?.scriptStyle || 'energizing';
+
+  // Route to appropriate generator
+  if (resolvedStyle === 'energizing') {
+    const { script: energizingScript, aiResponse } =
+      await generateEnergizingScript(plan, questionnaire);
+
+    // Convert EnergizingScript to MeditationScript format
+    const script: MeditationScript = {
+      ...energizingScript,
+      scriptStyle: 'energizing',
+    };
+
+    return { script, aiResponse };
+  } else {
+    // Use calming generator (existing implementation below)
+    return generateCalmingScript(plan, questionnaire);
+  }
+}
+
+/**
+ * Generate a CALMING meditation script (backup mode for users who specifically need it)
+ */
+async function generateCalmingScript(
   plan: MeditationPlan,
   questionnaire?: { specificOutcome?: string }
 ): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
@@ -177,6 +234,20 @@ export async function generateMeditationScript(
     estimatedDurationSeconds,
     status: 'pending_approval',
     version: 1,
+    scriptStyle: 'calming',
+    elevenLabsGuidance: {
+      style: 'calming_meditative',
+      stability: 0.75, // Higher stability for calm, steady delivery
+      similarityBoost: 0.75,
+      speakingRate: '0.95x', // Slightly slower for contemplation
+      emphasis: [
+        'Gentle, soothing tone throughout',
+        'Slow, deliberate pacing',
+        'Soft emphasis on breath and relaxation cues',
+        'Use longer pauses for contemplation',
+        'Steady, calming voice quality',
+      ],
+    },
     metadata: {
       generatedAt: new Date().toISOString(),
       model: aiResponse.model,
@@ -193,6 +264,47 @@ export async function generateMeditationScript(
  * Regenerate script with admin feedback
  */
 export async function regenerateScript(
+  originalScript: MeditationScript,
+  plan: MeditationPlan,
+  feedback: string,
+  questionnaire?: { specificOutcome?: string }
+): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
+  const scriptStyle = originalScript.scriptStyle || 'energizing';
+
+  // Route to appropriate regenerator
+  if (scriptStyle === 'energizing') {
+    const energizingScript: EnergizingScript = {
+      ...originalScript,
+      elevenLabsGuidance: originalScript.elevenLabsGuidance || {
+        style: 'energizing_motivational',
+        stability: 0.4,
+        similarityBoost: 0.75,
+        speakingRate: '1.1x',
+        emphasis: [],
+      },
+    };
+
+    const { script: newScript, aiResponse } = await regenerateEnergizingScript(
+      energizingScript,
+      plan,
+      feedback,
+      questionnaire
+    );
+
+    return {
+      script: { ...newScript, scriptStyle: 'energizing' },
+      aiResponse,
+    };
+  } else {
+    // Use calming regenerator
+    return regenerateCalmingScript(originalScript, plan, feedback, questionnaire);
+  }
+}
+
+/**
+ * Regenerate CALMING script with admin feedback (backup mode)
+ */
+async function regenerateCalmingScript(
   originalScript: MeditationScript,
   plan: MeditationPlan,
   feedback: string,
@@ -237,6 +349,8 @@ Write the complete meditation script now.`;
     estimatedDurationSeconds,
     status: 'pending_approval',
     version: originalScript.version + 1,
+    scriptStyle: 'calming',
+    elevenLabsGuidance: originalScript.elevenLabsGuidance,
     metadata: {
       generatedAt: new Date().toISOString(),
       model: aiResponse.model,
@@ -253,6 +367,41 @@ Write the complete meditation script now.`;
  * Regenerate a specific section of a script (for remix feature)
  */
 export async function regenerateScriptSection(
+  originalScript: MeditationScript,
+  plan: MeditationPlan,
+  sectionText: string,
+  userFeedback: string
+): Promise<string> {
+  const scriptStyle = originalScript.scriptStyle || 'energizing';
+
+  // Route to appropriate section regenerator
+  if (scriptStyle === 'energizing') {
+    const energizingScript: EnergizingScript = {
+      ...originalScript,
+      elevenLabsGuidance: originalScript.elevenLabsGuidance || {
+        style: 'energizing_motivational',
+        stability: 0.4,
+        similarityBoost: 0.75,
+        speakingRate: '1.1x',
+        emphasis: [],
+      },
+    };
+
+    return regenerateEnergizingSection(
+      energizingScript,
+      plan,
+      sectionText,
+      userFeedback
+    );
+  } else {
+    return regenerateCalmingSection(originalScript, plan, sectionText, userFeedback);
+  }
+}
+
+/**
+ * Regenerate a specific section of a CALMING script (backup mode)
+ */
+async function regenerateCalmingSection(
   originalScript: MeditationScript,
   plan: MeditationPlan,
   sectionText: string,

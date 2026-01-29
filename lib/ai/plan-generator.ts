@@ -20,7 +20,7 @@ export interface QuestionnaireResponse {
   userId: string;
   primaryGoal: string;
   currentChallenge: string;
-  sessionLength: 'quick' | 'standard' | 'deep';
+  sessionLength: 'ultra_quick' | 'quick' | 'standard' | 'deep';
   experienceLevel: string;
   skepticismLevel: number;
   performanceContext: string;

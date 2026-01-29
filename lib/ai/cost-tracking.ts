@@ -82,13 +82,14 @@ export async function checkBudgetLimit(
 }
 
 // Cost estimation helpers
-export function estimateMeditationCost(sessionLength: 'quick' | 'standard' | 'deep'): {
+export function estimateMeditationCost(sessionLength: 'ultra_quick' | 'quick' | 'standard' | 'deep'): {
   claudeCostCents: number;
   elevenLabsCostCents: number;
   totalCents: number;
 } {
   // Estimated token usage per session type
   const tokenEstimates = {
+    ultra_quick: { input: 1500, output: 250 }, // 1 min scripts
     quick: { input: 2000, output: 500 }, // 2-5 min scripts
     standard: { input: 3000, output: 1000 }, // 5-10 min scripts
     deep: { input: 4000, output: 2000 }, // 15-30 min scripts
@@ -96,6 +97,7 @@ export function estimateMeditationCost(sessionLength: 'quick' | 'standard' | 'de
 
   // Audio duration estimates in seconds
   const audioSeconds = {
+    ultra_quick: 60, // 1 minute
     quick: 180, // 3 minutes
     standard: 480, // 8 minutes
     deep: 1200, // 20 minutes

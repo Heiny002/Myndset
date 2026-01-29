@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
         {
           user_id: plan.user_id,
           meditation_plan_id: planId,
-          title: `Meditation for ${planData.messagingFramework.audienceType}`,
+          title: `${script.scriptStyle === 'energizing' ? 'Energizing' : 'Calming'} Session for ${planData.messagingFramework.audienceType}`,
           description: planData.overallRationale,
           script_text: script.scriptText,
           audio_duration_seconds: Math.round(script.estimatedDurationSeconds),
@@ -105,6 +105,8 @@ export async function POST(request: NextRequest) {
             word_count: script.wordCount,
             estimated_duration_seconds: script.estimatedDurationSeconds,
             version: script.version,
+            script_style: script.scriptStyle || 'energizing',
+            eleven_labs_guidance: script.elevenLabsGuidance,
             input_tokens: aiResponse.inputTokens,
             output_tokens: aiResponse.outputTokens,
             cost_cents: aiResponse.costCents,

@@ -1687,3 +1687,166 @@ Status: ✅ Complete
 8. Retest until all pass
 9. Mark US-028 complete in PRD
 
+
+## 2025-01-28 - US-009 Complete: Dynamic Questionnaire System Redesign
+
+### US-009: Build Tier 2 and Tier 3 Questionnaire Extensions (REDESIGNED)
+- **Status**: ✅ Complete
+- **Major Redesign**: Questionnaire completely rebuilt to focus on IMMEDIATE, URGENT user needs
+- **Key Design Principles**:
+  - Users are in DIRE NEED of motivation - no time for meditation history questions
+  - Get straight to the heart of what they're facing and what they need RIGHT NOW
+  - Dynamic questions based on user type for maximum relevance
+  - Two tiers instead of three: Essential (Tier 1) and Deep Personalization (Tier 2)
+
+- **New Questionnaire Structure**:
+  - **Universal Questions (Q1-Q3)**:
+    1. Performance Arena (determines user type) - FIRST QUESTION
+    2. Immediate Situation - Open-ended: "What's happening right now?"
+    3. Time Urgency - When do you need to perform?
+
+  - **Dynamic User-Type-Specific Questions (Q4-Q8)**:
+    - **Athlete/Competitor**: Competition type, stakes, mental state, physical state, session length
+    - **Entrepreneur/Founder**: Challenge type, stakes, mental state, energy level, session length
+    - **Sales/Business Development**: Situation, stakes, mental state, what they need, session length
+    - **Executive/Leader**: Leadership challenge, stakes, mental state, what to project, session length
+    - **Creative Professional**: Challenge, stakes, what's blocking, what they need, session length
+    - **Technical/Analytical**: Challenge, stakes, mental state, what they need, session length
+    - **Student/Academic**: Challenge, stakes, mental state, what they need, session length
+
+  - **Tier 2 Deep Personalization (8 questions)**:
+    1. Past Success - Describe peak performance moment
+    2. Inner Critic - What does self-doubt say?
+    3. Motivation Source - Who/what are you doing this for?
+    4. Physical Cue - What physical action helps you feel powerful?
+    5. Visualization Style - How do you best visualize success?
+    6. Identity Statement - "I am someone who..."
+    7. Victory Vision - What will success look/feel like?
+    8. Accountability - What promise are you making?
+
+- **Technical Implementation**:
+  - **lib/questionnaire/questions.ts** (1792 lines):
+    - Complete type definitions for questions, options, user types
+    - All 7 user type question sets with unique, tailored questions
+    - Helper functions: getTier1Questions(), getTier2Questions(), getAllQuestionsUpToTier()
+    - Legacy compatibility exports for existing code
+
+  - **lib/questionnaire/response-mapper.ts** (320+ lines):
+    - Maps new question IDs to plan generator expected format
+    - Extracts type-specific fields based on user type
+    - Derives primary goal and current challenge from responses
+    - Builds AI context string with full user profile
+    - Handles Tier 2 deep personalization fields
+
+  - **app/api/admin/create-test-meditation/route.ts**:
+    - Updated to use response mapper
+    - Now generates ENERGIZING scripts (not calm meditation)
+    - Uses energizing-script-generator instead of script-generator
+    - Stores script_type and user_type in techniques metadata
+
+  - **app/admin/test-meditation/TestMeditationClient.tsx**:
+    - Updated to work with dynamic questionnaire
+    - Questions change dynamically when user type selected
+    - Only shows 2 tiers (not 3)
+    - Properly calculates question counts per tier
+
+- **Build**: ✅ Passes with 31 routes
+- **Files Created**:
+  - lib/questionnaire/response-mapper.ts
+- **Files Modified**:
+  - lib/questionnaire/questions.ts (complete rewrite)
+  - app/api/admin/create-test-meditation/route.ts
+  - app/admin/test-meditation/TestMeditationClient.tsx
+  - prd.json (US-009 marked complete)
+
+**Acceptance Criteria Met**:
+✅ After Tier 1 completion, show benefit statement CTA (Tier 2 value prop)
+✅ Tier 2 adds deeper questions with progress indicator
+✅ Users can skip additional tiers and proceed with Tier 1 only
+✅ Tier completion tracked in database (tier field in questionnaire_responses)
+✅ Benefit statements are compelling (performance-focused messaging)
+✅ BONUS: Dynamic questions tailored to each of 7 user types
+✅ BONUS: Energizing script generation (not calm meditation)
+
+**Key Learning**:
+- The questionnaire needed to respect that users come to Myndset in URGENT need
+- Asking about meditation history or preferences wastes critical time
+- User type determines everything - questions must speak directly to their world
+- Two tiers (Essential + Deep) is better than three (less friction, still personalized)
+
+
+## 2025-01-28 - Add ElevenLabs Default Voice
+
+### Task: Set Default Voice for Audio Generator
+- **Status**: ✅ Complete
+- **Voice ID**: Km0Soh4qk4kpe8euVFnO
+- **Key Changes**:
+  1. Added new 'default' voice option to VOICE_OPTIONS in lib/ai/voice-synthesis.ts
+  2. Configured voice settings: 0.70 stability, 0.80 similarity_boost, 0.15 style, speaker_boost enabled
+  3. Changed default voice in ScriptActions.tsx from 'professional' to 'default'
+  4. Updated voice dropdown to include new default voice option as first selection
+- **Build**: ✅ Passes with 31 routes
+- **Files Modified**:
+  - lib/ai/voice-synthesis.ts (added default voice to VOICE_OPTIONS)
+  - app/admin/script/[id]/ScriptActions.tsx (changed default selection and dropdown)
+- **Result**: Audio generator now uses the new voice (Km0Soh4qk4kpe8euVFnO) as the default, with fallback options available
+
+
+## 2025-01-28 - Fix ElevenLabs Voice Formatting (Critical Bug)
+
+### Task: Correct Script Generation to Use ElevenLabs-Approved Formatting
+- **Status**: ✅ Complete
+- **Problem**: Scripts were using `**(build intensity)**` style markers which ElevenLabs SPEAKS OUT LOUD instead of treating as voice direction
+- **Solution**: Updated script generators to use ElevenLabs' approved formatting:
+  - Audio tags in square brackets: `[excited]`, `[intense]`, `[confident]`, `[determined]`, `[passionate]`
+  - SSML break tags for pauses: `<break time="0.8s" />`, `<break time="2.0s" />`
+  - NO ellipses (...), NO asterisks/parentheses for directions
+
+- **Key Changes**:
+  1. Updated energizing-script-generator.ts with correct ElevenLabs format documentation
+  2. Updated script-generator.ts (calming mode) with proper SSML and audio tag guidance
+  3. Added validation in voice-synthesis.ts to warn about old-style markers
+  4. Completely rewrote ELEVENLABS_VOICE_GUIDANCE.md with correct formatting examples
+
+- **Build**: ✅ Passes
+- **Files Modified**:
+  - lib/ai/energizing-script-generator.ts (system prompt now teaches correct format)
+  - lib/ai/script-generator.ts (calming script formatting updated)
+  - lib/ai/voice-synthesis.ts (added validation warnings for **(markers)** and ellipses)
+  - ELEVENLABS_VOICE_GUIDANCE.md (complete rewrite with correct examples)
+
+- **Critical Formatting Rules Now Enforced**:
+  ✅ Use `[intense]` NOT `**(build intensity)**`
+  ✅ Use `<break time="1.0s" />` NOT `...` or `.....`
+  ✅ Audio tags used sparingly (5-8 times per script max)
+  ✅ Model eleven_turbo_v2_5 supports both SSML breaks and audio tags
+
+- **Next Steps**:
+  - Existing scripts in database will need regeneration to fix formatting
+  - Voice synthesis will now warn if old-style markers detected
+  - Future scripts will use correct format automatically
+
+**Key Learning**:
+- ElevenLabs has specific syntax requirements that must be followed exactly
+- Documentation is critical - wrong formatting renders voice direction useless
+- SSML `<break>` tags are only supported by v2/v2.5 models (not v3)
+- Audio tags affect the FOLLOWING phrase, not preceding text
+
+
+## 2025-01-28 - Add Sarge Voice Option
+
+### Task: Add Sarge Voice (Csl0vkcBfWnfYT30wkjW) to Voice Options
+- **Status**: ✅ Complete
+- **Voice ID**: Csl0vkcBfWnfYT30wkjW
+- **Voice Name**: Sarge
+- **Key Changes**:
+  1. Added 'sarge' voice option to VOICE_OPTIONS in lib/ai/voice-synthesis.ts
+  2. Configured voice settings: 0.65 stability, 0.75 similarity_boost, 0.20 style, speaker_boost enabled
+  3. Added "Sarge" as second option in voice dropdown (after Default Voice)
+  4. Description: "Commanding, authoritative voice - ideal for motivational and performance-driven meditations"
+- **Build**: ✅ Passes with 31 routes
+- **Files Modified**:
+  - lib/ai/voice-synthesis.ts (added sarge to VOICE_OPTIONS)
+  - app/admin/script/[id]/ScriptActions.tsx (added Sarge option to dropdown)
+- **Result**: Sarge voice now available as option alongside Default, Professional, Calm, and Energizing voices
+

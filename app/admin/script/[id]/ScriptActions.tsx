@@ -16,7 +16,7 @@ export default function ScriptActions({
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [voiceType, setVoiceType] = useState<string>('professional');
+  const [voiceType, setVoiceType] = useState<string>('default');
   const router = useRouter();
 
   async function handleApprove() {
@@ -128,6 +128,8 @@ export default function ScriptActions({
               onChange={(e) => setVoiceType(e.target.value)}
               className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             >
+              <option value="default">Coach</option>
+              <option value="sarge">Sarge</option>
               <option value="professional">Professional (Adam)</option>
               <option value="calm">Calm (Sarah)</option>
               <option value="energizing">Energizing (Antoni)</option>

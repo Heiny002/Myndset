@@ -1,0 +1,573 @@
+{
+  "selectionDate": "2026-01-28",
+  "totalReviewed": 307,
+  "audioCompatible": 142,
+  "selectedCount": 45,
+  "selectionCriteria": {
+    "audioCompatible": "required",
+    "performanceFocus": "high priority",
+    "evidence": "medium priority",
+    "speed": "medium priority",
+    "versatility": "low priority"
+  },
+  "categoryTargets": {
+    "motivational": "10 techniques",
+    "performanceHypnosis": "12 techniques",
+    "sportsPerformance": "8 techniques",
+    "nlpPatterns": "10 techniques",
+    "cognitive": "5 techniques"
+  },
+  "techniques": [
+    {
+      "id": "mental_imagery_visualization",
+      "name": "Visualization/Mental Imagery",
+      "domain": "sports_performance",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Peak performance staple, extensive neuroscience research, builds neural pathways through vivid sensory rehearsal, fully audio-guided, used by elite athletes and executives",
+      "selectedForResearch": true
+    },
+    {
+      "id": "positive_self_talk",
+      "name": "Positive Self-Talk",
+      "domain": "sports_performance",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 2,
+      "rationale": "Immediate performance enhancement, strong sports psychology research base, reinforces confidence during high-pressure situations, easily audio-scripted",
+      "selectedForResearch": true
+    },
+    {
+      "id": "performance_cues_trigger_words",
+      "name": "Performance Cues/Trigger Words",
+      "domain": "sports_performance",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 2,
+      "rationale": "Activates focused attention instantly, used in athletics and military, combines conditioning with state management, perfect for audio cue installation",
+      "selectedForResearch": true
+    },
+    {
+      "id": "pre_performance_routines",
+      "name": "Pre-Performance Routines",
+      "domain": "sports_performance",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Establishes optimal arousal, consistent behavioral sequences enhance focus, extensive sports psychology research, audio can guide routine establishment",
+      "selectedForResearch": true
+    },
+    {
+      "id": "arousal_regulation",
+      "name": "Arousal Regulation",
+      "domain": "sports_performance",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Yerkes-Dodson Law foundation, optimizes physiological activation for peak performance, critical for high-stakes situations, audio-guided breathing and body awareness",
+      "selectedForResearch": true
+    },
+    {
+      "id": "centering_technique",
+      "name": "Centering Technique",
+      "domain": "sports_performance",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 2,
+      "rationale": "Robert Nideffer's breath-focused attention technique, directs focus to center of gravity, rapid state shift, purely audio-compatible",
+      "selectedForResearch": true
+    },
+    {
+      "id": "progressive_muscle_relaxation",
+      "name": "Progressive Muscle Relaxation",
+      "domain": "sports_performance",
+      "performanceFocus": 3,
+      "evidenceAvailable": true,
+      "estimatedDuration": 5,
+      "rationale": "Edmund Jacobson's classic, reduces performance anxiety, systematic tension-release, well-researched, audio-guided tension patterns",
+      "selectedForResearch": true
+    },
+    {
+      "id": "thought_stopping",
+      "name": "Thought-Stopping",
+      "domain": "sports_performance",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 2,
+      "rationale": "Cognitive-behavioral technique, interrupts negative thought spirals, redirects focus, simple audio cues, effective for performance anxiety",
+      "selectedForResearch": true
+    },
+    {
+      "id": "anchoring_nlp",
+      "name": "Anchoring (NLP)",
+      "domain": "nlp",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Peak performance technique, strong Pavlovian foundation, widely used in sports/business coaching, audio can install kinesthetic anchors, instant state access",
+      "selectedForResearch": true
+    },
+    {
+      "id": "circle_of_excellence",
+      "name": "Circle of Excellence",
+      "domain": "nlp",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Visualizes performance circle, stacks peak states, spatial anchoring, powerful pre-performance ritual, fully audio-guided",
+      "selectedForResearch": true
+    },
+    {
+      "id": "resource_anchoring",
+      "name": "Resource Anchoring",
+      "domain": "nlp",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Anchors specific positive resources (confidence, focus, energy), on-demand state access, practical for business settings, audio-compatible",
+      "selectedForResearch": true
+    },
+    {
+      "id": "stacking_anchors",
+      "name": "Stacking Anchors",
+      "domain": "nlp",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Layers multiple positive states onto single trigger, creates compound performance state, audio can guide multiple state recalls",
+      "selectedForResearch": true
+    },
+    {
+      "id": "swish_pattern",
+      "name": "Swish Pattern",
+      "domain": "nlp",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Replaces limiting patterns with empowering self-image, rapid pattern interrupt, Bandler/Grinder technique, audio guides visual swap",
+      "selectedForResearch": true
+    },
+    {
+      "id": "new_behavior_generator",
+      "name": "New Behavior Generator",
+      "domain": "nlp",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Creates and rehearses new behavioral responses, mental practice for skill acquisition, audio-guided visualization",
+      "selectedForResearch": true
+    },
+    {
+      "id": "perceptual_positions",
+      "name": "Perceptual Positions",
+      "domain": "nlp",
+      "performanceFocus": 3,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Shifts perspective between self/other/observer, enhances emotional intelligence, useful for leadership, audio guides perspective shifts",
+      "selectedForResearch": true
+    },
+    {
+      "id": "submodalities_work",
+      "name": "Submodalities Work",
+      "domain": "nlp",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Adjusts sensory details of mental images to change emotional impact, reduces fear, amplifies motivation, audio-guided sensory manipulation",
+      "selectedForResearch": true
+    },
+    {
+      "id": "future_pacing",
+      "name": "Future Pacing",
+      "domain": "nlp",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Mental rehearsal in future contexts, programs unconscious for success, Ericksonian/NLP foundation, audio-guided scenario practice",
+      "selectedForResearch": true
+    },
+    {
+      "id": "strategy_elicitation",
+      "name": "Strategy Elicitation and Installation",
+      "domain": "nlp",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 5,
+      "rationale": "Models successful mental strategies and installs them, skill acceleration technique, audio can guide strategy modeling",
+      "selectedForResearch": true
+    },
+    {
+      "id": "progressive_relaxation_induction",
+      "name": "Progressive Relaxation Induction",
+      "domain": "hypnosis",
+      "performanceFocus": 3,
+      "evidenceAvailable": true,
+      "estimatedDuration": 5,
+      "rationale": "Classic Jacobson technique adapted for hypnosis, establishes deep relaxation baseline, fully audio-guided body scan",
+      "selectedForResearch": true
+    },
+    {
+      "id": "dave_elman_induction",
+      "name": "Dave Elman Induction",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Rapid structured induction (1950s), eye closure to number disappearance, time-efficient, audio-compatible steps",
+      "selectedForResearch": true
+    },
+    {
+      "id": "arm_levitation_induction",
+      "name": "Arm Levitation Induction",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Suggests arm floating upward to transition into trance, ideomotor response, audio suggests lightness and floating",
+      "selectedForResearch": true
+    },
+    {
+      "id": "confusion_technique",
+      "name": "Confusion Technique",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Milton Erickson's classic, overloads conscious mind with paradoxes, creates natural trance, audio delivers complex patterns",
+      "selectedForResearch": true
+    },
+    {
+      "id": "naturalistic_trance_induction",
+      "name": "Naturalistic Trance Induction",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Ericksonian conversational hypnosis, uses ordinary storytelling, no formal induction needed, perfect for audio narrative",
+      "selectedForResearch": true
+    },
+    {
+      "id": "betty_erickson_321",
+      "name": "Betty Erickson 3-2-1 Technique",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Self-hypnosis method, alternates external/internal sensory observations, reducing from 3 to 1, audio guides sensory attention",
+      "selectedForResearch": true
+    },
+    {
+      "id": "countdown_breathing",
+      "name": "Countdown Breathing",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 5,
+      "rationale": "Counts down from 100 with each exhale, self-hypnosis technique, combines breath focus with progressive deepening, simple audio guidance",
+      "selectedForResearch": true
+    },
+    {
+      "id": "fractionation",
+      "name": "Fractionation",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Dave Elman/Bernheim technique, repeatedly brings in/out of trance, each cycle deepens state, audio guides cycles",
+      "selectedForResearch": true
+    },
+    {
+      "id": "staircase_deepener",
+      "name": "Staircase Deepener",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Descends mental staircase, doubling relaxation with each step, classic deepening technique, vivid audio imagery",
+      "selectedForResearch": true
+    },
+    {
+      "id": "embedded_commands",
+      "name": "Embedded Commands",
+      "domain": "hypnosis",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Milton Model/NLP, commands hidden in sentences marked by tone shift, bypasses conscious resistance, audio tonality shifts",
+      "selectedForResearch": true
+    },
+    {
+      "id": "pacing_and_leading",
+      "name": "Pacing and Leading",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Starts with verifiable truths then leads to suggestions, builds unconscious agreement, Milton Model foundation, audio narrative technique",
+      "selectedForResearch": true
+    },
+    {
+      "id": "metaphor_storytelling",
+      "name": "Metaphor and Storytelling",
+      "domain": "hypnosis",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Ericksonian indirect suggestion, delivers messages through stories, bypasses resistance, perfect for audio meditation format",
+      "selectedForResearch": true
+    },
+    {
+      "id": "mental_rehearsal_hypnotic",
+      "name": "Mental Rehearsal (Performance Hypnosis)",
+      "domain": "hypnosis",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Vividly imagines successful performance to program unconscious, sports/performance hypnosis staple, audio guides detailed sensory rehearsal",
+      "selectedForResearch": true
+    },
+    {
+      "id": "post_hypnotic_suggestion",
+      "name": "Post-Hypnotic Suggestion",
+      "domain": "hypnosis",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 2,
+      "rationale": "Suggestions activate after awakening, programs future behavior, classical hypnosis foundation, audio installs performance triggers",
+      "selectedForResearch": true
+    },
+    {
+      "id": "mastery_experiences",
+      "name": "Mastery Experiences",
+      "domain": "motivational",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Bandura's self-efficacy builder, recalls past successes to build confidence, strong research base, audio guides success recall",
+      "selectedForResearch": true
+    },
+    {
+      "id": "verbal_persuasion",
+      "name": "Verbal Persuasion",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Bandura's self-efficacy technique, encouragement from credible sources builds capability beliefs, audio acts as credible coach voice",
+      "selectedForResearch": true
+    },
+    {
+      "id": "implementation_intentions",
+      "name": "Implementation Intentions",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Gollwitzer's if-then planning, automates goal-directed behavior, strong research base, audio guides specific plan creation",
+      "selectedForResearch": true
+    },
+    {
+      "id": "mental_contrasting",
+      "name": "Mental Contrasting",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Oettingen's technique, compares desired future with current obstacles, mobilizes energy, audio guides contrast exercise",
+      "selectedForResearch": true
+    },
+    {
+      "id": "growth_mindset_cultivation",
+      "name": "Growth Mindset Cultivation",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Carol Dweck's framework, develops belief that abilities grow through effort, extensive research, audio reframes challenges",
+      "selectedForResearch": true
+    },
+    {
+      "id": "attribution_retraining",
+      "name": "Attribution Retraining",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Weiner's technique, attributes failures to controllable factors (effort) not ability, increases persistence, audio guides reattribution",
+      "selectedForResearch": true
+    },
+    {
+      "id": "explanatory_style_modification",
+      "name": "Explanatory Style Modification",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Seligman's optimism training, changes pessimistic patterns to optimistic, increases persistence, audio guides style shifts",
+      "selectedForResearch": true
+    },
+    {
+      "id": "best_possible_self",
+      "name": "Best Possible Self Exercise",
+      "domain": "motivational",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Positive psychology technique, visualizes ideal future self, clarifies goals and increases optimism, audio guides detailed visualization",
+      "selectedForResearch": true
+    },
+    {
+      "id": "psycap_development",
+      "name": "Psychological Capital (PsyCap) Development",
+      "domain": "motivational",
+      "performanceFocus": 5,
+      "evidenceAvailable": true,
+      "estimatedDuration": 5,
+      "rationale": "Fred Luthans' HERO model (Hope, Efficacy, Resilience, Optimism), builds positive resources, organizational psychology research, audio develops all four",
+      "selectedForResearch": true
+    },
+    {
+      "id": "cognitive_reframing",
+      "name": "Cognitive Reframing",
+      "domain": "cognitive",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 3,
+      "rationale": "Changes interpretation of situations to enhance motivation, cognitive psychology foundation, audio guides perspective shifts",
+      "selectedForResearch": true
+    },
+    {
+      "id": "values_clarification",
+      "name": "Values Clarification",
+      "domain": "cognitive",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Connects goals to core personal values, enhances intrinsic motivation, coaching psychology, audio guides value exploration",
+      "selectedForResearch": true
+    },
+    {
+      "id": "meaning_making",
+      "name": "Meaning-Making",
+      "domain": "cognitive",
+      "performanceFocus": 4,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Viktor Frankl inspired, connects activities to larger purpose, sustains motivation through adversity, audio guides meaning connection",
+      "selectedForResearch": true
+    },
+    {
+      "id": "safe_place_visualization",
+      "name": "Safe Place Visualization",
+      "domain": "hypnosis",
+      "performanceFocus": 3,
+      "evidenceAvailable": true,
+      "estimatedDuration": 4,
+      "rationale": "Creates internal sanctuary for resource access, clinical hypnotherapy standard, establishes calm baseline, audio guides detailed safe space creation",
+      "selectedForResearch": true
+    },
+    {
+      "id": "autogenic_training",
+      "name": "Autogenic Training",
+      "domain": "hypnosis",
+      "performanceFocus": 3,
+      "evidenceAvailable": true,
+      "estimatedDuration": 5,
+      "rationale": "Johannes Schultz's 6-exercise system, auto-suggestions of heaviness/warmth/calm, extensive European research, audio guides systematic relaxation",
+      "selectedForResearch": true
+    }
+  ],
+  "excludedCategories": {
+    "visualOnly": [
+      "Eye Fixation Induction (requires visual object)",
+      "Fixation on Swinging Pendulum (visual prop)",
+      "Handshake Induction (requires in-person physical contact)",
+      "Shock Induction (stage hypnosis, requires physical manipulation)",
+      "All Mesmeric Passes (require in-person physical contact)",
+      "Chevreul's Pendulum (requires physical prop)",
+      "Hand Drop Induction (requires in-person physical contact)",
+      "Arm Pull Induction (requires in-person physical contact)",
+      "Postural Sway Induction (requires in-person physical setup)",
+      "Kinesthetic Ambiguity Induction (requires physical touch)"
+    ],
+    "manipulationTechniques": [
+      "Gaslighting (unethical for performance context)",
+      "Love Bombing (manipulation, not performance)",
+      "Guilt-Tripping (negative emotional manipulation)",
+      "Silent Treatment (abuse technique)",
+      "Negging (pickup artist manipulation)",
+      "All DARVO and narcissistic abuse techniques",
+      "All propaganda techniques (not performance-focused)",
+      "All cult and thought reform techniques (coercive control)"
+    ],
+    "complexTherapeutic": [
+      "Parts Therapy (requires therapeutic supervision)",
+      "Ego State Therapy (clinical setting required)",
+      "Age Regression (therapeutic context needed)",
+      "Past Life Regression (therapeutic/controversial)",
+      "Heart-Centered Hypnotherapy (requires trained facilitator)",
+      "EMDR integration (clinical therapeutic technique)"
+    ],
+    "tooSlow": [
+      "Deliberate Practice (long-term skill building, not single session)",
+      "Habit Stacking (behavior change over weeks)",
+      "Tiny Habits (long-term behavior installation)",
+      "Grit Development (long-term personality development)",
+      "Job Characteristics Model (organizational restructuring)"
+    ],
+    "requiresInteraction": [
+      "Motivational Interviewing (requires two-way dialogue)",
+      "GROW Model (coaching conversation)",
+      "Appreciative Inquiry (group/organizational process)",
+      "Scaling Questions (requires interactive response)",
+      "All negotiation techniques (require other party)",
+      "All compliance-gaining techniques (require target response)"
+    ]
+  },
+  "researchPriority": {
+    "tier1_immediate": [
+      "anchoring_nlp",
+      "circle_of_excellence",
+      "mental_imagery_visualization",
+      "positive_self_talk",
+      "embedded_commands",
+      "post_hypnotic_suggestion",
+      "mastery_experiences",
+      "psycap_development"
+    ],
+    "tier2_high": [
+      "performance_cues_trigger_words",
+      "resource_anchoring",
+      "stacking_anchors",
+      "mental_rehearsal_hypnotic",
+      "centering_technique",
+      "arousal_regulation",
+      "dave_elman_induction",
+      "pacing_and_leading"
+    ],
+    "tier3_supporting": [
+      "progressive_muscle_relaxation",
+      "thought_stopping",
+      "cognitive_reframing",
+      "values_clarification",
+      "safe_place_visualization",
+      "autogenic_training"
+    ]
+  },
+  "implementationNotes": {
+    "scriptingApproach": "Each technique requires specific audio script structure with clear performance context",
+    "combinationPotential": "Many techniques can be layered within single meditation (e.g., progressive relaxation + embedded commands + anchoring)",
+    "userProfileMapping": "Different techniques appeal to different archetypes (Warrior prefers centering/arousal regulation, Scholar prefers cognitive reframing)",
+    "durationVariability": "Most techniques can be adapted from 2-5 minutes depending on depth",
+    "evidenceGathering": "Priority research: published studies on each technique's efficacy for performance enhancement"
+  },
+  "nextSteps": [
+    "Research academic papers for each tier 1 technique",
+    "Create detailed script templates for top 8 techniques",
+    "Map techniques to user archetypes and stress scenarios",
+    "Design combination protocols (2-3 techniques per meditation)",
+    "Develop evidence database with citations for each technique"
+  ]
+}

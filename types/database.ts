@@ -66,6 +66,7 @@ export type Database = {
           user_id: string;
           tier: 1 | 2 | 3;
           responses: Json;
+          title: string | null;
           completed_at: string | null;
           created_at: string;
           updated_at: string;
@@ -75,6 +76,7 @@ export type Database = {
           user_id: string;
           tier: 1 | 2 | 3;
           responses: Json;
+          title?: string | null;
           completed_at?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -84,6 +86,7 @@ export type Database = {
           user_id?: string;
           tier?: 1 | 2 | 3;
           responses?: Json;
+          title?: string | null;
           completed_at?: string | null;
           created_at?: string;
           updated_at?: string;
@@ -163,7 +166,7 @@ export type Database = {
           audio_url: string | null;
           audio_duration_seconds: number | null;
           voice_id: string | null;
-          session_length: 'quick' | 'standard' | 'deep';
+          session_length: 'ultra_quick' | 'quick' | 'standard' | 'deep';
           techniques: Json;
           generation_cost_cents: number | null;
           is_favorite: boolean;
@@ -182,7 +185,7 @@ export type Database = {
           audio_url?: string | null;
           audio_duration_seconds?: number | null;
           voice_id?: string | null;
-          session_length?: 'quick' | 'standard' | 'deep';
+          session_length?: 'ultra_quick' | 'quick' | 'standard' | 'deep';
           techniques?: Json;
           generation_cost_cents?: number | null;
           is_favorite?: boolean;
@@ -201,7 +204,7 @@ export type Database = {
           audio_url?: string | null;
           audio_duration_seconds?: number | null;
           voice_id?: string | null;
-          session_length?: 'quick' | 'standard' | 'deep';
+          session_length?: 'ultra_quick' | 'quick' | 'standard' | 'deep';
           techniques?: Json;
           generation_cost_cents?: number | null;
           is_favorite?: boolean;
@@ -337,6 +340,65 @@ export type Database = {
           },
         ];
       };
+      meditation_versions: {
+        Row: {
+          id: string;
+          meditation_id: string;
+          version_number: number;
+          script_text: string;
+          script_style: string | null;
+          audio_url: string | null;
+          audio_duration_seconds: number | null;
+          voice_id: string | null;
+          voice_type: string | null;
+          techniques: Json;
+          generation_cost_cents: number | null;
+          is_live: boolean;
+          replaced_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          meditation_id: string;
+          version_number: number;
+          script_text: string;
+          script_style?: string | null;
+          audio_url?: string | null;
+          audio_duration_seconds?: number | null;
+          voice_id?: string | null;
+          voice_type?: string | null;
+          techniques?: Json;
+          generation_cost_cents?: number | null;
+          is_live?: boolean;
+          replaced_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          meditation_id?: string;
+          version_number?: number;
+          script_text?: string;
+          script_style?: string | null;
+          audio_url?: string | null;
+          audio_duration_seconds?: number | null;
+          voice_id?: string | null;
+          voice_type?: string | null;
+          techniques?: Json;
+          generation_cost_cents?: number | null;
+          is_live?: boolean;
+          replaced_at?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'meditation_versions_meditation_id_fkey';
+            columns: ['meditation_id'];
+            isOneToOne: false;
+            referencedRelation: 'meditations';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       [_ in never]: never;
@@ -370,12 +432,20 @@ export type Database = {
         Args: Record<string, never>;
         Returns: void;
       };
+      archive_meditation_version: {
+        Args: { p_meditation_id: string };
+        Returns: string;
+      };
+      set_meditation_version_live: {
+        Args: { p_version_id: string };
+        Returns: string;
+      };
     };
     Enums: {
       subscription_tier: 'free' | 'basic' | 'premium';
       subscription_status: 'active' | 'canceled' | 'past_due';
       plan_status: 'pending_approval' | 'approved' | 'rejected' | 'generating' | 'completed';
-      session_length: 'quick' | 'standard' | 'deep';
+      session_length: 'ultra_quick' | 'quick' | 'standard' | 'deep';
       questionnaire_tier: 1 | 2 | 3;
       admin_role: 'admin' | 'super_admin';
     };

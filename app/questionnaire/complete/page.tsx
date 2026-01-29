@@ -49,12 +49,28 @@ export default function QuestionnaireCompletePage() {
             }
 
             // Save questionnaire and increment count
-            await supabase.from('questionnaire_responses').insert({
-              user_id: user.id,
-              tier: 1,
-              responses: responses,
-              completed_at: new Date().toISOString(),
-            });
+            const { data: questionnaireData, error: insertError } = await supabase
+              .from('questionnaire_responses')
+              .insert({
+                user_id: user.id,
+                tier: 1,
+                responses: responses,
+                completed_at: new Date().toISOString(),
+              })
+              .select('id')
+              .single();
+
+            if (!insertError && questionnaireData) {
+              // Generate title using Claude API (fire and forget, don't block UX)
+              fetch('/api/questionnaire/generate-title', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  questionnaire_id: questionnaireData.id,
+                  responses: responses,
+                }),
+              }).catch((err) => console.error('Failed to generate title:', err));
+            }
 
             // Increment meditation count
             await supabase.rpc('increment_meditation_count', {

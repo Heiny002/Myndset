@@ -1,0 +1,661 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-28T12:00:00Z",
+  "totalTechniques": 8,
+  "description": "Comprehensive psychological techniques database for AI-generated performance meditation scripts. Each technique includes academic research, implementation protocols, practitioner scripts, and NLP/hypnosis language patterns.",
+  "techniques": [
+    {
+      "id": "anchoring_nlp",
+      "name": "Anchoring (NLP)",
+      "domain": "nlp",
+      "tags": ["state_management", "classical_conditioning", "instant_access", "performance_trigger", "kinesthetic", "resource_state", "peak_state", "stimulus_response"],
+      "audioCompatible": true,
+      "performanceFocus": 4,
+      "description": "NLP anchoring adapts classical conditioning principles to intentionally create stimulus-response associations between a specific trigger (touch, word, image) and a desired emotional or physical state. Unlike classical conditioning which requires repetition, NLP anchoring can establish powerful associations in a single event when properly executed at peak emotional intensity.",
+      "psychologicalMechanism": "Anchoring works through the same neurological mechanisms as classical conditioning (Pavlov): pairing a neutral stimulus with a naturally occurring response creates an association. When the trigger is unique, timing precise (at peak state), and the state is vivid, the brain creates a neural pathway linking the anchor to the resource state. Repeated firing strengthens the association through neuroplasticity.",
+      "evidenceLevel": "moderate",
+      "academicSources": [
+        {
+          "authors": "Pavlov, I.",
+          "year": 1927,
+          "title": "Classical Conditioning Theory (adapted by Bandler & Grinder for NLP Anchoring in 1970s)",
+          "journal": "The Structure of Magic, Volume I & II (1975-1976)",
+          "url": "https://en.wikipedia.org/wiki/The_Structure_of_Magic",
+          "keyFindings": "Anchoring adapts classical conditioning principles to intentionally create stimulus-response associations. Unlike classical conditioning which requires repetition, NLP anchoring can establish associations in a single event when properly executed at peak emotional intensity.",
+          "effectSize": "Not formally measured in controlled trials"
+        },
+        {
+          "authors": "Bandler, R., & Grinder, J.",
+          "year": 1975,
+          "title": "The Structure of Magic: A Book about Language and Therapy",
+          "journal": "Science and Behavior Books",
+          "url": "https://www.personaldevelopmenthouse.com/blog/understanding-neuro-linguistic-programming-history-and-core-concepts",
+          "keyFindings": "Bandler and Grinder studied therapists Virginia Satir, Fritz Perls, and Milton Erickson, observing that these practitioners naturally used anchoring-like techniques. Anchoring was derived from Satir's work and systematized as teachable NLP technique."
+        }
+      ],
+      "whenToUse": [
+        "Pre-performance state preparation requiring instant confidence or focus activation",
+        "High-pressure situations where quick state change is needed (presentations, sales calls, competitions)",
+        "Creating automatic triggers for resourceful states in specific contexts",
+        "Building repeatable pre-performance routines with consistent state access",
+        "Situations requiring on-demand emotional regulation (calm, confidence, motivation)"
+      ],
+      "whenNotToUse": [
+        "Severe mental health conditions (PTSD, severe anxiety, depression) without professional therapeutic supervision",
+        "Active psychosis or situations where distinguishing internal experience from reality is impaired",
+        "Trauma processing or situations that may trigger intense emotional responses",
+        "When overwhelming emotions are present and individual has lost conscious control"
+      ],
+      "durationMinutes": 6,
+      "intensityLevel": "medium",
+      "implementationProtocol": {
+        "setup": "Begin by identifying the specific resourceful state needed for the performance situation. Have the client recall a specific, vivid memory when they experienced this state intensely. Ensure they are fully associated (seeing through own eyes, not watching themselves). Guide them into a relaxed, focused state before beginning the anchoring process.",
+        "coreProcess": "1) Identify target resourceful state (confidence, calm, focus, energy). 2) Access specific memory where state was felt powerfully. 3) Guide full sensory immersion (visual, auditory, kinesthetic) to amplify the state. 4) Watch for physiological indicators of state access (breathing changes, posture shifts). 5) At absolute peak of state intensity, install unique kinesthetic anchor (e.g., press thumb and finger together). 6) Break state, then test anchor by firing it and observing if resourceful state returns. 7) Reinforce through repetition and future pacing.",
+        "languagePatterns": [
+          "Remember a time when you felt completely [desired state]...",
+          "Go back to that experience and step into it fully...",
+          "Notice what you see, hear, and feel as that state intensifies...",
+          "And at the peak of that feeling, [apply anchor]...",
+          "Capturing that resource now...",
+          "Lock in that state by [anchor action]...",
+          "Notice what happens when [fire anchor]...",
+          "Simply [fire anchor] and feel that [state] flowing back..."
+        ],
+        "deliveryNotes": "Tone should be calm, confident, and steady - matching and then leading client's state. Pace slowly during state access phase, then mark the anchor installation moment with tonal shift to deeper, slower, more deliberate delivery. Emphasize key anchor words with slight volume increase. Duration: 4-8 minutes for initial installation; 2-3 minutes for reinforcement. Use strategic pauses to allow state building."
+      },
+      "scriptExample": {
+        "excerpt": "Take a moment to remember a time when you felt completely confident, totally in control. As you go back to that time now, notice what you're seeing through your own eyes. What sounds are around you? And as those feelings of confidence begin to grow stronger and stronger, reaching their peak right now, press your thumb and finger together, capturing this feeling.",
+        "context": "Used during anchoring installation phase when client is accessing peak resourceful state",
+        "duration": "2-3 minutes"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["entrepreneurs", "athletes", "executives", "sales", "performers"],
+      "bestFor": ["confidence", "focus", "pre_performance", "calm_alertness", "instant_state_change"],
+      "implementationSpeed": "quick",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "circle_of_excellence",
+      "name": "Circle of Excellence",
+      "domain": "nlp",
+      "tags": ["spatial_anchoring", "resource_stacking", "pre_performance", "state_layering", "confidence_building", "visualization", "multi_modal", "peak_performance"],
+      "audioCompatible": true,
+      "performanceFocus": 5,
+      "description": "Circle of Excellence combines spatial anchoring (physical or imagined location as trigger) with resource stacking (layering multiple positive states together). The practitioner guides the client to imagine or physically step into a circle that becomes filled with multiple resourceful states, creating a powerful compound state for peak performance situations.",
+      "psychologicalMechanism": "The technique leverages location-based memory retrieval (spatial anchoring), which is well-documented in cognitive psychology. Combining this with the stacking of multiple positive emotional and cognitive states creates synergistic effects. Mental imagery activates the same neural pathways as actual experience, and repeated practice strengthens the circle as a portable trigger for accessing peak performance states on demand.",
+      "evidenceLevel": "emerging",
+      "academicSources": [
+        {
+          "authors": "Grinder, J.",
+          "year": 1980,
+          "title": "Circle of Excellence (developed as part of NLP core techniques)",
+          "url": "https://nlppod.com/circle-of-excellence/",
+          "keyFindings": "Combines spatial anchoring (physical location as trigger) with resource stacking (multiple positive states layered together). Creates powerful compound state that can be accessed by stepping into imagined or physical circle. Particularly effective for pre-performance preparation in sports and high-stakes business situations.",
+          "effectSize": "No formal meta-analysis available; effectiveness documented through practitioner case studies"
+        },
+        {
+          "authors": "Clear, J.",
+          "year": 2013,
+          "title": "The Science of Positive Thinking (theoretical support)",
+          "journal": "Huffington Post",
+          "url": "https://anlp.org/books/sporting-excellence-optimising-sports-performance-using-nlp",
+          "keyFindings": "Positive emotions broaden your sense of possibilities and open your mind. Provides theoretical foundation for why accessing multiple positive states simultaneously enhances performance capacity and creative problem-solving."
+        }
+      ],
+      "whenToUse": [
+        "Pre-competition or pre-performance preparation requiring multiple resourceful states",
+        "Building consistent pre-performance rituals with compound state access",
+        "High-stakes presentations, meetings, or negotiations requiring confidence, focus, and clarity",
+        "Transitioning from one role to another (e.g., work mode to performance mode)",
+        "Situations where multiple resources needed simultaneously (calm + confident + energized)"
+      ],
+      "whenNotToUse": [
+        "Dissociative disorders where grounding and present-moment awareness is impaired",
+        "Severe trauma processing without trained therapeutic supervision",
+        "Active psychosis where distinguishing imagination from reality is problematic",
+        "Physical balance issues if doing actual stepping (can adapt to pure visualization)",
+        "Highly skeptical clients who resist imaginative engagement"
+      ],
+      "durationMinutes": 12,
+      "intensityLevel": "medium",
+      "implementationProtocol": {
+        "setup": "Guide the client to imagine or physically create a circle on the floor in front of them. Have them make it vivid with sensory details (color, size, texture, energy, glow). The circle should feel appealing and powerful, drawing them naturally to step into it. This creates the spatial anchor that will hold the stacked resources.",
+        "coreProcess": "1) Create vivid circle with sensory details. 2) Identify first resourceful state needed (confidence, focus, determination, calm). 3) Access specific memory of that state and build to peak intensity. 4) At peak, step into the circle (physical or imagined), allowing the resource to fill the space. 5) Step out, break state. 6) Identify second resource and repeat process, stepping back into same circle. 7) Stack 3-5 resources total onto the same spatial anchor. 8) Test by stepping out, breaking state, then stepping back in to verify all resources flood back. 9) Future pace: imagine using the circle before actual performance situations.",
+        "languagePatterns": [
+          "Imagine a circle on the floor in front of you...",
+          "What color is your circle? What size? Does it glow?",
+          "Make it as appealing and powerful as you want it to be...",
+          "What resourceful state belongs in this circle?",
+          "When that feeling reaches its peak, step into your circle NOW",
+          "Notice how that resource fills your entire circle...",
+          "What other resource would make this even more powerful?",
+          "Step out completely, shake it off... now step back in and notice what happens",
+          "You can take this circle with you anywhere in your imagination"
+        ],
+        "deliveryNotes": "Tone should be confident, encouraging, and energizing - building anticipation for the resource experience. Moderate pace overall, slowing during peak state moments, then energizing during resource stacking. Emphasize action words (STEP INTO, FEEL, NOTICE) and peak state descriptors. Duration: 12-15 minutes for initial installation with 3-5 resources; 1-2 minutes for quick activation once established. Use moderate to slightly elevated volume to convey enthusiasm and possibility."
+      },
+      "scriptExample": {
+        "excerpt": "I'd like you to imagine a circle on the floor in front of you. This is your Circle of Excellence, a special space where you'll gather all the resources you need for outstanding performance. What color is your circle? Good. And as you look at it, does it have a glow, an energy, a sense of possibility? Perfect. Now, think of a time when you felt absolutely confident...",
+        "context": "Opening script for guided Circle of Excellence installation",
+        "duration": "12-15 minutes"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["athletes", "entrepreneurs", "executives", "performers", "sales"],
+      "bestFor": ["pre_performance", "confidence", "focus", "energy", "compound_states", "peak_performance"],
+      "implementationSpeed": "moderate",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "mental_imagery_visualization",
+      "name": "Mental Imagery/Visualization",
+      "domain": "sports_performance",
+      "tags": ["visualization", "mental_rehearsal", "skill_acquisition", "performance_preparation", "neuroscience", "motor_learning", "first_person", "multisensory"],
+      "audioCompatible": true,
+      "performanceFocus": 4,
+      "description": "Mental imagery involves vivid, multisensory mental rehearsal of physical skills, performances, or desired outcomes. Research shows that imagery activates the same neural pathways as physical execution, allowing skill refinement and confidence building without physical wear and tear. Optimal practice is 10-minute sessions, 2-3 times per week.",
+      "psychologicalMechanism": "Mental imagery activates motor cortex, supplementary motor areas, basal ganglia, and cerebellum - the same brain regions involved in actual physical execution. Neural pathways are strengthened through repeated mental rehearsal via neuroplasticity. Mirror neurons fire during imagery as if performing the action. Myelin (insulation around neurons) strengthens with mental practice, creating muscle memory without physical fatigue or injury risk.",
+      "evidenceLevel": "strong",
+      "academicSources": [
+        {
+          "authors": "Feltz, D. L., & Landers, D. M.",
+          "year": 1983,
+          "title": "The Effects of Mental Practice on Motor Skill Learning and Performance: A Meta-Analysis",
+          "journal": "Journal of Sport Psychology, Volume 5, Pages 25-57",
+          "url": "https://www.researchgate.net/publication/228118028_The_Effects_of_Mental_Practice_on_Motor_Skill_Learning_and_Performance_A_Meta-Analysis",
+          "keyFindings": "Meta-analysis of 60 studies yielding 146 effect sizes. Overall average effect size of 0.48, indicating mental practice significantly enhances performance better than no practice. Cognitive tasks showed larger effect sizes than motor or strength tasks. This landmark study established mental imagery as evidence-based performance enhancement technique.",
+          "effectSize": "Cohen's d = 0.48 (medium effect)"
+        },
+        {
+          "authors": "Multiple international researchers",
+          "year": 2024,
+          "title": "The Effects of Imagery Practice on Athletes' Performance: A Multilevel Meta-Analysis with Systematic Review",
+          "journal": "PMC (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12109254/",
+          "keyFindings": "Imagery practice significantly enhances athletic performance, particularly in agility, muscular strength, and in tennis and soccer domains. Mental imagery combined with physical practice yields strongest results. Optimal dosage: imagery practice lasting around 10 minutes, three times per week, over 100 days had most significant positive impact.",
+          "effectSize": "Significant positive effects across domains"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2024,
+          "title": "Investigation of the effect of a virtual reality-based imagery training model on muscle activation in athletes",
+          "journal": "Frontiers in Psychology",
+          "url": "https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2025.1553327/full",
+          "keyFindings": "Mental imagery activates the same neural pathways in the brain involved in actual physical execution of sports movements. Brain's plasticity allows athletes to mold neural pathways through consistent visualization, strengthening motor skills without physical wear and tear."
+        }
+      ],
+      "whenToUse": [
+        "Pre-competition or pre-performance mental warm-up and preparation",
+        "Technical skill refinement between physical practice sessions",
+        "Recovery from injury when physical practice is restricted (maintains neural pathways)",
+        "Learning new skills, techniques, or complex movement sequences",
+        "Confidence building before high-stakes performances or competitions",
+        "Overcoming performance blocks or technical errors"
+      ],
+      "whenNotToUse": [
+        "Performance anxiety disorders where outcome-focused imagery may increase pressure (emphasize process imagery instead)",
+        "Individuals with intrusive imagery issues or PTSD (should work with therapist first)",
+        "Significant vision impairment (emphasize kinesthetic and auditory senses instead)",
+        "Periods of cognitive fatigue or mental exhaustion (imagery requires cognitive resources)",
+        "Immediately before sleep if visualization increases arousal"
+      ],
+      "durationMinutes": 10,
+      "intensityLevel": "medium",
+      "implementationProtocol": {
+        "setup": "Find quiet environment with minimal distractions. Adopt comfortable seated or lying position. Close eyes or maintain soft gaze. Take several deep, calming breaths to establish relaxed, focused state. Set intention for the specific skill or performance to be mentally rehearsed.",
+        "coreProcess": "1) Preparation: deep breathing and relaxation (1-2 minutes). 2) Environmental visualization: imagine performance setting in vivid detail - lighting, sounds, temperature, surfaces (1-2 minutes). 3) Kinesthetic imagery: feel muscles engaging, body moving through the motion from first-person perspective. Start slow-motion, then real-time (3-5 minutes). 4) Visual imagery: add detailed visual components - see hands, equipment, target, trajectory (2-3 minutes). 5) Emotional/outcome imagery: feel confidence, satisfaction, pride; visualize successful outcome (1-2 minutes). 6) Integration: gradual return to present, brief reflection, physical movement to embody rehearsed action (1 minute).",
+        "languagePatterns": [
+          "Close your eyes and take three deep, calming breaths...",
+          "Imagine yourself arriving at the venue where you'll compete...",
+          "See the space in vivid detail - the lighting, the colors, the layout...",
+          "Hear the ambient sounds around you...",
+          "Feel your muscles engaging, your body moving...",
+          "Notice the weight, the balance, the coordination...",
+          "Sense the rhythm, the timing, the power of the movement...",
+          "See yourself performing with perfect technique...",
+          "Experience the satisfaction of excellent performance...",
+          "Feel the confidence flowing through you..."
+        ],
+        "deliveryNotes": "Tone should be calm, confident, and encouraging - establishing focused relaxation. Pacing is slow and deliberate, especially during detailed imagery sequences. Allow pauses (3-5 seconds) after sensory prompts for mental image construction. Emphasize sensory words (see, hear, feel) and positive performance descriptors (perfect, smooth, powerful, precise). Duration: 10-12 minutes for full guided session; 3-5 minutes for brief pre-performance visualization. Volume moderate to soft, creating intimate, focused atmosphere."
+      },
+      "scriptExample": {
+        "excerpt": "Close your eyes and take three deep, calming breaths. With each exhale, feel yourself becoming more relaxed and focused. Now, imagine yourself arriving at the venue where you'll compete. See the space in vivid detail - the lighting, the colors, the layout. Hear the ambient sounds around you. Feel the surface beneath your feet.",
+        "context": "Opening relaxation and environment establishment for mental rehearsal",
+        "duration": "10-12 minutes"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["athletes", "performers", "executives", "sales", "entrepreneurs"],
+      "bestFor": ["skill_acquisition", "pre_performance", "confidence", "focus", "technique_refinement"],
+      "implementationSpeed": "moderate",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "positive_self_talk",
+      "name": "Positive Self-Talk",
+      "domain": "sports_performance",
+      "tags": ["cognitive", "self_talk", "confidence_building", "focus", "instructional", "motivational", "performance_enhancement", "error_recovery"],
+      "audioCompatible": true,
+      "performanceFocus": 4,
+      "description": "Positive self-talk involves the strategic use of internal dialogue to enhance performance through instructional cues (technique focus), motivational statements (effort and confidence), or regulatory phrases (emotional control). Research shows self-talk significantly improves performance, with effect sizes of 0.48 overall and 0.67 for fine motor tasks.",
+      "psychologicalMechanism": "Self-talk works through multiple mechanisms: 1) Attentional focus - directs attention to relevant cues and away from distractions, 2) Cognitive priming - activates task-relevant neural networks, 3) Confidence building - positive statements trigger confidence-related neural patterns, 4) Effort regulation - motivational self-talk increases pain tolerance and persistence, 5) Emotional regulation - counter-statements reduce anxiety and negative affect. Brain regions involved include left hemisphere language processing areas, prefrontal cortex (executive function), and anterior cingulate cortex (attention and error monitoring).",
+      "evidenceLevel": "strong",
+      "academicSources": [
+        {
+          "authors": "Hatzigeorgiadis, A., Zourbanos, N., Galanis, E., & Theodorakis, Y.",
+          "year": 2011,
+          "title": "Self-Talk and Sports Performance: A Meta-Analysis",
+          "journal": "Perspectives on Psychological Science, Volume 6(4), Pages 348-356",
+          "url": "https://journals.sagepub.com/doi/10.1177/1745691611413136",
+          "keyFindings": "Meta-analysis found self-talk had significant positive effect with moderate magnitude on performance (ES = 0.48). Instructional self-talk more effective for fine motor tasks (d = 0.67) vs. gross motor tasks (d = 0.26). Self-talk interventions more effective for novel tasks compared to well-learned tasks. Five mechanisms identified: enhances attentional focus, increases confidence, regulates effort, controls cognitive/emotional reactions.",
+          "effectSize": "Overall d = 0.48 (medium); Fine motor tasks d = 0.67 (medium-large)"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2020,
+          "title": "The Effects of Self-Talk on Shooting Athletes' Motivation",
+          "journal": "PMC (PubMed Central)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7429435/",
+          "keyFindings": "Increased positive self-talk affected athletes' effort value. Self-talk helpful in motivating and promoting effortful behavior. Research on relationship between athletes' self-talk with athletic performance and self-control abilities has been expanding with consistent positive findings."
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2019,
+          "title": "Effects of Self-Talk Training on Competitive Anxiety, Self-Efficacy, Volitional Skills, and Performance",
+          "journal": "PMC",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6628429/",
+          "keyFindings": "Self-talk helped athletes feel more confident and direct their attention more efficiently, improved concentration and self-confidence. Participants reported that positive self-talk helped them concentrate and enhanced their motivation."
+        }
+      ],
+      "whenToUse": [
+        "Pre-competition or pre-performance confidence building and preparation",
+        "During competition or performance for focus maintenance and technique cuing",
+        "After errors or setbacks for recovery and resilience",
+        "Endurance tasks requiring sustained motivation and effort",
+        "Learning new skills where instructional cues aid technique refinement",
+        "High-pressure isolated moments (free throws, penalties, presentations)"
+      ],
+      "whenNotToUse": [
+        "Severe anxiety disorders where self-talk may increase rumination (requires therapeutic supervision)",
+        "OCD with thought rituals where compulsive self-talk patterns may worsen",
+        "Active psychosis where reality-testing is impaired",
+        "Well-learned automated skills where over-thinking can impair performance (use sparingly)",
+        "Extreme perfectionism that may turn self-talk self-critical without proper training"
+      ],
+      "durationMinutes": 3,
+      "intensityLevel": "low",
+      "implementationProtocol": {
+        "setup": "Identify specific performance situations where self-talk is needed. Analyze typical negative thoughts in these situations. Determine whether instructional (technique-focused), motivational (effort/confidence), or regulatory (emotional control) self-talk is most appropriate for the task and context.",
+        "coreProcess": "1) Situation analysis: identify when self-talk is needed (pre, during, post-performance). 2) Statement creation: develop 2-3 key phrases for each situation. Instructional for technical tasks (1-3 words: 'Elbow up,' 'Breathe,' 'Follow through'). Motivational for effort/confidence ('I've got this,' 'I am strong'). 3) Three-statement protocol: Before performance (confidence/preparation), During performance (focus/technique cues), After mistake (recovery statement). 4) Practice integration: write statements down, review daily, practice aloud during training, use in low-pressure situations first. 5) Competition implementation: pre-competition routine using statements, deploy cue words during performance, use recovery statements after errors. 6) Refinement: track effectiveness, adjust language for personal resonance, update as skills improve.",
+        "languagePatterns": [
+          "I am [confident/prepared/strong/focused]...",
+          "I've got this...",
+          "Stay present / Be here now...",
+          "Breathe / Focus / Execute...",
+          "Smooth and steady / Eyes on target / Follow through...",
+          "Next point / Let it go / Move forward...",
+          "I learn and improve...",
+          "[Your name], you've got this...",
+          "One point at a time..."
+        ],
+        "deliveryNotes": "Tone should be confident, assertive, and encouraging - model the energy you want athlete to internalize. Pacing is moderate to energetic for motivational self-talk; calm and steady for instructional self-talk. Emphasize action words and power words (STRONG, READY, FOCUS, SUCCEED). Duration: initial training 15-20 minutes; daily practice 2-3 minutes; pre-competition routine 3-5 minutes; in-the-moment use 1-10 seconds (brief cue words). Athletes should practice saying statements aloud during training, then can internalize for competition. Critical that statements resonate personally with individual."
+      },
+      "scriptExample": {
+        "excerpt": "Let's identify three statements you'll use. The first is your confidence statement before you compete: 'I am ready and I've prepared for this.' Say it with conviction. The second is your focus cue during competition - for you, it might be 'Smooth and steady.' And third, your recovery statement after any mistake: 'Next point, let's go.' Practice these every day, especially during training.",
+        "context": "Initial self-talk training session with athlete, establishing three-statement protocol",
+        "duration": "15-20 minutes"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["athletes", "performers", "executives", "sales", "entrepreneurs"],
+      "bestFor": ["confidence", "focus", "error_recovery", "endurance", "technique_refinement"],
+      "implementationSpeed": "instant",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "embedded_commands",
+      "name": "Embedded Commands",
+      "domain": "hypnosis",
+      "tags": ["ericksonian", "milton_model", "indirect_suggestion", "unconscious", "analog_marking", "bypass_resistance", "conversational_hypnosis", "linguistic_patterns"],
+      "audioCompatible": true,
+      "performanceFocus": 3,
+      "description": "Embedded commands are hypnotic suggestions hidden within larger sentence structures and marked with subtle vocal changes (analog marking). Developed by Milton Erickson and systematized by Bandler and Grinder, this technique delivers suggestions indirectly to bypass conscious resistance. Commands are marked through changes in tone, volume, pitch, or tempo within conversational flow.",
+      "psychologicalMechanism": "Embedded commands work by delivering suggestions to the unconscious mind while the conscious mind processes the surface structure of the sentence. Analog marking (tonal shifts) unconsciously highlights specific phrases. This bypasses critical conscious evaluation and resistance. The technique leverages the brain's ability to process multiple levels of communication simultaneously, with marked phrases registering at unconscious level while conscious attention focuses on the overt message.",
+      "evidenceLevel": "emerging",
+      "academicSources": [
+        {
+          "authors": "Bandler, R., & Grinder, J.",
+          "year": 1975,
+          "title": "Patterns of the Hypnotic Techniques of Milton H. Erickson, M.D., Volume I",
+          "journal": "Meta Publications",
+          "url": "https://www.academia.edu/42822977/Bandler_Richard_and_Grinder_Patterns_Of_The_Hypnotic_Techniques_Of_Milton_Erickson_Vol",
+          "keyFindings": "Bandler and Grinder analyzed Milton Erickson's indirect hypnotic language patterns, identifying embedded commands as key technique. Commands are 'hidden' within larger sentence structures and marked with subtle vocal changes (analog marking). Bypasses conscious resistance by delivering suggestions indirectly. Embedded commands are delivered through changes in tone, volume, pitch, tempo to mark specific words within sentences.",
+          "effectSize": "No quantitative effect size available; effectiveness documented through clinical case studies"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2024,
+          "title": "Ericksonian Hypnotherapy Research Overview",
+          "journal": "British Hypnosis Research",
+          "url": "https://britishhypnosisresearch.com/about-ericksonian-hypnotherapy/",
+          "keyFindings": "Research shows mixed evidence. Some studies find indirect hypnotic suggestion more effective than direct suggestion in certain contexts. However, relevant empirical literature has failed to consistently support the assumption that indirect suggestions are universally more effective. Many of Erickson's creative techniques were effective in establishing strong therapeutic alliance and engendering positive response sets, which may constitute 'common factors' responsible for effectiveness."
+        }
+      ],
+      "whenToUse": [
+        "Clients with high conscious resistance or analytical tendencies who resist direct suggestions",
+        "Performance hypnosis sessions requiring subtle state installation",
+        "Building confidence and motivation in conversational coaching contexts",
+        "Installing post-hypnotic triggers or behavioral programming subtly",
+        "Situations where naturalistic, permissive approach is preferred over authoritative direct suggestions"
+      ],
+      "whenNotToUse": [
+        "Active resistance, paranoia, or trust issues where indirect techniques may be perceived as manipulative",
+        "Trauma survivors of coercion or manipulation (may experience as triggering)",
+        "Contexts requiring transparent, explicit communication (informed consent discussions)",
+        "Severe cognitive impairment where subtle linguistic patterns may not be processed",
+        "Legal or ethical settings requiring fully informed, explicit consent"
+      ],
+      "durationMinutes": 5,
+      "intensityLevel": "low",
+      "implementationProtocol": {
+        "setup": "Establish rapport and light to medium trance state through conversational induction or standard relaxation. Establish baseline vocal tone, volume, and pacing that will serve as the neutral background from which commands will be marked. Client should be in receptive, relaxed state but not necessarily deep trance.",
+        "coreProcess": "1) Establish rapport and baseline trance. 2) Craft sentences with embedded commands: [Setup phrase] + COMMAND + [continuation]. Example: 'I wonder if you'll FEEL MORE CONFIDENT as you consider this...' 3) Mark commands with analog marking: slightly louder/softer volume, deeper tone, slower tempo, lower pitch, brief pauses before/after. 4) Distribute 3-5 embedded commands throughout session in varied contexts. 5) Observe client responses (breathing, micro-movements, facial shifts) to calibrate effectiveness. 6) Integrate with other Milton Model patterns (presuppositions, metaphors, pacing/leading). 7) Keep commands simple, clear, positive (what to do, not what to avoid).",
+        "languagePatterns": [
+          "I wonder if you'll [COMMAND]...",
+          "You might not even realize how good you CAN [COMMAND]...",
+          "In a moment I'll ask you to [COMMAND]...",
+          "My friend learned to [COMMAND] when facing challenges...",
+          "Can you [COMMAND]...",
+          "When you [COMMAND], notice what happens...",
+          "As you [COMMAND], you'll begin to...",
+          "People often [COMMAND] when they're ready..."
+        ],
+        "deliveryNotes": "Base tone is conversational and permissive; command phrases marked with deeper, more authoritative tone. Overall pacing slow to moderate; command phrases slightly slower than surrounding text. Commands spoken with subtle but distinct emphasis - natural integration, not theatrical. Volume can mark commands slightly louder OR softer than baseline (test client response). Lower pitch on commands conveys authority. Pauses of 0.5-1 second before command, 0.5 second after (optional but effective). Congruence is critical - must believe in the suggestion yourself for unconscious transmission."
+      },
+      "scriptExample": {
+        "excerpt": "And I'm curious whether you'll find it easy or perhaps surprisingly natural to RELAX COMPLETELY as you sit here, because some people discover that when they're ready to LET GO OF TENSION, it happens automatically, doesn't it?",
+        "context": "Early trance deepening phase with embedded commands marked through analog marking",
+        "duration": "Throughout 20-30 minute session, woven into conversational flow"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["entrepreneurs", "executives", "athletes", "performers", "sales"],
+      "bestFor": ["confidence", "motivation", "stress_reduction", "behavioral_change", "bypassing_resistance"],
+      "implementationSpeed": "moderate",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "post_hypnotic_suggestion",
+      "name": "Post-Hypnotic Suggestion",
+      "domain": "hypnosis",
+      "tags": ["hypnosis", "trigger_response", "automatic_activation", "state_installation", "performance_programming", "future_pacing", "unconscious", "conditioning"],
+      "audioCompatible": true,
+      "performanceFocus": 5,
+      "description": "Post-hypnotic suggestions are commands installed during hypnotic trance that activate automatically after the person emerges from hypnosis, triggered by specific cues (time, location, action, object). Research from 2024 shows significant effects on strength, memory confidence, working memory, and stress coping, with effects persisting from one week to potentially years.",
+      "psychologicalMechanism": "Post-hypnotic suggestions create trigger-response associations in the unconscious mind during heightened suggestibility (hypnotic trance). The brain forms neural pathways linking the specified trigger to the desired response. When the trigger occurs post-trance, the programmed response activates automatically without conscious deliberation. Mechanism involves expectancy effects, neural priming of response pathways, and unconscious automatization of trigger-response sequences.",
+      "evidenceLevel": "moderate",
+      "academicSources": [
+        {
+          "authors": "Hull, C. L.",
+          "year": 1933,
+          "title": "Hypnosis and Suggestibility: An Experimental Approach",
+          "journal": "Appleton (New York); Modern edition: Crown House Publishing, 2002",
+          "url": "https://www.tandfonline.com/doi/abs/10.1080/00029157.2004.10403608",
+          "keyFindings": "Hull's five-year research project effectively began the modern era of hypnosis research. Post-hypnotic suggestions demonstrated that hypnotized participants fell more quickly when suggestions were given in trance state vs. waking state. Established that suggestions can be programmed during hypnosis to activate after awakening with measurable behavioral effects.",
+          "effectSize": "Significant behavioral differences between trance and waking suggestions"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2024,
+          "title": "Increasing handgrip strength via post-hypnotic suggestions with lasting effects",
+          "journal": "Scientific Reports (Nature)",
+          "url": "https://www.nature.com/articles/s41598-024-73117-0",
+          "keyFindings": "Hypnosis is effective, non-invasive method to increase strength both subjectively and objectively for professional athletes and patients. Participants in hypnosis group felt significantly stronger when activating post-hypnotic power anchor compared to baseline, both in first and second experimental session. Effects persisted over time.",
+          "effectSize": "Significant increase in subjective and objective strength measures"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2024,
+          "title": "Post-hypnotic suggestion improves confidence and speed of memory access with long-lasting effects",
+          "journal": "ScienceDirect",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0001691824001173",
+          "keyFindings": "Participants were significantly faster and more confident in recognition ratings in easy-remembering condition compared to control, and this effect persisted over one week. Post-hypnotic suggestions produced measurable cognitive performance improvements with lasting duration.",
+          "effectSize": "Significant improvements with medium to large effect sizes, persisting 1 week+"
+        }
+      ],
+      "whenToUse": [
+        "Pre-competition confidence and performance state installation with automatic trigger",
+        "Creating calm response when entering high-pressure situations (presentations, meetings)",
+        "Automatic focus activation when beginning important work or tasks",
+        "Morning energy and motivation triggers as part of daily routine",
+        "Performance cue installation (e.g., grip equipment → perfect form activates)",
+        "Stress reduction response to specific triggering situations"
+      ],
+      "whenNotToUse": [
+        "Severe mental illness (schizophrenia, active psychosis, dissociative identity disorder) without clinical supervision",
+        "Suggestions contrary to client's values or moral code",
+        "Safety-critical behaviors where impaired judgment could be dangerous",
+        "Medical conditions where suggestions might mask symptoms requiring attention",
+        "Individuals with very low hypnotic suggestibility (assess first)",
+        "Legal or coercive contexts (cannot force actions against will)"
+      ],
+      "durationMinutes": 8,
+      "intensityLevel": "medium",
+      "implementationProtocol": {
+        "setup": "Induce medium to deep hypnotic trance through preferred method (progressive relaxation, countdown, Dave Elman, etc.). Deepen trance with fractionation or staircase deepener. Verify adequate trance depth through ideomotor testing or observation of trance phenomena. Post-hypnotic suggestions are most effective when installed at medium to deep trance levels.",
+        "coreProcess": "1) Trance induction and deepening to medium/deep level (5-10 minutes). 2) Future pacing preparation: have client visualize specific context where suggestion will activate with vivid sensory details (2-3 minutes). 3) Installing suggestion with TRIGGER + RESPONSE formula: 'When you [specific trigger], you [desired response]' in present tense. Examples: 'When you step onto the stage, you feel waves of confidence flowing through you.' 4) Reinforcement through repetition: repeat suggestion 3-5 times with slight variations and different sensory modalities (2-3 minutes). 5) Future rehearsal: client mentally rehearses trigger-response sequence (2-3 minutes). 6) Seal and lock: 'Your unconscious mind now fully accepts this suggestion... it will activate automatically and naturally when the time comes' (1 minute). 7) Testing: bring client out of trance and create trigger condition to observe activation (2-3 minutes). 8) Reinforce or strengthen if needed.",
+        "languagePatterns": [
+          "When you [specific action], you will [desired response]...",
+          "The moment you [trigger], immediately you [response]...",
+          "You feel [desired state]... (present tense, not 'you will feel')",
+          "Confidence flows through you...",
+          "Your unconscious mind accepts this suggestion completely...",
+          "This suggestion takes root deeply in your unconscious...",
+          "It happens automatically, naturally, effortlessly...",
+          "You don't need to think about it - it simply occurs...",
+          "Each time this happens, the response grows stronger...",
+          "This suggestion is now firmly sealed and locked in place..."
+        ],
+        "deliveryNotes": "Tone should be authoritative yet permissive during installation; confident and certain. Pacing is slow and deliberate during suggestion installation; allow words to sink in. Strong emphasis on trigger word/phrase and desired response. Duration: 20-30 minutes for full session with induction; 5-8 minutes for suggestion installation phase; 2-3 minutes for quick reinforcement if already in trance. Volume moderate to slightly elevated during key suggestion phrases to convey certainty. Repeat core suggestion 3-5 times with variations for reinforcement. Use 2-3 second pauses after key suggestions to allow unconscious processing."
+      },
+      "scriptExample": {
+        "excerpt": "And now, as you rest deeply in this comfortable state, I want you to imagine tomorrow morning. You're preparing for your competition. And as you put on your uniform, a wave of confidence flows through you. This is your post-hypnotic signal - when you put on that uniform tomorrow, you immediately feel confident, focused, and ready. Your unconscious mind accepts this suggestion completely. Tomorrow, when you dress, confidence activates automatically.",
+        "context": "Installing pre-competition confidence trigger during hypnotic trance",
+        "duration": "5-8 minutes for installation phase within 20-30 minute total session"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["athletes", "performers", "entrepreneurs", "executives", "sales"],
+      "bestFor": ["pre_performance", "confidence", "automatic_triggers", "stress_management", "behavioral_programming"],
+      "implementationSpeed": "moderate",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "mastery_experiences",
+      "name": "Mastery Experiences (Bandura)",
+      "domain": "motivational",
+      "tags": ["self_efficacy", "confidence_building", "past_success", "capability_recognition", "attribution", "progressive_challenge", "evidence_based", "bandura"],
+      "audioCompatible": true,
+      "performanceFocus": 4,
+      "description": "Mastery experiences are the most powerful source of self-efficacy (Bandura, 1977). This technique involves systematically recalling, reliving, and cognitively processing past successes to extract evidence of personal capability. Successful performance accomplishments strengthen beliefs in one's capabilities; the technique then applies these beliefs to new challenges through progressive difficulty sequencing.",
+      "psychologicalMechanism": "Mastery experiences work by providing authentic evidence of personal capability, which is encoded in memory and forms the foundation of self-efficacy beliefs. When past successes are recalled with full sensory detail and attributed to internal, controllable factors (effort, skill, perseverance), the brain strengthens neural pathways associated with confidence and capability. These efficacy beliefs then influence future performance through increased effort, persistence, and resilience. Progressive mastery (easy to challenging) builds robust self-efficacy that transfers across contexts.",
+      "evidenceLevel": "strong",
+      "academicSources": [
+        {
+          "authors": "Bandura, A.",
+          "year": 1977,
+          "title": "Self-Efficacy: Toward a Unifying Theory of Behavioral Change",
+          "journal": "Psychological Review, Volume 84, No. 2, Pages 191-215",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/847061/",
+          "keyFindings": "Bandura presented integrative theoretical framework explaining psychological changes achieved by different treatment modes. Theory hypothesizes that expectations of personal efficacy determine whether coping behavior will be initiated, how much effort will be expended, and how long it will be sustained. Proposed four sources of self-efficacy: (1) performance accomplishments/mastery experiences - most powerful source, (2) vicarious experience, (3) verbal persuasion, (4) physiological states. Successful mastery of tasks strengthens beliefs in one's capabilities; repeated failures undermine them.",
+          "effectSize": "Mastery experiences identified as strongest predictor of self-efficacy across studies"
+        },
+        {
+          "authors": "Usher & Pajares",
+          "year": 2008,
+          "title": "Sources of Self-Efficacy in Schools: Critical Review of the Literature",
+          "journal": "Review of Educational Research",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5070217/",
+          "keyFindings": "Comprehensive review of research on sources of self-efficacy in schools. Mastery experiences consistently predict self-efficacy of students more reliably than other three sources (vicarious experience, verbal persuasion, physiological states). Evidence for other sources was less consistent. Confirms mastery experiences as most robust predictor.",
+          "effectSize": "Strongest of four sources across multiple studies"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2016,
+          "title": "Why Do I Feel More Confident? Bandura's Sources Predict Preservice Teachers' Latent Changes in Teacher Self-Efficacy",
+          "journal": "PMC (Frontiers in Psychology)",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5070217/",
+          "keyFindings": "Four sources of self-efficacy (mastery experiences, vicarious experiences, verbal persuasion, physiological and affective states) predict self-efficacy development. Mastery experiences showed strongest predictive power for self-efficacy changes over time in longitudinal study."
+        }
+      ],
+      "whenToUse": [
+        "Pre-performance confidence building by reviewing past successes in similar contexts",
+        "Overcoming self-doubt or impostor syndrome through evidence of genuine capability",
+        "Recovery from setbacks by reconnecting with proven track record of success",
+        "Learning new skills with progressive mastery sequencing (easy to challenging)",
+        "Before high-stakes situations requiring confidence (interviews, pitches, competitions)",
+        "When facing challenges similar to past successfully-navigated difficulties"
+      ],
+      "whenNotToUse": [
+        "Severe depression with anhedonia where accessing positive memories is extremely difficult",
+        "Delusional beliefs or grandiosity requiring reality-based assessment first",
+        "Learned helplessness patterns requiring preliminary cognitive work on attributional style",
+        "Trauma associated with performance contexts (requires trauma-informed approach)"
+      ],
+      "durationMinutes": 15,
+      "intensityLevel": "low",
+      "implementationProtocol": {
+        "setup": "Begin with comprehensive success audit across life domains (professional, athletic, social, personal). Guide client to identify 5-10 specific instances of genuine achievement where they overcame difficulty through effort. Establish relaxed, reflective state conducive to memory recall and cognitive processing.",
+        "coreProcess": "1) Success Inventory (Week 1): Identify 5-10 past mastery experiences across domains. For each, detail what made it challenging, actions taken, obstacles overcome, resources drawn upon. 2) Mastery Experience Reliving (Sessions 1-3): Guide vivid sensory recall of 2-3 key successes with full immersion. Emphasize capability recognition: 'What strengths does this reveal about you?' Create emotional anchor at peak of success memory. 3) Attribution Analysis: Help client recognize internal, controllable factors (effort, skill, perseverance) that led to success. Counter external attributions ('luck') with capability recognition. 4) Progressive Mastery Building (Weeks 2-8): Break current challenge into Level 1 (high success probability), Level 2 (moderate challenge), Level 3 (significant challenge). Start with Level 1, achieve success, reflect and integrate, then progress. When obstacles occur, attribute to strategy/effort (controllable) not ability (fixed). 5) Future Mastery Projection: Visualize upcoming challenges while accessing past mastery experiences; mentally rehearse success using proven capabilities.",
+        "languagePatterns": [
+          "Remember a time when you accomplished something difficult...",
+          "Take yourself back to a moment of genuine achievement...",
+          "What does this success reveal about your capabilities?",
+          "Notice what strengths you demonstrated...",
+          "What specifically did YOU do that led to this success?",
+          "If you could do that, what else are you capable of?",
+          "The same strengths that led to that success are still within you...",
+          "How can you apply what you learned there to this new challenge?",
+          "You've proven you can master difficult challenges..."
+        ],
+        "deliveryNotes": "Tone should be confident, encouraging, and reflective - helping client recognize their own capability without creating it artificially. Pacing is moderate and thoughtful during recall; slightly slower during capability recognition moments. Emphasize CLIENT'S ACTIONS, EFFORT, and SKILLS that led to success (not luck or external factors). Duration: 20-30 minutes for initial success inventory; 15-20 minutes for mastery experience reliving session; ongoing progressive mastery building over 6-12 weeks; 5-10 minutes for pre-performance mastery review. Volume is moderate and warm, conveying belief in client's capability. Repeatedly return to past mastery experiences as evidence of capability."
+      },
+      "scriptExample": {
+        "excerpt": "I want you to take yourself back to a time when you accomplished something difficult, something that required real effort from you. Go back to that moment now. Where are you? What do you see around you? Feel what it felt like to succeed after that challenge. And as you experience that success fully, notice what this reveals about your capabilities. You did this. You have this strength within you.",
+        "context": "Guided mastery experience recall during capability building session",
+        "duration": "15-20 minutes for full mastery reliving session"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["entrepreneurs", "athletes", "executives", "performers", "sales"],
+      "bestFor": ["confidence", "overcoming_self_doubt", "pre_performance", "skill_acquisition", "resilience"],
+      "implementationSpeed": "moderate",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    },
+    {
+      "id": "psycap_development",
+      "name": "Psychological Capital (PsyCap) Development",
+      "domain": "motivational",
+      "tags": ["psycap", "hero_model", "hope", "efficacy", "resilience", "optimism", "performance_enhancement", "organizational", "evidence_based"],
+      "audioCompatible": true,
+      "performanceFocus": 5,
+      "description": "Psychological Capital (PsyCap) is an integrative construct comprising four positive psychological resources: Hope (clear goals + multiple pathways), Efficacy (confidence in capabilities), Resilience (bounce back from adversity), and Optimism (realistic positive expectations). Meta-analysis shows strong positive relationship with performance, satisfaction, and well-being. PsyCap is state-like and developable through brief interventions.",
+      "psychologicalMechanism": "PsyCap works through synergistic interaction of four components (HERO): Hope provides goal clarity and pathway flexibility; Efficacy provides confidence in capabilities; Resilience provides recovery capacity; Optimism provides positive expectancies. These four resources activate complementary neural and cognitive systems: goal-directed behavior (prefrontal cortex), self-efficacy beliefs (based on memory of past performance), stress resilience (adaptive coping), and attributional style (cognitive appraisal). Combined effect is greater than sum of parts, creating robust psychological resource for performance.",
+      "evidenceLevel": "strong",
+      "academicSources": [
+        {
+          "authors": "Luthans, F., Avolio, B. J., Avey, J. B., & Norman, S. M.",
+          "year": 2007,
+          "title": "Positive Psychological Capital: Measurement and Relationship with Performance and Satisfaction",
+          "journal": "Personnel Psychology, Volume 60, Pages 541-572",
+          "url": "https://digitalcommons.unl.edu/managementfacpub/165/",
+          "keyFindings": "Introduced PsyCap as core construct comprising four positive psychological resources: Hope, (Self-)Efficacy, Resilience, and Optimism (HERO). These meet criteria of being theory/research-based, positive, validly measurable, state-like (developable), and having impact on attitudes, behaviors, performance and well-being. Meta-analysis showed strong, significant, positive relationship between PsyCap and desirable attitudes (satisfaction, commitment, well-being), behaviors (citizenship), and performance (self-rated, supervisor-rated, objective).",
+          "effectSize": "Strong positive correlations with performance and satisfaction (r > .40)"
+        },
+        {
+          "authors": "Luthans, F., & Youssef-Morgan, C. M.",
+          "year": 2017,
+          "title": "Psychological Capital: An Evidence-Based Positive Approach",
+          "journal": "Annual Review of Organizational Psychology and Organizational Behavior",
+          "url": "https://www.annualreviews.org/content/journals/10.1146/annurev-orgpsych-032516-113324",
+          "keyFindings": "Comprehensive review of PsyCap research. Both experimental and longitudinal research indicates state-like nature of PsyCap and that it can be developed and cause performance to improve. PsyCap has both scientific, evidence-based rigor and practical relevance for organizations.",
+          "effectSize": "Moderate effect sizes for interventions; strong correlations with outcomes"
+        },
+        {
+          "authors": "Multiple researchers",
+          "year": 2020,
+          "title": "The Generalizability of HERO across 15 Nations: Positive Psychological Capital beyond the US and Other WEIRD Countries",
+          "journal": "PMC",
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7765579/",
+          "keyFindings": "Using data from 3,860 employees across 15 nations (Australia, Brazil, China, France, Germany, Great Britain, India, Ireland, Italy, Japan, Netherlands, New Zealand, Philippines, South Africa, United States), study found PsyCap strongly associated with workplace proactivity, proficiency, adaptivity, and overall work performance across ALL 15 nations. Validates universal applicability.",
+          "effectSize": "Consistent positive associations across all 15 nations"
+        }
+      ],
+      "whenToUse": [
+        "Leadership development programs and executive coaching",
+        "Organizational change initiatives requiring adaptability and resilience",
+        "Entrepreneurial coaching for mindset development and goal pursuit",
+        "Pre-launch preparation for new ventures or major initiatives",
+        "Athletic mental toughness training with integrated approach",
+        "Career advancement and promotion preparation",
+        "Post-setback recovery and growth mindset development"
+      ],
+      "whenNotToUse": [
+        "Mania or hypomania where uncritical optimism could fuel episodes (requires clinical supervision)",
+        "Severe depression lacking cognitive/emotional resources for capacity-building (treat depression first)",
+        "Delusional thinking where reality-testing impairment makes goal-setting problematic",
+        "Active crisis situations requiring stabilization before capacity-building",
+        "Extreme pessimism or nihilism requiring preliminary cognitive therapy"
+      ],
+      "durationMinutes": 45,
+      "intensityLevel": "medium",
+      "implementationProtocol": {
+        "setup": "Explain HERO model (Hope, Efficacy, Resilience, Optimism) and how four components work synergistically. Assess baseline PsyCap with PCQ-24 questionnaire if possible. Identify current goal or challenge that will serve as focus for PsyCap development. Establish that PsyCap is state-like (developable) not trait-like (fixed).",
+        "coreProcess": "Phase 1 - Hope Development (30-45 min): 1a) Goal setting: identify meaningful, challenging goal with specific milestones. 1b) Pathways thinking: brainstorm 3-5 different routes to achieve goal, develop contingency plans. 1c) Agency: recognize personal power and past examples of goal persistence. Phase 2 - Efficacy Development (30-45 min): 2a) Mastery experience activation: recall 3-5 past successes with full sensory detail. 2b) Vicarious learning: identify role models who've succeeded. 2c) Task breakdown: assess skills, plan progressive mastery. Phase 3 - Resilience Development (30-45 min): 3a) Asset recognition: inventory skills, support systems, past resilience. 3b) Risk management: identify obstacles, develop coping strategies. 3c) Cognitive reframing: learn from adversities, growth mindset. 3d) Influence expansion: focus on controllable factors. Phase 4 - Optimism Development (30-45 min): 4a) Realistic optimism foundation: distinguish from naive positivity, recognize genuine opportunities. 4b) Explanatory style: attribute successes to internal/stable/global; setbacks to external/unstable/specific. 4c) Positive expectancy: visualize positive outcomes with evidence-based reasoning. Phase 5 - HERO Integration (30-45 min): Recognize interconnections, create personal HERO statement, apply all four to current goal. Phase 6 - Ongoing: Daily 5-10 min practice, weekly 15-20 min review, monthly 30-45 min assessment.",
+        "languagePatterns": [
+          "What is your specific goal? What do you want to achieve?",
+          "What are three different pathways to reach that goal?",
+          "You have the willpower and the waypower to make this happen",
+          "What past successes can you draw upon?",
+          "You've proven you can [specific achievement]",
+          "What obstacles might you face, and how will you handle them?",
+          "How have you bounced back from setbacks in the past?",
+          "What positive outcomes are possible?",
+          "You have clear goals with multiple pathways (Hope)",
+          "You have proven capabilities (Efficacy)",
+          "You can handle whatever comes (Resilience)",
+          "You expect positive outcomes from your efforts (Optimism)"
+        ],
+        "deliveryNotes": "Tone should be confident, encouraging, and evidence-based - balancing optimism with realism. Pacing is moderate, allowing time for reflection and exercises in each HERO component. Emphasize the SYNERGY between components - HERO is greater than sum of parts. Duration: 2-3 hours for full PCI workshop covering all four components; 45-60 minutes for brief micro-intervention; 30-45 minutes per individual component focus; 5-10 minutes daily maintenance; 15-20 minutes weekly review. Volume is moderate and professional, conveying competence and possibility. Structure is systematic progression through HERO with exercises and reflection for each."
+      },
+      "scriptExample": {
+        "excerpt": "Let's start by getting clear on your goal. What do you want to accomplish? Good. Now, I want you to think of at least three different ways you could achieve that goal. If your first path is blocked, what's another route? And a third? This is pathways thinking - the more routes you can see, the more hope you'll feel, because you're not dependent on any single path.",
+        "context": "Developing hope component through goal clarity and pathway generation in PsyCap intervention",
+        "duration": "2-3 hours for full PCI workshop; 45-60 minutes for micro-intervention"
+      },
+      "combinesWellWith": [],
+      "contradictsWithout": [],
+      "targetAudience": ["entrepreneurs", "executives", "athletes", "sales", "performers"],
+      "bestFor": ["goal_achievement", "confidence", "resilience", "optimism", "leadership_development", "performance_enhancement"],
+      "implementationSpeed": "moderate",
+      "createdAt": "2026-01-28T00:00:00Z",
+      "updatedAt": "2026-01-28T00:00:00Z",
+      "version": 1
+    }
+  ]
+}

@@ -17,9 +17,10 @@ interface Meditation {
 
 interface MeditationDetailClientProps {
   meditation: Meditation;
+  isAdmin?: boolean;
 }
 
-export default function MeditationDetailClient({ meditation: initialMeditation }: MeditationDetailClientProps) {
+export default function MeditationDetailClient({ meditation: initialMeditation, isAdmin = false }: MeditationDetailClientProps) {
   const [meditation, setMeditation] = useState(initialMeditation);
   const [showAudioPlayer, setShowAudioPlayer] = useState(false);
   const [showRemixer, setShowRemixer] = useState(false);
@@ -27,6 +28,9 @@ export default function MeditationDetailClient({ meditation: initialMeditation }
   const metadata = (meditation.techniques as any) || {};
   const hasAudio = !!meditation.audio_url;
   const hasScript = !!meditation.script_text;
+
+  // Check if this is a test meditation (created via admin test flow)
+  const isTestMeditation = metadata.script_type === 'energizing' && metadata.user_type;
 
   const handleRemixComplete = (newScript: string, audioUrl: string | null) => {
     setMeditation({
@@ -42,7 +46,14 @@ export default function MeditationDetailClient({ meditation: initialMeditation }
       <main className="mx-auto max-w-4xl px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">{meditation.title}</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-white">{meditation.title}</h1>
+            {isAdmin && isTestMeditation && (
+              <span className="px-3 py-1 bg-purple-500/20 text-purple-400 text-sm font-medium rounded-full border border-purple-500/30">
+                🧪 Test
+              </span>
+            )}
+          </div>
           {meditation.description && (
             <p className="text-lg text-neutral-400">{meditation.description}</p>
           )}

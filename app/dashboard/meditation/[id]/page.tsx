@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
+import { isAdmin } from '@/lib/auth/admin';
 import MeditationDetailClient from './MeditationDetailClient';
 
 export default async function MeditationDetailPage({ params }: { params: { id: string } }) {
@@ -15,13 +16,34 @@ export default async function MeditationDetailPage({ params }: { params: { id: s
     redirect('/auth/signup?redirect=/dashboard');
   }
 
-  // Fetch the meditation
-  const { data: meditation, error } = await supabase
-    .from('meditations')
-    .select('*')
-    .eq('id', params.id)
-    .eq('user_id', user.id)
-    .single();
+  // Check if user is admin - admins can view any meditation
+  const userIsAdmin = await isAdmin();
+
+  // Fetch the meditation - admins can see all, users only their own
+  let meditation;
+  let error;
+
+  if (userIsAdmin) {
+    // Admin: use admin client to bypass RLS and see any meditation
+    const adminClient = createAdminClient();
+    const result = await adminClient
+      .from('meditations')
+      .select('*')
+      .eq('id', params.id)
+      .single();
+    meditation = result.data;
+    error = result.error;
+  } else {
+    // Regular user: only see their own meditations
+    const result = await supabase
+      .from('meditations')
+      .select('*')
+      .eq('id', params.id)
+      .eq('user_id', user.id)
+      .single();
+    meditation = result.data;
+    error = result.error;
+  }
 
   if (error || !meditation) {
     return (
@@ -88,7 +110,7 @@ export default async function MeditationDetailPage({ params }: { params: { id: s
         </div>
       </nav>
 
-      <MeditationDetailClient meditation={meditation} />
+      <MeditationDetailClient meditation={meditation} isAdmin={userIsAdmin} />
     </div>
   );
 }

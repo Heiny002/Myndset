@@ -74,6 +74,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate audio using ElevenLabs
+    console.log('[generate-audio] Starting voice synthesis...', {
+      scriptId,
+      voiceType,
+      scriptLength: script.script_text.length,
+    });
+
     const {
       audioBuffer,
       characterCount,
@@ -81,6 +87,8 @@ export async function POST(request: NextRequest) {
       voiceId,
       voiceName,
     } = await synthesizeVoice(script.script_text, voiceType as VoiceType);
+
+    console.log('[generate-audio] Voice synthesis complete, uploading to storage...');
 
     // Upload audio to Supabase Storage
     const fileName = `${script.user_id}/${scriptId}.mp3`;
@@ -178,14 +186,30 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error generating audio:', error);
+    console.error('[generate-audio] Error generating audio:', error);
 
-    if (error instanceof Error && error.message.includes('Unauthorized')) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+    // Log detailed error information
+    if (error instanceof Error) {
+      console.error('[generate-audio] Error message:', error.message);
+      console.error('[generate-audio] Error stack:', error.stack);
+
+      if (error.message.includes('Unauthorized')) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+
+      // Return detailed error for debugging
+      return NextResponse.json(
+        {
+          error: 'Failed to generate meditation audio',
+          details: error.message,
+          type: error.constructor.name
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json(
-      { error: 'Failed to generate meditation audio' },
+      { error: 'Failed to generate meditation audio', details: 'Unknown error' },
       { status: 500 }
     );
   }

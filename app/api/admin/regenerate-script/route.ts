@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
       .update({
         script_text: newScript.scriptText,
         audio_duration_seconds: newScript.estimatedDurationSeconds,
-        generation_cost_cents: aiResponse.costCents,
+        generation_cost_cents: Math.round(aiResponse.costCents),
         techniques: {
           status: 'pending_approval',
           word_count: newScript.wordCount,

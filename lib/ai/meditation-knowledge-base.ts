@@ -223,7 +223,7 @@ export const MESSAGING_FRAMEWORKS: Record<string, MessagingFramework> = {
 // ============================================================================
 
 export interface SessionStructure {
-  duration: 'quick' | 'standard' | 'deep';
+  duration: 'ultra_quick' | 'quick' | 'standard' | 'deep';
   totalMinutes: number;
   phases: SessionPhase[];
 }
@@ -236,6 +236,18 @@ export interface SessionPhase {
 }
 
 export const SESSION_STRUCTURES: Record<string, SessionStructure> = {
+  ultra_quick: {
+    duration: 'ultra_quick',
+    totalMinutes: 1,
+    phases: [
+      {
+        name: 'Immediate Activation',
+        durationMinutes: 1,
+        purpose: 'Rapid energy boost and focus - no fluff, pure activation',
+        techniques: ['breath_awareness', 'mantra_repetition', 'energy_activation'],
+      },
+    ],
+  },
   quick: {
     duration: 'quick',
     totalMinutes: 3,
@@ -335,7 +347,7 @@ export const SESSION_STRUCTURES: Record<string, SessionStructure> = {
 export interface UserProfile {
   primaryGoal: string;
   currentChallenge: string;
-  sessionLength: 'quick' | 'standard' | 'deep';
+  sessionLength: 'ultra_quick' | 'quick' | 'standard' | 'deep';
   experienceLevel: string;
   skepticismLevel: number; // 1-5
   performanceContext: string;

@@ -40,6 +40,28 @@ export const VOICE_OPTIONS = {
       use_speaker_boost: true,
     },
   },
+  default: {
+    id: 'Km0Soh4qk4kpe8euVFnO',
+    name: 'Coach',
+    description: 'Premium default voice - optimized for all meditation types',
+    settings: {
+      stability: 0.70,
+      similarity_boost: 0.80,
+      style: 0.15,
+      use_speaker_boost: true,
+    },
+  },
+  sarge: {
+    id: 'Csl0vkcBfWnfYT30wkjW',
+    name: 'Sarge',
+    description: 'Commanding, authoritative voice - ideal for motivational and performance-driven meditations',
+    settings: {
+      stability: 0.65,
+      similarity_boost: 0.75,
+      style: 0.20,
+      use_speaker_boost: true,
+    },
+  },
 } as const;
 
 export type VoiceType = keyof typeof VOICE_OPTIONS;
@@ -56,6 +78,13 @@ const COST_PER_1K_CHARACTERS = 0.3; // in dollars
  */
 export function getElevenLabsClient(): ElevenLabsClient {
   const apiKey = process.env.ELEVENLABS_API_KEY;
+
+  console.log('[voice-synthesis] Checking ELEVENLABS_API_KEY:', {
+    exists: !!apiKey,
+    length: apiKey?.length,
+    prefix: apiKey?.substring(0, 8) + '...',
+  });
+
   if (!apiKey) {
     throw new Error('ELEVENLABS_API_KEY environment variable is not set');
   }
@@ -89,13 +118,23 @@ export async function synthesizeVoice(
   const voice = VOICE_OPTIONS[voiceType];
 
   try {
+    console.log('[voice-synthesis] Starting synthesis:', {
+      voiceId: voice.id,
+      voiceName: voice.name,
+      textLength: scriptText.length,
+      voiceType,
+    });
+
     // Generate audio using ElevenLabs streaming API
+    // Using turbo_v2_5 which supports SSML break tags for precise pausing
     const audioStream = await client.textToSpeech.convert(voice.id, {
       text: scriptText,
-      modelId: 'eleven_turbo_v2_5', // Fast, high-quality model
+      modelId: 'eleven_turbo_v2_5', // Supports SSML break tags and audio tags
       voiceSettings: voice.settings,
       outputFormat: 'mp3_44100_128', // Standard quality MP3
     });
+
+    console.log('[voice-synthesis] Audio stream received, reading chunks...');
 
     // Convert ReadableStream to buffer
     const reader = audioStream.getReader();
@@ -109,9 +148,20 @@ export async function synthesizeVoice(
 
     const audioBuffer = Buffer.concat(chunks);
 
+    console.log('[voice-synthesis] Audio buffer created:', {
+      bufferSize: audioBuffer.length,
+      chunks: chunks.length,
+    });
+
     // Calculate costs
     const characterCount = scriptText.length;
     const costCents = calculateVoiceSynthesisCost(scriptText);
+
+    console.log('[voice-synthesis] Synthesis complete:', {
+      characterCount,
+      costCents,
+      bufferSizeKB: Math.round(audioBuffer.length / 1024),
+    });
 
     return {
       audioBuffer,
@@ -121,7 +171,18 @@ export async function synthesizeVoice(
       voiceName: voice.name,
     };
   } catch (error) {
-    console.error('Voice synthesis error:', error);
+    console.error('[voice-synthesis] Error:', error);
+
+    // Log additional error details if available
+    if (error && typeof error === 'object') {
+      console.error('[voice-synthesis] Error details:', {
+        message: (error as any).message,
+        name: (error as any).name,
+        statusCode: (error as any).statusCode,
+        body: (error as any).body,
+      });
+    }
+
     throw new VoiceSynthesisError(
       error instanceof Error ? error.message : 'Unknown voice synthesis error',
       error
@@ -195,6 +256,16 @@ export function validateScriptForSynthesis(scriptText: string): {
   // Warnings for potentially problematic content
   if (scriptText.includes('***')) {
     warnings.push('Script contains *** markers that may affect speech');
+  }
+
+  // Check for old-style tone markers that will be spoken aloud
+  if (scriptText.match(/\*\*\([^)]+\)\*\*/)) {
+    warnings.push('Script contains **(markers)** that will be SPOKEN ALOUD - use [audio tags] instead');
+  }
+
+  // Check for ellipses that should be SSML breaks
+  if (scriptText.includes('...')) {
+    warnings.push('Script uses ellipses (...) - consider using <break time="X.Xs" /> for consistent pausing');
   }
 
   if (scriptText.split('\n\n').length > 20) {

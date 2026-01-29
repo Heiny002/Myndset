@@ -121,18 +121,34 @@ export default function QuestionnairePage() {
       }
 
       // Save questionnaire responses to database
-      const { error } = await supabase.from('questionnaire_responses').insert({
-        user_id: user.id,
-        tier: 1,
-        responses: responses,
-        completed_at: new Date().toISOString(),
-      });
+      const { data: questionnaireData, error } = await supabase
+        .from('questionnaire_responses')
+        .insert({
+          user_id: user.id,
+          tier: 1,
+          responses: responses,
+          completed_at: new Date().toISOString(),
+        })
+        .select('id')
+        .single();
 
       if (error) {
         console.error('Error saving questionnaire:', error);
         setErrors({ submit: 'Failed to save your responses. Please try again.' });
         setIsSubmitting(false);
         return;
+      }
+
+      // Generate title using Claude API (fire and forget, don't block UX)
+      if (questionnaireData) {
+        fetch('/api/questionnaire/generate-title', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            questionnaire_id: questionnaireData.id,
+            responses: responses,
+          }),
+        }).catch((err) => console.error('Failed to generate title:', err));
       }
 
       // Redirect to success page
