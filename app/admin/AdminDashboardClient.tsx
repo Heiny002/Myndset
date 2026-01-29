@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useRef, Dispatch, SetStateAction } from 'react';
+import Link from 'next/link';
 
 type TabType = 'questionnaires' | 'plans';
 
@@ -17,12 +18,16 @@ export default function AdminDashboardClient({
 }: AdminDashboardClientProps) {
   const [activeTab, setActiveTab] = useState<TabType>('questionnaires');
 
-  // Filter plans by status
-  const approvedPlans = allPlans.filter((p) => p.status === 'approved');
-  const completedPlans = allPlans.filter((p) => {
-    // Plans with audio generated (check if meditation exists with audio_url)
-    return p.meditation_id && p.audio_url;
-  });
+  // Filter plans by status - memoized to prevent recalculation on every render
+  const approvedPlans = useMemo(
+    () => allPlans.filter((p) => p.status === 'approved'),
+    [allPlans]
+  );
+
+  const completedPlans = useMemo(
+    () => allPlans.filter((p) => p.meditation_id && p.audio_url),
+    [allPlans]
+  );
 
   return (
     <>
@@ -210,12 +215,12 @@ function QuestionnaireCard({ questionnaire }: { questionnaire: any }) {
           </p>
         </div>
         <div className="ml-4">
-          <a
+          <Link
             href={`/admin/questionnaire/${questionnaire.id}`}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90"
           >
             Generate Plan
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -229,6 +234,8 @@ function PlanCard({
   plan: any;
   showAudioStatus?: boolean;
 }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const createdAt = new Date(plan.created_at);
   const timeAgo = getTimeAgo(createdAt);
 
@@ -238,7 +245,7 @@ function PlanCard({
         <div className="flex-1">
           <div className="mb-2 flex items-center gap-3">
             <h3 className="font-semibold text-white">
-              Meditation Plan #{plan.id?.slice(0, 8)}
+              {plan.questionnaire_title || `Meditation Plan #${plan.id?.slice(0, 8)}`}
             </h3>
             <StatusBadge status={plan.status} />
             {showAudioStatus && plan.audio_url && (
@@ -266,19 +273,179 @@ function PlanCard({
           </p>
         </div>
         <div className="ml-4 flex flex-col gap-2">
-          <a
+          <Link
             href={`/admin/plan/${plan.id}`}
             className="rounded-lg bg-primary px-4 py-2 text-center text-sm font-medium text-neutral-950 hover:bg-primary/90"
           >
             {plan.status === 'pending_approval' ? 'Review Plan' : 'View Plan'}
-          </a>
+          </Link>
           {showAudioStatus && plan.meditation_id && (
-            <a
+            <Link
               href={`/admin/script/${plan.meditation_id}`}
               className="rounded-lg border border-neutral-700 bg-neutral-800 px-4 py-2 text-center text-sm font-medium text-white hover:bg-neutral-700"
             >
               View Script & Audio
-            </a>
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Audio Player - shown for completed plans with audio */}
+      {showAudioStatus && plan.audio_url && (
+        <div className="mt-4 border-t border-neutral-800 pt-4">
+          <PlanAudioPlayer
+            audioUrl={plan.audio_url}
+            audioRef={audioRef}
+            isPlaying={isPlaying}
+            setIsPlaying={setIsPlaying}
+            duration={plan.audio_duration_seconds}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PlanAudioPlayer({
+  audioUrl,
+  audioRef,
+  isPlaying,
+  setIsPlaying,
+  duration,
+}: {
+  audioUrl: string;
+  audioRef: React.RefObject<HTMLAudioElement | null>;
+  isPlaying: boolean;
+  setIsPlaying: Dispatch<SetStateAction<boolean>>;
+  duration: number | null;
+}) {
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [totalDuration, setTotalDuration] = useState<number>(duration || 0);
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      setCurrentTime(audioRef.current.currentTime);
+    }
+  };
+
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      setTotalDuration(audioRef.current.duration);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value);
+    setCurrentTime(time);
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+    }
+  };
+
+  const handleEnded = () => {
+    setIsPlaying(false);
+  };
+
+  const formatTime = (seconds: number) => {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="space-y-3">
+      <div className="space-y-3 rounded-lg bg-neutral-800/50 p-4">
+        {/* Audio Element (hidden) */}
+        <audio
+          ref={audioRef}
+          src={audioUrl}
+          onTimeUpdate={handleTimeUpdate}
+          onLoadedMetadata={handleLoadedMetadata}
+          onEnded={handleEnded}
+          preload="metadata"
+        />
+
+        {/* Control Bar */}
+        <div className="flex items-center gap-3">
+          {/* Play/Pause Button */}
+          <button
+            onClick={togglePlayPause}
+            className="flex-shrink-0 rounded-full bg-primary p-2 text-neutral-950 hover:bg-primary/90 transition-colors"
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+          >
+            {isPlaying ? (
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.75 4a.75.75 0 0 0-.75.75v10.5a.75.75 0 0 0 .75.75h1.5a.75.75 0 0 0 .75-.75V4.75A.75.75 0 0 0 7.25 4h-1.5zm6 0a.75.75 0 0 0-.75.75v10.5a.75.75 0 0 0 .75.75h1.5a.75.75 0 0 0 .75-.75V4.75a.75.75 0 0 0-.75-.75h-1.5z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+              </svg>
+            )}
+          </button>
+
+          {/* Time Display */}
+          <span className="flex-shrink-0 text-xs font-medium text-neutral-400 w-10">
+            {formatTime(currentTime)}
+          </span>
+
+          {/* Progress Bar */}
+          <input
+            type="range"
+            min="0"
+            max={totalDuration || 0}
+            value={currentTime}
+            onChange={handleSeek}
+            className="flex-1 h-2 bg-neutral-700 rounded-full appearance-none cursor-pointer accent-primary"
+            aria-label="Progress"
+          />
+
+          {/* Total Duration */}
+          <span className="flex-shrink-0 text-xs font-medium text-neutral-400 w-10 text-right">
+            {formatTime(totalDuration)}
+          </span>
+
+          {/* Download Button */}
+          <a
+            href={audioUrl}
+            download
+            className="flex-shrink-0 p-1 text-neutral-400 hover:text-primary transition-colors"
+            aria-label="Download"
+            title="Download audio"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+          </a>
+        </div>
+
+        {/* Audio Status */}
+        <div className="text-xs text-neutral-500">
+          {isPlaying ? (
+            <span className="flex items-center gap-1">
+              <span className="inline-block w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+              Playing
+            </span>
+          ) : (
+            <span>Ready to play</span>
           )}
         </div>
       </div>

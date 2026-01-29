@@ -88,6 +88,10 @@ export async function POST(request: NextRequest) {
         : undefined
     );
 
+    // Use questionnaire title if available, otherwise generate default title
+    const defaultTitle = `${script.scriptStyle === 'energizing' ? 'Energizing' : 'Calming'} Session for ${planData.messagingFramework.audienceType}`;
+    const meditationTitle = questionnaire?.title || defaultTitle;
+
     // Save script to database (use admin client to bypass RLS)
     const { data: savedScript, error: saveError } = await adminClient
       .from('meditations')
@@ -95,7 +99,7 @@ export async function POST(request: NextRequest) {
         {
           user_id: plan.user_id,
           meditation_plan_id: planId,
-          title: `${script.scriptStyle === 'energizing' ? 'Energizing' : 'Calming'} Session for ${planData.messagingFramework.audienceType}`,
+          title: meditationTitle,
           description: planData.overallRationale,
           script_text: script.scriptText,
           audio_duration_seconds: Math.round(script.estimatedDurationSeconds),

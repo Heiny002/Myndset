@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/auth/admin';
 import AdminDashboardClient from './AdminDashboardClient';
@@ -26,7 +27,7 @@ export default async function AdminDashboard() {
     console.error('Error fetching questionnaires:', questionnairesError);
   }
 
-  // Fetch all meditation plans with meditation data (use admin client to bypass RLS)
+  // Fetch all meditation plans with meditation and questionnaire data (use admin client to bypass RLS)
   const { data: plans, error: plansError } = await adminClient
     .from('meditation_plans')
     .select(`
@@ -34,7 +35,11 @@ export default async function AdminDashboard() {
       meditations (
         id,
         audio_url,
+        audio_duration_seconds,
         script_text
+      ),
+      questionnaire_responses:questionnaire_response_id (
+        title
       )
     `)
     .order('created_at', { ascending: false });
@@ -48,7 +53,9 @@ export default async function AdminDashboard() {
     ...plan,
     meditation_id: plan.meditations?.[0]?.id || null,
     audio_url: plan.meditations?.[0]?.audio_url || null,
+    audio_duration_seconds: plan.meditations?.[0]?.audio_duration_seconds || null,
     has_script: !!plan.meditations?.[0]?.script_text,
+    questionnaire_title: plan.questionnaire_responses?.title || null,
   })) || [];
 
   // Fetch all meditations (use admin client to bypass RLS)
@@ -88,25 +95,25 @@ export default async function AdminDashboard() {
           <div className="flex h-16 items-center justify-between">
             <h1 className="text-xl font-bold text-white">Myndset Admin</h1>
             <div className="flex items-center gap-4">
-              <a
+              <Link
                 href="/admin/test-meditation"
                 className="rounded-lg bg-purple-500 px-4 py-2 text-sm font-medium text-white hover:bg-purple-600 transition-colors"
               >
                 Create Test Meditation
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/admin/meditations"
                 className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90"
               >
                 Manage Meditations
-              </a>
+              </Link>
               <span className="text-sm text-neutral-400">Admin Dashboard</span>
-              <a
+              <Link
                 href="/auth/signout"
                 className="text-sm text-neutral-400 hover:text-white"
               >
                 Sign Out
-              </a>
+              </Link>
             </div>
           </div>
         </div>
