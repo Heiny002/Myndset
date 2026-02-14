@@ -187,6 +187,7 @@ ${techniqueDetails}
 4. Write rationale that directly references their specific goal/challenge AND the academic evidence
 5. Use messaging that aligns with their performance context values
 6. Leverage the available language patterns for each technique in your rationale
+7. CRITICAL: Set "totalMinutes" to EXACTLY ${baselinePlan.sessionStructure?.totalMinutes || baselinePlan.totalDuration} — this is the user's chosen session length and must not be changed
 
 Generate the meditation plan JSON now.`;
 }

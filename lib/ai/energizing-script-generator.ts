@@ -395,8 +395,20 @@ async function buildEnergizingUserMessage(
     techniqueData
   );
 
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 170);
-  const isUltraQuick = plan.sessionStructure.totalMinutes === 1;
+  // Use questionnaire sessionLength as authoritative duration when available
+  // (plan AI sometimes ignores the duration constraint)
+  const sessionLengthMinutes: Record<string, number> = {
+    ultra_quick: 1,
+    quick: 3,
+    standard: 6,
+    deep: 12,
+  };
+  const effectiveMinutes = questionnaire?.sessionLength
+    ? sessionLengthMinutes[questionnaire.sessionLength] ?? plan.sessionStructure.totalMinutes
+    : plan.sessionStructure.totalMinutes;
+
+  const targetWords = Math.round(effectiveMinutes * 170);
+  const isUltraQuick = effectiveMinutes <= 1;
 
   // Build questionnaire context
   const questionnaireBlock = questionnaire
@@ -407,12 +419,12 @@ async function buildEnergizingUserMessage(
 
 # Script Parameters
 
-**Total Duration**: ${plan.sessionStructure.totalMinutes} minutes (STRICT)
+**Total Duration**: ${effectiveMinutes} minutes (STRICT)
 **Target Word Count**: ${targetWords} words (STRICT RANGE: ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words)
 **Energy Level**: HIGH — activation, not relaxation
 ${isUltraQuick ? '**Style**: Ultra-punchy smelling salts / Instant fire / Zero fluff' : '**Style**: Mirror speech / Self-rally / The voice that refuses to let you lose'}
 
-CRITICAL: Script MUST be ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words for the ${plan.sessionStructure.totalMinutes}-minute duration.${isUltraQuick ? '\n\nULTRA-SHORT: 1-minute activation. NO warm-up. Hit IMMEDIATELY with maximum intensity. Every word must punch. Compress all 5 beats into rapid-fire delivery.' : ''}
+CRITICAL: Script MUST be ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words for the ${effectiveMinutes}-minute duration.${isUltraQuick ? '\n\nULTRA-SHORT: 1-minute activation. NO warm-up. Hit IMMEDIATELY with maximum intensity. Every word must punch. Compress all 5 beats into rapid-fire delivery.' : ''}
 
 ${questionnaireBlock}
 
@@ -425,7 +437,7 @@ ${techniqueBlocks.join('\n\n')}
 ${flowMap}
 # Your Mission
 
-Write a ${plan.sessionStructure.totalMinutes}-minute self-rally speech (~${targetWords} words) following the 5-beat Self-Rally Arc:
+Write a ${effectiveMinutes}-minute self-rally speech (~${targetWords} words) following the 5-beat Self-Rally Arc:
 
 ${isUltraQuick ? `Compress all beats into ultra-concise statements:
 - The Spiral (~20 words): Name their darkness NOW
