@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function ScriptEditor({
   scriptId,
@@ -15,6 +16,7 @@ export default function ScriptEditor({
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const wordCount = script.split(/\s+/).filter(Boolean).length;
   const estimatedMinutes = Math.round((wordCount / 145) * 10) / 10;
@@ -39,6 +41,10 @@ export default function ScriptEditor({
       }
 
       setIsEditing(false);
+      if (isApproved) {
+        // Status changed - refresh the page to reflect new state
+        router.refresh();
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -56,35 +62,33 @@ export default function ScriptEditor({
     <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-6">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-white">Meditation Script</h3>
-        {!isApproved && (
-          <div className="flex gap-2">
-            {isEditing ? (
-              <>
-                <button
-                  onClick={handleCancel}
-                  disabled={isSaving}
-                  className="rounded-lg bg-neutral-700 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-600 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSave}
-                  disabled={isSaving}
-                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isSaving ? 'Saving...' : 'Save Changes'}
-                </button>
-              </>
-            ) : (
+        <div className="flex gap-2">
+          {isEditing ? (
+            <>
               <button
-                onClick={() => setIsEditing(true)}
-                className="rounded-lg bg-neutral-700 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-600"
+                onClick={handleCancel}
+                disabled={isSaving}
+                className="rounded-lg bg-neutral-700 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Edit Script
+                Cancel
               </button>
-            )}
-          </div>
-        )}
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSaving ? 'Saving...' : 'Save Changes'}
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="rounded-lg bg-neutral-700 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-600"
+            >
+              Edit Script
+            </button>
+          )}
+        </div>
       </div>
 
       {error && (
@@ -117,10 +121,10 @@ export default function ScriptEditor({
         </div>
       )}
 
-      {isApproved && (
-        <div className="mt-4 rounded-lg border border-green-500/20 bg-green-500/5 p-3">
-          <p className="text-sm text-green-500">
-            ✓ Script approved - Editing disabled
+      {isApproved && !isEditing && (
+        <div className="mt-4 rounded-lg border border-yellow-500/20 bg-yellow-500/5 p-3">
+          <p className="text-sm text-yellow-500">
+            Script is approved. Saving changes will set it back to pending approval and clear audio.
           </p>
         </div>
       )}

@@ -102,13 +102,23 @@ export async function POST(request: NextRequest) {
       mappedQuestionnaire
     );
 
-    // Update script in database
+    // Delete old audio file if it existed
+    if (existingScript.audio_url) {
+      const oldFileName = `${existingScript.user_id}/${scriptId}.mp3`;
+      await adminClient.storage
+        .from('meditation-audio')
+        .remove([oldFileName]);
+    }
+
+    // Update script in database (clear audio fields since script changed)
     const { data: updatedScript, error: updateError } = await adminClient
       .from('meditations')
       .update({
         script_text: newScript.scriptText,
         audio_duration_seconds: newScript.estimatedDurationSeconds,
         generation_cost_cents: Math.round(aiResponse.costCents),
+        audio_url: null,
+        voice_id: null,
         techniques: {
           status: 'pending_approval',
           word_count: newScript.wordCount,

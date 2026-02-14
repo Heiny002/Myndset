@@ -116,8 +116,54 @@ export default function PlanActions({
   if (currentStatus === 'approved') {
     if (hasScript) {
       return (
-        <div className="text-sm text-green-500">
-          ✓ Plan approved - Script generated
+        <div className="flex flex-col items-end gap-4">
+          <div className="text-sm text-green-500">
+            ✓ Plan approved - Script generated
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => setShowFeedback(!showFeedback)}
+              disabled={isProcessing}
+              className="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Regenerate Plan
+            </button>
+            <p className="text-xs text-neutral-500">This will regenerate the plan. You&apos;ll need to regenerate the script and audio afterwards.</p>
+          </div>
+
+          {showFeedback && (
+            <div className="w-full max-w-md">
+              <textarea
+                value={feedback}
+                onChange={(e) => setFeedback(e.target.value)}
+                placeholder="Provide feedback for regeneration (e.g., 'Too many components', 'Wrong messaging tone')"
+                className="w-full rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white placeholder-neutral-500 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                rows={3}
+              />
+              <div className="mt-2 flex justify-end gap-2">
+                <button
+                  onClick={() => {
+                    setShowFeedback(false);
+                    setFeedback('');
+                  }}
+                  className="rounded-lg bg-neutral-700 px-3 py-1.5 text-sm text-white hover:bg-neutral-600"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleRegenerate}
+                  disabled={isProcessing || !feedback.trim()}
+                  className="rounded-lg bg-orange-600 px-3 py-1.5 text-sm text-white hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isProcessing ? 'Regenerating...' : 'Submit & Regenerate'}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          {success && <p className="text-sm text-green-500">{success}</p>}
         </div>
       );
     }

@@ -30,15 +30,37 @@ export async function POST(request: NextRequest) {
       .single();
 
     const metadata = (existingScript?.techniques as any) || {};
+    const wasApproved = metadata.status === 'approved';
 
-    // Update script
+    // Fetch full record to check for audio_url if was approved
+    let audioUrl: string | null = null;
+    if (wasApproved) {
+      const { data: fullRecord } = await adminClient
+        .from('meditations')
+        .select('audio_url, user_id')
+        .eq('id', scriptId)
+        .single();
+
+      if (fullRecord?.audio_url) {
+        audioUrl = fullRecord.audio_url;
+        // Delete old audio file
+        const oldFileName = `${fullRecord.user_id}/${scriptId}.mp3`;
+        await adminClient.storage
+          .from('meditation-audio')
+          .remove([oldFileName]);
+      }
+    }
+
+    // Update script (reset status to pending_approval and clear audio if was approved)
     const { data, error } = await adminClient
       .from('meditations')
       .update({
         script_text: scriptText,
         audio_duration_seconds: estimatedDurationSeconds,
+        ...(wasApproved ? { audio_url: null, voice_id: null } : {}),
         techniques: {
           ...metadata,
+          status: 'pending_approval',
           word_count: wordCount,
           estimated_duration_seconds: estimatedDurationSeconds,
           last_edited: new Date().toISOString(),

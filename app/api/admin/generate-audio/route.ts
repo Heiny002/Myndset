@@ -12,9 +12,17 @@ import { sendMeditationReadyEmail } from '@/lib/email/resend';
 export async function POST(request: NextRequest) {
   try {
     // Verify admin access
-    await requireAdmin();
+    try {
+      await requireAdmin();
+    } catch (authError) {
+      console.error('[generate-audio] Auth error:', authError);
+      return NextResponse.json(
+        { error: 'Unauthorized', details: authError instanceof Error ? authError.message : 'Auth check failed' },
+        { status: 403 }
+      );
+    }
 
-    const { scriptId, voiceType = 'professional' } = await request.json();
+    const { scriptId, voiceType = 'professional', forceRegenerate = false } = await request.json();
 
     if (!scriptId) {
       return NextResponse.json({ error: 'scriptId is required' }, { status: 400 });
@@ -43,7 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if audio already exists
-    if (script.audio_url) {
+    if (script.audio_url && !forceRegenerate) {
       return NextResponse.json(
         {
           error: 'Audio already exists for this script',
@@ -51,6 +59,14 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+    }
+
+    // Delete old audio file if force regenerating
+    if (script.audio_url && forceRegenerate) {
+      const oldFileName = `${script.user_id}/${scriptId}.mp3`;
+      await adminClient.storage
+        .from('meditation-audio')
+        .remove([oldFileName]);
     }
 
     // Validate script text
@@ -96,7 +112,7 @@ export async function POST(request: NextRequest) {
       .from('meditation-audio')
       .upload(fileName, audioBuffer, {
         contentType: 'audio/mpeg',
-        upsert: false,
+        upsert: forceRegenerate,
       });
 
     if (uploadError) {
