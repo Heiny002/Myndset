@@ -6,6 +6,8 @@
  *
  * DEFAULT MODE: Energizing/Motivational (high-energy activation)
  * BACKUP MODE: Calming/Meditative (relaxation and contemplation)
+ *
+ * UPDATED: Now uses V2 psychological techniques database for enhanced implementation guidance
  */
 
 import { generateText, ClaudeResponse } from './claude';
@@ -15,6 +17,11 @@ import {
   SESSION_STRUCTURES,
   MEDITATION_COMPONENTS,
 } from './meditation-knowledge-base';
+import {
+  getTechniqueById,
+  SessionStructure,
+  MessagingFramework,
+} from './meditation-knowledge-base-v2';
 import {
   generateEnergizingScript,
   regenerateEnergizingScript,
@@ -87,8 +94,9 @@ Write a complete, word-for-word meditation script that will be narrated by a pro
 # Pacing Guidelines
 
 - Average speaking pace: 140-160 words per minute
-- Use SSML break tags for pauses: <break time="1.5s" /> for short pauses, <break time="3.0s" /> for longer pauses
-- Use paragraph breaks for natural breath points
+- Use punctuation for pauses: periods, commas, em-dashes (—), and paragraph breaks
+- Use paragraph breaks for natural breath points and longer pauses
+- DO NOT use SSML break tags like <break time="X.Xs" /> - eleven_v3 does NOT support them
 - DO NOT use ellipses ("..." or ".....") - they create inconsistent pauses
 
 # Output Format
@@ -99,8 +107,8 @@ Write ONLY the meditation script text. Do NOT include:
 - Parenthetical directions in asterisks or parentheses - these will be SPOKEN ALOUD
 
 You MAY include (sparingly):
-- ElevenLabs audio tags in square brackets: [whispers], [gentle], [calm], [soothing]
-- SSML break tags for precise pausing: <break time="1.5s" /> or <break time="3.0s" />
+- ElevenLabs v3 audio tags in square brackets: [whispers], [gentle], [calm], [soothing]
+- Use punctuation and paragraph breaks for pausing (NO SSML break tags)
 
 Start with the first words the user will hear. End with the last words before silence.`;
 }
@@ -161,9 +169,9 @@ Script Guidelines: ${fullComponent.scriptGuidelines}`
 3. Use hypnotic language patterns naturally (not forced)
 4. Match the ${plan.messagingFramework.audienceType} messaging style
 5. Address the user's specific outcome if provided
-6. Use SSML break tags for pauses: <break time="1.5s" /> for short, <break time="3.0s" /> for longer
+6. Use punctuation for pauses: periods, commas, em-dashes (—), and paragraph breaks (NO SSML break tags)
 7. Write for spoken delivery - natural, conversational, but professional
-8. Use ElevenLabs audio tags in square brackets sparingly for emotional tone: [gentle], [calm], [soothing]
+8. Use ElevenLabs v3 audio tags in square brackets sparingly for emotional tone: [gentle], [calm], [soothing]
 
 Write the complete meditation script now. Start with the first words the user will hear.`;
 }

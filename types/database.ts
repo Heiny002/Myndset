@@ -340,6 +340,87 @@ export type Database = {
           },
         ];
       };
+      psychological_techniques: {
+        Row: {
+          id: string;
+          name: string;
+          domain: 'motivational' | 'hypnosis' | 'nlp' | 'sports_performance' | 'cognitive' | 'persuasion';
+          tags: string[];
+          audio_compatible: boolean;
+          performance_focus: number;
+          description: string;
+          psychological_mechanism: string;
+          evidence_level: 'strong' | 'moderate' | 'emerging' | 'limited';
+          when_to_use: string[];
+          when_not_to_use: string[];
+          duration_minutes: number;
+          intensity_level: 'low' | 'medium' | 'high';
+          combines_well_with: string[];
+          contradicts_without: string[];
+          target_audience: string[];
+          best_for: string[];
+          implementation_speed: 'instant' | 'quick' | 'moderate';
+          version: number;
+          created_at: string;
+          updated_at: string;
+          academic_sources: Json;
+          implementation_protocol: Json;
+          script_example: Json;
+        };
+        Insert: {
+          id: string;
+          name: string;
+          domain: 'motivational' | 'hypnosis' | 'nlp' | 'sports_performance' | 'cognitive' | 'persuasion';
+          tags: string[];
+          audio_compatible?: boolean;
+          performance_focus: number;
+          description: string;
+          psychological_mechanism: string;
+          evidence_level: 'strong' | 'moderate' | 'emerging' | 'limited';
+          when_to_use: string[];
+          when_not_to_use: string[];
+          duration_minutes: number;
+          intensity_level: 'low' | 'medium' | 'high';
+          combines_well_with?: string[];
+          contradicts_without?: string[];
+          target_audience: string[];
+          best_for: string[];
+          implementation_speed: 'instant' | 'quick' | 'moderate';
+          version?: number;
+          created_at?: string;
+          updated_at?: string;
+          academic_sources: Json;
+          implementation_protocol: Json;
+          script_example: Json;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          domain?: 'motivational' | 'hypnosis' | 'nlp' | 'sports_performance' | 'cognitive' | 'persuasion';
+          tags?: string[];
+          audio_compatible?: boolean;
+          performance_focus?: number;
+          description?: string;
+          psychological_mechanism?: string;
+          evidence_level?: 'strong' | 'moderate' | 'emerging' | 'limited';
+          when_to_use?: string[];
+          when_not_to_use?: string[];
+          duration_minutes?: number;
+          intensity_level?: 'low' | 'medium' | 'high';
+          combines_well_with?: string[];
+          contradicts_without?: string[];
+          target_audience?: string[];
+          best_for?: string[];
+          implementation_speed?: 'instant' | 'quick' | 'moderate';
+          version?: number;
+          created_at?: string;
+          updated_at?: string;
+          academic_sources?: Json;
+          implementation_protocol?: Json;
+          script_example?: Json;
+        };
+        Relationships: [];
+      };
       meditation_versions: {
         Row: {
           id: string;
@@ -481,6 +562,10 @@ export type MeditationRemixUpdate = Database['public']['Tables']['meditation_rem
 export type AdminUser = Database['public']['Tables']['admin_users']['Row'];
 export type AdminUserInsert = Database['public']['Tables']['admin_users']['Insert'];
 export type AdminUserUpdate = Database['public']['Tables']['admin_users']['Update'];
+
+export type PsychologicalTechniqueRow = Database['public']['Tables']['psychological_techniques']['Row'];
+export type PsychologicalTechniqueInsert = Database['public']['Tables']['psychological_techniques']['Insert'];
+export type PsychologicalTechniqueUpdate = Database['public']['Tables']['psychological_techniques']['Update'];
 
 // Subscription tiers with their limits
 export const SUBSCRIPTION_LIMITS = {

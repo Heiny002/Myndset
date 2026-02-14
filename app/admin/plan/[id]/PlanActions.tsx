@@ -16,11 +16,13 @@ export default function PlanActions({
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleApprove() {
     setIsProcessing(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await fetch('/api/admin/approve-plan', {
@@ -37,7 +39,9 @@ export default function PlanActions({
         throw new Error(data.error || 'Failed to approve plan');
       }
 
-      router.refresh();
+      setSuccess('Plan approved successfully!');
+      // Only refresh after a delay to show success message
+      setTimeout(() => router.refresh(), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -53,6 +57,7 @@ export default function PlanActions({
 
     setIsProcessing(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await fetch('/api/admin/regenerate-plan', {
@@ -69,9 +74,11 @@ export default function PlanActions({
         throw new Error(data.error || 'Failed to regenerate plan');
       }
 
-      router.refresh();
+      setSuccess('Plan regenerated successfully!');
       setShowFeedback(false);
       setFeedback('');
+      // Only refresh after a delay to show success message
+      setTimeout(() => router.refresh(), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -131,6 +138,7 @@ export default function PlanActions({
 
   return (
     <div className="flex flex-col items-end gap-2">
+      {success && <p className="text-sm text-green-500">{success}</p>}
       <div className="flex gap-2">
         <button
           onClick={handleApprove}

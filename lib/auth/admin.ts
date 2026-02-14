@@ -6,13 +6,17 @@
  */
 
 import { createClient } from '@/lib/supabase/server';
+import { cache } from 'react';
 
 /**
  * Check if the current user is an admin
  * For MVP: Jim's email is hardcoded as admin
  * For production: Should check admin_users table
+ *
+ * Note: This function is wrapped with React's cache() to ensure
+ * it only runs once per request, improving performance significantly.
  */
-export async function isAdmin(): Promise<boolean> {
+export const isAdmin = cache(async (): Promise<boolean> => {
   try {
     const supabase = await createClient();
 
@@ -49,13 +53,16 @@ export async function isAdmin(): Promise<boolean> {
     console.error('Error checking admin status:', error);
     return false;
   }
-}
+});
 
 /**
  * Get admin user data from database
  * Returns admin record if user is admin, null otherwise
+ *
+ * Note: This function is wrapped with React's cache() to ensure
+ * it only runs once per request.
  */
-export async function getAdminUser() {
+export const getAdminUser = cache(async () => {
   try {
     const supabase = await createClient();
 
@@ -82,7 +89,7 @@ export async function getAdminUser() {
     console.error('Error fetching admin user:', error);
     return null;
   }
-}
+});
 
 /**
  * Require admin access - redirects if not admin

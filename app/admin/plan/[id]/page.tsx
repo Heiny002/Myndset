@@ -1,4 +1,5 @@
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
 import { isAdmin } from '@/lib/auth/admin';
 import PlanActions from './PlanActions';
@@ -51,12 +52,12 @@ export default async function PlanReviewPage({
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-4">
-              <a
+              <Link
                 href="/admin"
                 className="text-sm text-neutral-400 hover:text-white"
               >
                 ← Back to Dashboard
-              </a>
+              </Link>
             </div>
             <h1 className="text-xl font-bold text-white">Meditation Plan Review</h1>
           </div>
@@ -78,20 +79,20 @@ export default async function PlanReviewPage({
                 Generated {new Date(plan.created_at).toLocaleString()}
               </p>
               {questionnaire && (
-                <a
+                <Link
                   href={`/admin/questionnaire/${questionnaire.id}`}
                   className="mt-2 inline-block text-sm text-primary hover:underline"
                 >
                   View Original Questionnaire →
-                </a>
+                </Link>
               )}
               {existingScript && (
-                <a
+                <Link
                   href={`/admin/script/${existingScript.id}`}
                   className="mt-2 inline-block text-sm text-primary hover:underline"
                 >
                   View Generated Script →
-                </a>
+                </Link>
               )}
             </div>
             <PlanActions

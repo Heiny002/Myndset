@@ -7,10 +7,15 @@
  * The database contains 30-50 evidence-based techniques from motivational psychology,
  * sports performance, hypnosis, NLP, and cognitive psychology - all optimized for
  * audio-driven, high-energy performance meditation.
+ *
+ * Data source: Supabase `psychological_techniques` table, with JSON file fallback.
  */
 
+import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import type { Database } from '@/types/database';
+import type { PsychologicalTechniqueRow } from '@/types/database';
 
 // ============================================================================
 // TYPE DEFINITIONS
@@ -75,6 +80,17 @@ export interface AcademicSource {
 }
 
 /**
+ * Categorized language patterns for script generation (v2 enriched format)
+ */
+export interface CategorizedLanguagePatterns {
+  openingHooks: string[];
+  coreProcess: string[];
+  deepeningIntensifiers: string[];
+  transitionBridges: string[];
+  closingAnchors: string[];
+}
+
+/**
  * Implementation protocol for script generation
  */
 export interface ImplementationProtocol {
@@ -84,8 +100,8 @@ export interface ImplementationProtocol {
   /** Main steps of the technique (detailed instructions) */
   coreProcess: string;
 
-  /** Specific phrases and sentence structures to use */
-  languagePatterns: string[];
+  /** Categorized phrases and sentence structures (v2: object, v1 fallback: string[]) */
+  languagePatterns: CategorizedLanguagePatterns | string[];
 
   /** Pacing, tone, emphasis, and delivery guidance */
   deliveryNotes: string;
@@ -103,6 +119,89 @@ export interface ScriptExample {
 
   /** Typical duration of this section */
   duration: string;
+
+  /** Intensity level of this example */
+  intensity?: string;
+
+  /** Techniques used in this example */
+  techniquesUsed?: string[];
+
+  /** Pronoun strategy used */
+  pronounStrategy?: string;
+}
+
+/**
+ * Self-speech / mirror speech adaptation metadata
+ */
+export interface SelfSpeechAdaptation {
+  pronounStrategy: string;
+  mirrorCompatible: boolean;
+  internalMonologueStyle: string;
+  confrontationLevel: string;
+  emotionalEntryPoint: string;
+  transformationTarget: string;
+  adaptationNotes: string;
+}
+
+/**
+ * Rhetorical device mapping
+ */
+export interface RhetoricalDevice {
+  device: string;
+  application: string;
+  example: string;
+}
+
+/**
+ * User context example for a specific archetype
+ */
+export interface UserContextExample {
+  scenario: string;
+  scriptExcerpt: string;
+  keyAdaptations: string[];
+}
+
+/**
+ * Emotional arc mapping for darkness-to-light structure
+ */
+export interface EmotionalArc {
+  startingState: string;
+  buildPhase: string;
+  peakMoment: string;
+  resolutionState: string;
+  darknessToLightMapping: string;
+}
+
+/**
+ * Creative inspiration from performance traditions
+ */
+export interface CreativeInspiration {
+  source: string;
+  insight: string;
+  applicationNote: string;
+}
+
+/**
+ * Voice delivery guidance for audio synthesis
+ */
+export interface VoiceDeliveryNotes {
+  paceGuidance: string;
+  toneShifts: string[];
+  emphasisWords: string[];
+  breathPoints: string[];
+  elevenLabsTags: string[];
+}
+
+/**
+ * Enriched combinesWellWith entry with synergy rationale
+ */
+export interface TechniqueCombination {
+  id: string;
+  name: string;
+  synergy: string;
+  sequencePosition: 'before' | 'after' | 'either';
+  combinedEffect: string;
+  transitionLanguage: string;
 }
 
 /**
@@ -166,13 +265,36 @@ export interface PsychologicalTechnique {
   /** Detailed implementation instructions */
   implementationProtocol: ImplementationProtocol;
 
-  /** Example showing technique in practice */
-  scriptExample: ScriptExample;
+  /** Example showing technique in practice (v1 single, v2 array) */
+  scriptExample?: ScriptExample;
+
+  /** Multiple script examples across archetypes (v2 enriched) */
+  scriptExamples?: ScriptExample[];
+
+  // ==================== V2 ENRICHMENT FIELDS ====================
+
+  /** Mirror speech / self-speech adaptation metadata */
+  selfSpeechAdaptation?: SelfSpeechAdaptation;
+
+  /** Rhetorical devices mapped to this technique */
+  rhetoricalDevices?: RhetoricalDevice[];
+
+  /** Context-specific examples for 6 user archetypes */
+  userContextExamples?: Record<string, UserContextExample>;
+
+  /** Emotional arc mapping (darkness-to-light structure) */
+  emotionalArc?: EmotionalArc;
+
+  /** Creative inspirations from performance traditions */
+  creativeInspirations?: CreativeInspiration[];
+
+  /** Voice delivery guidance for audio synthesis */
+  voiceDeliveryNotes?: VoiceDeliveryNotes;
 
   // ==================== RELATIONSHIPS ====================
 
-  /** IDs of synergistic techniques */
-  combinesWellWith: string[];
+  /** Synergistic techniques (v2: TechniqueCombination[], v1 fallback: string[]) */
+  combinesWellWith: TechniqueCombination[] | string[];
 
   /** IDs of incompatible techniques */
   contradictsWithout: string[];
@@ -209,36 +331,115 @@ export interface TechniquesDatabase {
 }
 
 // ============================================================================
+// SUPABASE CLIENT (lightweight, no cookie dependency)
+// ============================================================================
+
+function getSupabaseClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient<Database>(url, key, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+}
+
+// ============================================================================
 // DATABASE LOADING
 // ============================================================================
 
 /**
- * Cached database instance to avoid repeated file reads
+ * In-memory cache with TTL
  */
-let cachedDatabase: TechniquesDatabase | null = null;
+let cachedTechniques: PsychologicalTechnique[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 /**
- * Load the complete techniques database from JSON file.
- * Results are cached in memory for performance.
- *
- * @returns Complete techniques database
- * @throws Error if database file cannot be read or parsed
+ * Map a Supabase row (snake_case) to the app-level PsychologicalTechnique interface (camelCase)
  */
-export function loadTechniquesDatabase(): PsychologicalTechnique[] {
-  if (cachedDatabase) {
-    return cachedDatabase.techniques;
+function mapRowToTechnique(row: PsychologicalTechniqueRow): PsychologicalTechnique {
+  return {
+    id: row.id,
+    name: row.name,
+    domain: row.domain as TechniqueDomain,
+    tags: row.tags,
+    audioCompatible: row.audio_compatible,
+    performanceFocus: row.performance_focus as PerformanceFocus,
+    description: row.description,
+    psychologicalMechanism: row.psychological_mechanism,
+    evidenceLevel: row.evidence_level as EvidenceLevel,
+    academicSources: row.academic_sources as unknown as AcademicSource[],
+    whenToUse: row.when_to_use,
+    whenNotToUse: row.when_not_to_use,
+    durationMinutes: row.duration_minutes,
+    intensityLevel: row.intensity_level as IntensityLevel,
+    implementationProtocol: row.implementation_protocol as unknown as ImplementationProtocol,
+    scriptExample: row.script_example as unknown as ScriptExample,
+    combinesWellWith: row.combines_well_with ?? [],
+    contradictsWithout: row.contradicts_without ?? [],
+    targetAudience: row.target_audience,
+    bestFor: row.best_for,
+    implementationSpeed: row.implementation_speed as ImplementationSpeed,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    version: row.version,
+  };
+}
+
+/**
+ * Fallback: load techniques from local JSON file (synchronous)
+ */
+function loadFromJson(): PsychologicalTechnique[] {
+  const dbPath = join(process.cwd(), 'lib', 'ai', 'psychological-techniques-db.json');
+  const fileContents = readFileSync(dbPath, 'utf-8');
+  const db: TechniquesDatabase = JSON.parse(fileContents);
+  if (!db || !db.techniques) {
+    throw new Error('Invalid database structure: missing techniques array');
+  }
+  return db.techniques;
+}
+
+/**
+ * Load the complete techniques database.
+ * Tries Supabase first, falls back to local JSON file.
+ * Results are cached in memory with a 5-minute TTL.
+ *
+ * @returns Array of all techniques
+ */
+export async function loadTechniquesDatabase(): Promise<PsychologicalTechnique[]> {
+  // Return from cache if still valid
+  if (cachedTechniques && Date.now() - cacheTimestamp < CACHE_TTL_MS) {
+    return cachedTechniques;
   }
 
+  // Try Supabase first
   try {
-    const dbPath = join(process.cwd(), 'lib', 'ai', 'psychological-techniques-db.json');
-    const fileContents = readFileSync(dbPath, 'utf-8');
-    cachedDatabase = JSON.parse(fileContents);
+    const supabase = getSupabaseClient();
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('psychological_techniques')
+        .select('*')
+        .order('id');
 
-    if (!cachedDatabase || !cachedDatabase.techniques) {
-      throw new Error('Invalid database structure: missing techniques array');
+      if (!error && data && data.length > 0) {
+        cachedTechniques = data.map(mapRowToTechnique);
+        cacheTimestamp = Date.now();
+        return cachedTechniques;
+      }
+      // If Supabase returned empty or errored, fall through to JSON
+      if (error) {
+        console.warn('Supabase techniques query failed, using JSON fallback:', error.message);
+      }
     }
+  } catch (err) {
+    console.warn('Supabase unavailable, using JSON fallback:', err instanceof Error ? err.message : String(err));
+  }
 
-    return cachedDatabase.techniques;
+  // Fallback to JSON file
+  try {
+    cachedTechniques = loadFromJson();
+    cacheTimestamp = Date.now();
+    return cachedTechniques;
   } catch (error) {
     console.error('Failed to load psychological techniques database:', error);
     throw new Error(`Database load failed: ${error instanceof Error ? error.message : String(error)}`);
@@ -247,10 +448,11 @@ export function loadTechniquesDatabase(): PsychologicalTechnique[] {
 
 /**
  * Force reload of the database (clears cache).
- * Useful for development/testing when database file is updated.
+ * Useful for development/testing when database is updated.
  */
 export function reloadDatabase(): void {
-  cachedDatabase = null;
+  cachedTechniques = null;
+  cacheTimestamp = 0;
 }
 
 // ============================================================================
@@ -263,8 +465,8 @@ export function reloadDatabase(): void {
  * @param id - Unique technique identifier
  * @returns Technique object if found, undefined otherwise
  */
-export function getTechniqueById(id: string): PsychologicalTechnique | undefined {
-  const techniques = loadTechniquesDatabase();
+export async function getTechniqueById(id: string): Promise<PsychologicalTechnique | undefined> {
+  const techniques = await loadTechniquesDatabase();
   return techniques.find(t => t.id === id);
 }
 
@@ -274,8 +476,8 @@ export function getTechniqueById(id: string): PsychologicalTechnique | undefined
  * @param domain - Domain to filter by
  * @returns Array of matching techniques
  */
-export function getTechniquesByDomain(domain: TechniqueDomain): PsychologicalTechnique[] {
-  const techniques = loadTechniquesDatabase();
+export async function getTechniquesByDomain(domain: TechniqueDomain): Promise<PsychologicalTechnique[]> {
+  const techniques = await loadTechniquesDatabase();
   return techniques.filter(t => t.domain === domain);
 }
 
@@ -285,8 +487,8 @@ export function getTechniquesByDomain(domain: TechniqueDomain): PsychologicalTec
  * @param tag - Tag to search for
  * @returns Array of techniques containing the tag
  */
-export function getTechniquesByTag(tag: string): PsychologicalTechnique[] {
-  const techniques = loadTechniquesDatabase();
+export async function getTechniquesByTag(tag: string): Promise<PsychologicalTechnique[]> {
+  const techniques = await loadTechniquesDatabase();
   return techniques.filter(t => t.tags.includes(tag));
 }
 
@@ -336,8 +538,8 @@ const EVIDENCE_LEVELS: Record<EvidenceLevel, number> = {
  * @param query - Search parameters
  * @returns Array of matching techniques
  */
-export function searchTechniques(query: SearchQuery): PsychologicalTechnique[] {
-  let results = loadTechniquesDatabase();
+export async function searchTechniques(query: SearchQuery): Promise<PsychologicalTechnique[]> {
+  let results = await loadTechniquesDatabase();
 
   // Filter by domain
   if (query.domain) {
@@ -396,8 +598,8 @@ export function searchTechniques(query: SearchQuery): PsychologicalTechnique[] {
  *
  * @returns Database statistics
  */
-export function getDatabaseStats() {
-  const techniques = loadTechniquesDatabase();
+export async function getDatabaseStats() {
+  const techniques = await loadTechniquesDatabase();
 
   return {
     totalTechniques: techniques.length,
@@ -473,18 +675,19 @@ export function validateTechnique(technique: PsychologicalTechnique): string[] {
     if (!protocol.setup || !protocol.coreProcess || !protocol.deliveryNotes) {
       errors.push('Implementation protocol missing required sub-fields');
     }
-    if (!protocol.languagePatterns || protocol.languagePatterns.length === 0) {
+    // languagePatterns can be string[] (v1) or CategorizedLanguagePatterns (v2)
+    if (!protocol.languagePatterns) {
+      errors.push('Implementation protocol must include language patterns');
+    } else if (Array.isArray(protocol.languagePatterns) && protocol.languagePatterns.length === 0) {
       errors.push('Implementation protocol must include language patterns');
     }
   }
 
-  // Script example validation
-  if (!technique.scriptExample) {
-    errors.push('Missing required field: scriptExample');
-  } else {
-    if (!technique.scriptExample.excerpt || !technique.scriptExample.context) {
-      errors.push('Script example missing required fields');
-    }
+  // Script example validation (v2 uses scriptExamples array)
+  const hasScriptExample = technique.scriptExample?.excerpt;
+  const hasScriptExamples = technique.scriptExamples && technique.scriptExamples.length > 0;
+  if (!hasScriptExample && !hasScriptExamples) {
+    errors.push('Missing required field: scriptExample or scriptExamples');
   }
 
   // Array validations
@@ -514,8 +717,8 @@ export function validateTechnique(technique: PsychologicalTechnique): string[] {
  *
  * @returns Validation report with errors and warnings
  */
-export function validateDatabase() {
-  const techniques = loadTechniquesDatabase();
+export async function validateDatabase() {
+  const techniques = await loadTechniquesDatabase();
   const report = {
     totalTechniques: techniques.length,
     valid: [] as string[],
@@ -542,12 +745,14 @@ export function validateDatabase() {
 
   // Check for broken cross-references
   techniques.forEach(technique => {
-    technique.combinesWellWith.forEach(id => {
-      if (!ids.includes(id)) {
-        report.warnings.push(`${technique.id}: combinesWellWith references non-existent technique "${id}"`);
+    const cww = technique.combinesWellWith || [];
+    cww.forEach((entry) => {
+      const refId = typeof entry === 'string' ? entry : entry.id;
+      if (!ids.includes(refId)) {
+        report.warnings.push(`${technique.id}: combinesWellWith references non-existent technique "${refId}"`);
       }
     });
-    technique.contradictsWithout.forEach(id => {
+    (technique.contradictsWithout || []).forEach(id => {
       if (!ids.includes(id)) {
         report.warnings.push(`${technique.id}: contradictsWithout references non-existent technique "${id}"`);
       }

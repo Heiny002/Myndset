@@ -6,13 +6,14 @@
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
 
 // Voice configurations for different meditation styles
+// Note: eleven_v3 requires stability to be 0.0, 0.5, or 1.0 (0.0=Creative, 0.5=Natural, 1.0=Robust)
 export const VOICE_OPTIONS = {
   calm: {
     id: 'EXAVITQu4vr4xnSDxMaL', // Sarah - calm, clear female voice
     name: 'Sarah',
     description: 'Calm, clear female voice - ideal for relaxation meditations',
     settings: {
-      stability: 0.75,
+      stability: 1.0, // Robust - consistent, steady delivery for calming meditations
       similarity_boost: 0.75,
       style: 0.0,
       use_speaker_boost: true,
@@ -23,7 +24,7 @@ export const VOICE_OPTIONS = {
     name: 'Adam',
     description: 'Professional, authoritative male voice - ideal for performance-focused meditations',
     settings: {
-      stability: 0.65,
+      stability: 0.5, // Natural - balanced delivery
       similarity_boost: 0.75,
       style: 0.15,
       use_speaker_boost: true,
@@ -34,7 +35,7 @@ export const VOICE_OPTIONS = {
     name: 'Antoni',
     description: 'Energizing, confident male voice - ideal for pre-performance meditations',
     settings: {
-      stability: 0.55,
+      stability: 0.0, // Creative - dynamic, varied delivery for energizing meditations
       similarity_boost: 0.75,
       style: 0.25,
       use_speaker_boost: true,
@@ -45,7 +46,7 @@ export const VOICE_OPTIONS = {
     name: 'Coach',
     description: 'Premium default voice - optimized for all meditation types',
     settings: {
-      stability: 0.70,
+      stability: 0.5, // Natural - balanced delivery
       similarity_boost: 0.80,
       style: 0.15,
       use_speaker_boost: true,
@@ -56,7 +57,7 @@ export const VOICE_OPTIONS = {
     name: 'Sarge',
     description: 'Commanding, authoritative voice - ideal for motivational and performance-driven meditations',
     settings: {
-      stability: 0.65,
+      stability: 0.5, // Natural - balanced delivery with authority
       similarity_boost: 0.75,
       style: 0.20,
       use_speaker_boost: true,
@@ -126,10 +127,11 @@ export async function synthesizeVoice(
     });
 
     // Generate audio using ElevenLabs streaming API
-    // Using turbo_v2_5 which supports SSML break tags for precise pausing
+    // Using eleven_v3 which supports audio tags for emotional direction
+    // Note: v3 does NOT support SSML break tags - use punctuation and paragraph breaks instead
     const audioStream = await client.textToSpeech.convert(voice.id, {
       text: scriptText,
-      modelId: 'eleven_turbo_v2_5', // Supports SSML break tags and audio tags
+      modelId: 'eleven_v3', // v3 supports audio tags like [excited], [intense], [confident]
       voiceSettings: voice.settings,
       outputFormat: 'mp3_44100_128', // Standard quality MP3
     });
@@ -263,9 +265,14 @@ export function validateScriptForSynthesis(scriptText: string): {
     warnings.push('Script contains **(markers)** that will be SPOKEN ALOUD - use [audio tags] instead');
   }
 
-  // Check for ellipses that should be SSML breaks
+  // Check for SSML break tags (not supported by eleven_v3)
+  if (scriptText.match(/<break\s+time="[^"]+"\s*\/>/)) {
+    warnings.push('Script contains SSML <break> tags - eleven_v3 does NOT support them. Use punctuation instead.');
+  }
+
+  // Check for ellipses
   if (scriptText.includes('...')) {
-    warnings.push('Script uses ellipses (...) - consider using <break time="X.Xs" /> for consistent pausing');
+    warnings.push('Script uses ellipses (...) - use punctuation (periods, commas, em-dashes) for pausing');
   }
 
   if (scriptText.split('\n\n').length > 20) {

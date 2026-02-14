@@ -4,16 +4,19 @@
  * Step 1 of the two-step AI generation workflow.
  * Analyzes user questionnaire responses and generates a structured meditation plan
  * that requires admin approval before proceeding to script generation.
+ *
+ * UPDATED: Now uses V2 psychological techniques database with enhanced academic backing
  */
 
 import { generateText, ClaudeResponse } from './claude';
 import {
   generateMeditationPlan,
   UserProfile,
-  MeditationComponent,
   SessionStructure,
   MessagingFramework,
-} from './meditation-knowledge-base';
+  getTechniqueById,
+  type PsychologicalTechnique,
+} from './meditation-knowledge-base-v2';
 
 export interface QuestionnaireResponse {
   id: string;
@@ -129,47 +132,61 @@ Do NOT include any text before or after the JSON. Only output valid JSON.`;
 /**
  * Build the user message with questionnaire context
  */
-function buildPlanUserMessage(
+async function buildPlanUserMessage(
   questionnaire: QuestionnaireResponse,
-  baselinePlan: ReturnType<typeof generateMeditationPlan>
-): string {
-  const components = baselinePlan.components
-    .map(
-      (c) =>
-        `- ${c?.name}: ${c?.function} (Evidence: ${c?.evidenceLevel}, Best for: ${c?.bestFor.join(', ')})`
-    )
-    .join('\n');
+  baselinePlan: Awaited<ReturnType<typeof generateMeditationPlan>>
+): Promise<string> {
+  // Get full technique details for V2 components
+  const techniqueResults = await Promise.all(baselinePlan.components
+    .map(async (c) => {
+      const tech = await getTechniqueById(c.id);
+      if (!tech) return null;
 
-  return `Analyze this user's questionnaire and create a personalized meditation plan.
+      const academicSource = tech.academicSources[0];
+      const sourceInfo = academicSource
+        ? `${Array.isArray(academicSource.authors) ? academicSource.authors.join(', ') : academicSource.authors} (${academicSource.year})`
+        : 'Practitioner validated';
+
+      return `- **${tech.name}** (${tech.domain}): ${tech.description}
+  Evidence: ${tech.evidenceLevel} | Performance Focus: ${tech.performanceFocus}/5
+  Source: ${sourceInfo}
+  Best for: ${tech.bestFor.join(', ')}
+  Language patterns available: ${Array.isArray(tech.implementationProtocol?.languagePatterns) ? tech.implementationProtocol.languagePatterns.length : Object.values(tech.implementationProtocol?.languagePatterns || {}).flat().length}`;
+    }));
+  const techniqueDetails = techniqueResults.filter(Boolean).join('\n\n');
+
+  return `Analyze this user's questionnaire and create a personalized meditation plan using evidence-based psychological techniques.
 
 # User Profile
 
 **Primary Goal**: ${questionnaire.primaryGoal}
 **Current Challenge**: ${questionnaire.currentChallenge}
-**Session Length Preference**: ${questionnaire.sessionLength} (${baselinePlan.structure.totalMinutes} minutes)
+**Session Length Preference**: ${questionnaire.sessionLength} (${baselinePlan.sessionStructure?.totalMinutes || baselinePlan.totalDuration} minutes)
 **Experience Level**: ${questionnaire.experienceLevel}
 **Skepticism Level**: ${questionnaire.skepticismLevel}/5 ${questionnaire.skepticismLevel >= 4 ? '(High - emphasize evidence)' : ''}
 **Performance Context**: ${questionnaire.performanceContext}
 **Preferred Time**: ${questionnaire.preferredTime}
 ${questionnaire.specificOutcome ? `**Specific Outcome**: ${questionnaire.specificOutcome}` : ''}
 
-# Available Components (Baseline Recommendation)
+# Recommended Psychological Techniques (V2 Database)
 
-${components}
+${techniqueDetails}
 
-# Messaging Framework: ${baselinePlan.messaging.audienceType}
+# Messaging Framework: ${baselinePlan.messagingFramework?.archetype || 'Performance Professional'}
 
-**Values**: ${baselinePlan.messaging.values.join(', ')}
-**Emphasize**: ${baselinePlan.messaging.emphasizeWords.join(', ')}
-**Avoid**: ${baselinePlan.messaging.avoidWords.join(', ')}
+**Archetype**: ${baselinePlan.messagingFramework?.archetype || 'Ambitious professional'}
+**Values**: ${baselinePlan.messagingFramework?.values?.join(', ') || 'Results, efficiency, competitive advantage'}
+**Key Words**: ${baselinePlan.messagingFramework?.keyWords?.join(', ') || 'Performance, focus, edge'}
+**Avoid**: ${baselinePlan.messagingFramework?.avoidWords?.join(', ') || 'Relax, peace, spirituality'}
 
 # Instructions
 
-1. Select 2-4 components that best address this user's PRIMARY GOAL and CURRENT CHALLENGE
-2. For high skepticism users (4-5), ONLY use components with "high" evidence level
-3. Structure components into the ${questionnaire.sessionLength} session template
-4. Write rationale that directly references their specific goal/challenge
+1. Select 3-5 techniques that best address this user's PRIMARY GOAL and CURRENT CHALLENGE
+2. For high skepticism users (4-5), prioritize "strong" or "moderate" evidence levels with peer-reviewed sources
+3. Structure techniques into the ${questionnaire.sessionLength} session template
+4. Write rationale that directly references their specific goal/challenge AND the academic evidence
 5. Use messaging that aligns with their performance context values
+6. Leverage the available language patterns for each technique in your rationale
 
 Generate the meditation plan JSON now.`;
 }
@@ -181,22 +198,31 @@ export async function generateMeditationPlanFromQuestionnaire(
   questionnaire: QuestionnaireResponse
 ): Promise<{ plan: MeditationPlan; aiResponse: ClaudeResponse }> {
   // Step 1: Use knowledge base to get baseline recommendations
+  // Convert session length from string to number for V2
+  // Values match questionnaire: ultra_quick=1min, quick=2-3min, standard=5-7min, deep=10-15min
+  const sessionLengthMap: Record<string, number> = {
+    'ultra_quick': 1,
+    'quick': 3,
+    'standard': 6,
+    'deep': 12
+  };
+
   const userProfile: UserProfile = {
     primaryGoal: questionnaire.primaryGoal,
     currentChallenge: questionnaire.currentChallenge,
-    sessionLength: questionnaire.sessionLength,
+    sessionLength: sessionLengthMap[questionnaire.sessionLength] || 10,
     experienceLevel: questionnaire.experienceLevel,
-    skepticismLevel: questionnaire.skepticismLevel,
+    skepticismLevel: questionnaire.skepticismLevel.toString(),
     performanceContext: questionnaire.performanceContext,
     preferredTime: questionnaire.preferredTime,
     specificOutcome: questionnaire.specificOutcome,
   };
 
-  const baselinePlan = generateMeditationPlan(userProfile);
+  const baselinePlan = await generateMeditationPlan(userProfile);
 
   // Step 2: Use Claude to refine and justify the plan
   const systemPrompt = buildPlanSystemPrompt();
-  const userMessage = buildPlanUserMessage(questionnaire, baselinePlan);
+  const userMessage = await buildPlanUserMessage(questionnaire, baselinePlan);
 
   const aiResponse = await generateText(userMessage, {
     systemPrompt,
@@ -248,21 +274,30 @@ export async function regenerateMeditationPlan(
   questionnaire: QuestionnaireResponse,
   feedback: string
 ): Promise<{ plan: MeditationPlan; aiResponse: ClaudeResponse }> {
+  // Convert session length from string to number for V2
+  // Values match questionnaire: ultra_quick=1min, quick=2-3min, standard=5-7min, deep=10-15min
+  const sessionLengthMap: Record<string, number> = {
+    'ultra_quick': 1,
+    'quick': 3,
+    'standard': 6,
+    'deep': 12
+  };
+
   const userProfile: UserProfile = {
     primaryGoal: questionnaire.primaryGoal,
     currentChallenge: questionnaire.currentChallenge,
-    sessionLength: questionnaire.sessionLength,
+    sessionLength: sessionLengthMap[questionnaire.sessionLength] || 10,
     experienceLevel: questionnaire.experienceLevel,
-    skepticismLevel: questionnaire.skepticismLevel,
+    skepticismLevel: questionnaire.skepticismLevel.toString(),
     performanceContext: questionnaire.performanceContext,
     preferredTime: questionnaire.preferredTime,
     specificOutcome: questionnaire.specificOutcome,
   };
 
-  const baselinePlan = generateMeditationPlan(userProfile);
+  const baselinePlan = await generateMeditationPlan(userProfile);
   const systemPrompt = buildPlanSystemPrompt();
 
-  const userMessage = `${buildPlanUserMessage(questionnaire, baselinePlan)}
+  const userMessage = `${await buildPlanUserMessage(questionnaire, baselinePlan)}
 
 # Previous Plan (REJECTED)
 

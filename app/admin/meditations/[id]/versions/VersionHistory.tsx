@@ -40,6 +40,7 @@ function VersionCard({ version }: { version: MeditationVersion }) {
   const [showScript, setShowScript] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   const scriptStyle = version.script_style || 'energizing';
@@ -55,6 +56,7 @@ function VersionCard({ version }: { version: MeditationVersion }) {
 
     setIsRestoring(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await fetch('/api/admin/restore-version', {
@@ -71,7 +73,9 @@ function VersionCard({ version }: { version: MeditationVersion }) {
         throw new Error(data.error || 'Failed to restore version');
       }
 
-      router.refresh();
+      setSuccess('Version restored successfully!');
+      // Delay refresh to show success message
+      setTimeout(() => router.refresh(), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -99,13 +103,16 @@ function VersionCard({ version }: { version: MeditationVersion }) {
           </p>
         </div>
 
-        <button
-          onClick={handleRestore}
-          disabled={isRestoring || version.is_live}
-          className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isRestoring ? 'Restoring...' : 'Restore This Version'}
-        </button>
+        <div className="flex flex-col items-end gap-2">
+          {success && <p className="text-sm text-green-500">{success}</p>}
+          <button
+            onClick={handleRestore}
+            disabled={isRestoring || version.is_live}
+            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isRestoring ? 'Restoring...' : 'Restore This Version'}
+          </button>
+        </div>
       </div>
 
       {/* Metadata */}

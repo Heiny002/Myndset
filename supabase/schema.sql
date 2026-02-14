@@ -11,7 +11,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TYPE subscription_tier AS ENUM ('free', 'basic', 'premium');
 CREATE TYPE subscription_status AS ENUM ('active', 'canceled', 'past_due');
 CREATE TYPE plan_status AS ENUM ('pending_approval', 'approved', 'rejected', 'generating', 'completed');
-CREATE TYPE session_length AS ENUM ('quick', 'standard', 'deep');
+CREATE TYPE session_length AS ENUM ('ultra_quick', 'quick', 'standard', 'deep');
 CREATE TYPE admin_role AS ENUM ('admin', 'super_admin');
 
 -- ============================================

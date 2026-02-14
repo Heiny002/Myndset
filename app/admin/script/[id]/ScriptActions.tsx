@@ -17,11 +17,13 @@ export default function ScriptActions({
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [voiceType, setVoiceType] = useState<string>('default');
+  const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleApprove() {
     setIsProcessing(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await fetch('/api/admin/approve-script', {
@@ -38,7 +40,9 @@ export default function ScriptActions({
         throw new Error(data.error || 'Failed to approve script');
       }
 
-      router.refresh();
+      setSuccess('Script approved successfully!');
+      // Only refresh after a delay to show success message
+      setTimeout(() => router.refresh(), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -54,6 +58,7 @@ export default function ScriptActions({
 
     setIsProcessing(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await fetch('/api/admin/regenerate-script', {
@@ -70,9 +75,11 @@ export default function ScriptActions({
         throw new Error(data.error || 'Failed to regenerate script');
       }
 
-      router.refresh();
+      setSuccess('Script regenerated successfully!');
       setShowFeedback(false);
       setFeedback('');
+      // Only refresh after a delay to show success message
+      setTimeout(() => router.refresh(), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -83,6 +90,7 @@ export default function ScriptActions({
   async function handleGenerateAudio() {
     setIsProcessing(true);
     setError(null);
+    setSuccess(null);
 
     try {
       const response = await fetch('/api/admin/generate-audio', {
@@ -99,7 +107,9 @@ export default function ScriptActions({
         throw new Error(data.error || 'Failed to generate audio');
       }
 
-      router.refresh();
+      setSuccess('Audio generated successfully!');
+      // Only refresh after a delay to show success message
+      setTimeout(() => router.refresh(), 500);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -143,6 +153,7 @@ export default function ScriptActions({
             </button>
           </div>
           {error && <p className="text-sm text-red-500">{error}</p>}
+          {success && <p className="text-sm text-green-500">{success}</p>}
         </div>
       </div>
     );
@@ -150,6 +161,7 @@ export default function ScriptActions({
 
   return (
     <div className="flex flex-col items-end gap-2">
+      {success && <p className="text-sm text-green-500">{success}</p>}
       <div className="flex gap-2">
         <button
           onClick={handleApprove}

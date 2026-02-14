@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { regenerateMeditationPlan } from '@/lib/ai/plan-generator';
 import { logAPIUsage } from '@/lib/ai/cost-tracking';
+import { mapQuestionnaireResponses } from '@/lib/questionnaire/response-mapper';
 
 export async function POST(request: NextRequest) {
   try {
@@ -66,19 +67,23 @@ export async function POST(request: NextRequest) {
 
     // Regenerate plan with feedback
     const responses = questionnaire.responses as Record<string, any>;
+
+    // Map questionnaire responses to the format expected by plan generator
+    const mappedData = mapQuestionnaireResponses(responses);
+
     const { plan: newPlan, aiResponse } = await regenerateMeditationPlan(
       originalPlan,
       {
         id: questionnaire.id,
         userId: questionnaire.user_id,
-        primaryGoal: responses.primaryGoal,
-        currentChallenge: responses.currentChallenge,
-        sessionLength: responses.sessionLength,
-        experienceLevel: responses.experienceLevel,
-        skepticismLevel: responses.skepticismLevel,
-        performanceContext: responses.performanceContext,
-        preferredTime: responses.preferredTime,
-        specificOutcome: responses.specificOutcome,
+        primaryGoal: mappedData.primaryGoal,
+        currentChallenge: mappedData.currentChallenge,
+        sessionLength: mappedData.sessionLength,
+        experienceLevel: mappedData.experienceLevel,
+        skepticismLevel: mappedData.skepticismLevel,
+        performanceContext: mappedData.performanceContext,
+        preferredTime: mappedData.preferredTime,
+        specificOutcome: mappedData.specificOutcome,
         tier: questionnaire.tier || 1,
         responses,
         createdAt: questionnaire.created_at,

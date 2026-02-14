@@ -10,7 +10,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clear-users": "tsx scripts/clear-test-users.ts",
-    "setup-stripe": "tsx scripts/setup-stripe-products.ts"
+    "setup-stripe": "tsx scripts/setup-stripe-products.ts",
+    "seed-techniques": "tsx scripts/seed-techniques.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
