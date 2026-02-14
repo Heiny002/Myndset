@@ -301,6 +301,46 @@
           "sequencePosition": "after",
           "combinedEffect": "The anchor fires the state; the self-talk statement reinforces and directs it toward specific action.",
           "transitionLanguage": "Now that the state is locked in your body, let's give it a voice -- a phrase that fires alongside the anchor..."
+        },
+        {
+          "id": "arousal_regulation",
+          "name": "Arousal Regulation",
+          "synergy": "Once the listener reaches their optimal arousal zone, an anchor locks that state to a physical trigger for instant future recall. Without arousal regulation first, the anchor captures a suboptimal state.",
+          "sequencePosition": "after",
+          "combinedEffect": "Arousal regulation finds and calibrates the zone; anchoring preserves it as an on-demand resource. Together they create a repeatable, instant-access optimal performance state.",
+          "transitionLanguage": "You are in the zone right now. Feel it in every cell. Now press your thumb and finger together and seal this state into your body..."
+        },
+        {
+          "id": "new_behavior_generator",
+          "name": "New Behavior Generator",
+          "synergy": "After the New Behavior Generator installs the behavioral pattern through mental rehearsal, anchoring locks the associated state to a physical trigger (fist clench, touch, breath pattern) so the listener can re-access the rehearsed state instantly in real-world situations.",
+          "sequencePosition": "before",
+          "combinedEffect": "The New Behavior Generator creates the full sensory experience of the desired behavior; anchoring compresses that experience into a portable trigger. Together they produce both the detailed behavioral template AND the rapid-access mechanism for deploying it under pressure.",
+          "transitionLanguage": "You have just rehearsed this at full intensity. Now let us lock it in. At the peak of that feeling, press your thumb and finger together and hold it..."
+        },
+        {
+          "id": "strategy_elicitation",
+          "name": "Strategy Elicitation and Installation",
+          "synergy": "Anchoring provides a physical trigger to fire the installed strategy automatically",
+          "sequencePosition": "before",
+          "combinedEffect": "Strategy is both cognitively mapped and kinesthetically triggered -- double-locked installation",
+          "transitionLanguage": "Now let's attach a trigger to this strategy so it fires without thinking..."
+        },
+        {
+          "id": "submodalities_work",
+          "name": "Submodalities Work",
+          "synergy": "Anchoring locks the amplified positive state to a physical trigger, ensuring the submodality shift can be recalled instantly without repeating the full process.",
+          "sequencePosition": "before",
+          "combinedEffect": "Submodalities create the desired internal state; anchoring makes it portable and instantly accessible. Together they produce on-demand emotional control.",
+          "transitionLanguage": "Now, while that vivid, amplified state is at its peak, press your thumb and finger together and lock it in..."
+        },
+        {
+          "id": "swish_pattern",
+          "name": "Swish Pattern",
+          "synergy": "After the swish installs the new self-image, anchoring provides a physical trigger that fires the new identity on demand in real-world situations.",
+          "sequencePosition": "before",
+          "combinedEffect": "The swish creates the new default self-image; the anchor provides instant access in high-pressure moments. Together they produce automatic identity activation.",
+          "transitionLanguage": "Now, while that new you is filling the frame, press your thumb and finger together and anchor this identity..."
         }
       ],
       "contradictsWithout": [],
@@ -625,6 +665,22 @@
           "sequencePosition": "after",
           "combinedEffect": "The circle transitions from a conscious visualization exercise to an automatic trigger that fires without deliberate effort.",
           "transitionLanguage": "Your circle is fully loaded. Now let's make it automatic -- so that the moment you see it in your mind, everything activates without you having to think..."
+        },
+        {
+          "id": "strategy_elicitation",
+          "name": "Strategy Elicitation and Installation",
+          "synergy": "Circle of excellence provides the peak state from which strategies are most easily elicited",
+          "sequencePosition": "after",
+          "combinedEffect": "The fully resourceful state amplifies strategy recall and makes installation more vivid",
+          "transitionLanguage": "From this state of excellence, let's map exactly what's running inside you right now..."
+        },
+        {
+          "id": "swish_pattern",
+          "name": "Swish Pattern",
+          "synergy": "Circle of Excellence provides a spatial, whole-body anchor for the new self-image the swish installs. Stepping into the circle becomes stepping into the new identity.",
+          "sequencePosition": "before",
+          "combinedEffect": "The swish rewires the visual default; the Circle grounds it physically. The combination makes the identity shift both visual and kinesthetic.",
+          "transitionLanguage": "The new you is now your default image. See a circle of light on the ground in front of you. Step into it and feel that identity flood through your entire body..."
         }
       ],
       "contradictsWithout": [],
@@ -961,6 +1017,134 @@
           "sequencePosition": "interleaved",
           "combinedEffect": "Multi-channel confidence building -- visual proof of success combined with verbal affirmation creates a dual-coding effect that strengthens both pathways.",
           "transitionLanguage": "As you see yourself succeeding, let's give that confident version of you a voice..."
+        },
+        {
+          "id": "circle_of_excellence",
+          "name": "Circle of Excellence",
+          "synergy": "Visualization makes the circle vivid, real, and sensorially rich. The more detailed the circle, the stronger the spatial anchor.",
+          "sequencePosition": "either",
+          "combinedEffect": "A fully imagined, multi-sensory spatial anchor that the listener can see, feel, and step into with automatic state activation.",
+          "transitionLanguage": "Now that you can see every detail of this space, let's fill it with everything you need..."
+        },
+        {
+          "id": "post_hypnotic_suggestion",
+          "name": "Post-Hypnotic Suggestion",
+          "synergy": "Vivid mental imagery creates the sensory detail necessary for an effective post-hypnotic trigger. The more vividly the future scene is imagined, the more reliably the trigger activates in the real moment.",
+          "sequencePosition": "either",
+          "combinedEffect": "Visualization builds the vivid internal representation of the future scene; the post-hypnotic suggestion anchors the desired state to a specific sensory cue within that scene. The combination creates a trigger that is both contextually rich and somatically anchored.",
+          "transitionLanguage": "As this scene becomes vivid and real in your mind -- every detail, every sensation -- I want you to notice one specific moment within it..."
+        },
+        {
+          "id": "autogenic_training",
+          "name": "Autogenic Training",
+          "synergy": "The alpha/theta brainwave state produced by AT is the optimal neurological platform for vivid mental imagery. AT clears the mental noise that typically fragments visualization.",
+          "sequencePosition": "after",
+          "combinedEffect": "AT produces the relaxed, internally focused state; imagery uses that state to rehearse success or build confidence with dramatically enhanced vividness. The combination is the foundation of many European sport psychology protocols.",
+          "transitionLanguage": "Your body is at peace. Your mind is clear and quiet. And in this stillness, let an image begin to form..."
+        },
+        {
+          "id": "centering_technique",
+          "name": "Centering Technique",
+          "synergy": "Centering clears mental noise, creating a clean canvas for vivid imagery. Imagery attempted in an anxious state is clouded and fragmented.",
+          "sequencePosition": "after",
+          "combinedEffect": "The centered state dramatically increases imagery vividness and control, allowing the listener to rehearse with full sensory engagement.",
+          "transitionLanguage": "Now that you are centered and still, let an image begin to form..."
+        },
+        {
+          "id": "cognitive_reframing",
+          "name": "Cognitive Reframing",
+          "synergy": "Once the situation is reframed, visualization can rehearse the new behavioral response, making the reframe concrete and actionable",
+          "sequencePosition": "after",
+          "combinedEffect": "Reframing changes the interpretation; visualization programs the new response. The combination ensures the cognitive shift translates to changed behavior.",
+          "transitionLanguage": "With this new perspective, see yourself stepping into the next moment and acting from this truth..."
+        },
+        {
+          "id": "progressive_muscle_relaxation",
+          "name": "Progressive Muscle Relaxation",
+          "synergy": "PMR reduces the physical noise that interferes with mental imagery clarity. A relaxed body produces clearer, more vivid mental images.",
+          "sequencePosition": "after",
+          "combinedEffect": "Athletes who do PMR before imagery report significantly more vivid and controllable images, enhancing the motor programming effect of mental rehearsal.",
+          "transitionLanguage": "With your body completely released and at ease, your mind is now free to create the clearest image you have ever formed..."
+        },
+        {
+          "id": "arm_levitation_induction",
+          "name": "Arm Levitation Induction",
+          "synergy": "The trance state from arm levitation enhances vividness and emotional intensity of subsequent visualization.",
+          "sequencePosition": "after",
+          "combinedEffect": "Visualization done in deep trance produces more vivid, multi-sensory imagery that transfers more effectively to real performance.",
+          "transitionLanguage": "From this deep, receptive place, let your mind now create an image..."
+        },
+        {
+          "id": "best_possible_self",
+          "name": "Best Possible Self Exercise",
+          "synergy": "Mental imagery adds sensory richness and specificity to the BPS exercise.",
+          "sequencePosition": "either",
+          "combinedEffect": "The visualization becomes vivid enough for the brain to treat it as a proto-memory, increasing its motivational impact.",
+          "transitionLanguage": "Make this picture as real as a memory. See the light. Hear the sounds. Feel the ground beneath your feet in this future."
+        },
+        {
+          "id": "future_pacing",
+          "name": "Future Pacing",
+          "synergy": "Mental imagery builds the general skill of vivid internal representation; future pacing applies that skill to specific upcoming situations for transfer and generalization",
+          "sequencePosition": "before",
+          "combinedEffect": "Visualization develops the 'camera'; future pacing points that camera at the specific scenes where performance matters most. Together they create targeted, high-fidelity mental rehearsal.",
+          "transitionLanguage": "You have seen what excellence looks like. Now let us place it in the exact moment where you will need it..."
+        },
+        {
+          "id": "mental_contrasting",
+          "name": "Mental Contrasting",
+          "synergy": "Mental imagery deepens the outcome visualization phase of mental contrasting, making the desired future more vivid and emotionally compelling, which increases the energization when contrasted with reality.",
+          "sequencePosition": "either",
+          "combinedEffect": "Richer sensory imagery in the outcome phase creates a stronger cognitive discrepancy during the obstacle phase, amplifying the motivational energy that drives the plan into action.",
+          "transitionLanguage": "Stay in that image. Make it sharper. What do you see? What do you hear? What does your body feel like in that moment of success? Good. Now hold that -- because we are about to look at what stands between you and that picture."
+        },
+        {
+          "id": "new_behavior_generator",
+          "name": "New Behavior Generator",
+          "synergy": "Mental imagery provides the vivid sensory foundation that makes the New Behavior Generator's screen and association phases maximally effective. Stronger imagery skills produce richer rehearsals and faster behavioral installation.",
+          "sequencePosition": "after",
+          "combinedEffect": "Mental imagery warms up the visualization system and establishes vivid, controllable sensory representation. The New Behavior Generator then channels that heightened imagery capacity into structured behavioral rehearsal. The combination produces rehearsals that are vivid enough to create genuine neural encoding.",
+          "transitionLanguage": "You have been building vivid images, feeling them in your body. Now let us put that skill to work. Imagine a screen in front of you..."
+        },
+        {
+          "id": "pre_performance_routines",
+          "name": "Pre-Performance Routines",
+          "synergy": "Brief visualization of successful execution is one of the most evidence-based cognitive elements within a PPR",
+          "sequencePosition": "either",
+          "combinedEffect": "A flash of visualization embedded within the routine primes the motor system for the exact movement pattern needed. The combination produces both psychological readiness (routine) and neural rehearsal (imagery).",
+          "transitionLanguage": "And right here in the routine, see it -- one clear image of the ball going exactly where you want it..."
+        },
+        {
+          "id": "progressive_relaxation_induction",
+          "name": "Progressive Relaxation Induction",
+          "synergy": "Physical relaxation removes muscular noise that interferes with vivid mental imagery",
+          "sequencePosition": "after",
+          "combinedEffect": "Relaxed body plus absorbed mind creates optimal conditions for detailed, emotionally impactful visualization",
+          "transitionLanguage": "Now that your body is completely at ease, your mind's eye has never been clearer..."
+        },
+        {
+          "id": "staircase_deepener",
+          "name": "Staircase Deepener",
+          "synergy": "Deep trance from the staircase maximizes imagery vividness and emotional impact",
+          "sequencePosition": "after",
+          "combinedEffect": "Imagery delivered at this depth is experienced with near-perceptual vividness",
+          "transitionLanguage": "From this place of profound depth, your mind's eye opens with crystalline clarity..."
+        },
+        {
+          "id": "strategy_elicitation",
+          "name": "Strategy Elicitation and Installation",
+          "synergy": "Mental imagery is used within installation to rehearse the strategy in the target context",
+          "sequencePosition": "either",
+          "combinedEffect": "Strategy is not just mapped but vividly experienced in the target environment through mental rehearsal",
+          "transitionLanguage": "Now see yourself in that exact situation next week, and watch this strategy run..."
+        },
+        {
+          "id": "verbal_persuasion",
+          "name": "Verbal Persuasion",
+          "synergy": "Verbal persuasion builds belief in capability; visualization rehearses the successful execution that the belief predicts. Words build the conviction; imagery makes it vivid and felt.",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener first BELIEVES they can succeed, then SEES themselves succeeding. The visualization is dramatically more vivid and compelling when preceded by verbal persuasion because the belief removes the internal resistance to positive imagery.",
+          "transitionLanguage": "You know you are ready. Now see it. Close your eyes and watch yourself walk into that moment as the person I just described..."
         }
       ],
       "contradictsWithout": [],
@@ -1279,6 +1463,62 @@
           "sequencePosition": "either",
           "combinedEffect": "Visualization provides the movie; self-talk provides the voiceover. Together they create a complete internal rehearsal that engages imagery, language, and emotion centers simultaneously.",
           "transitionLanguage": "As you see yourself performing, hear your own voice in the scene. The words you chose. Running underneath everything, steady and certain..."
+        },
+        {
+          "id": "embedded_commands",
+          "name": "Embedded Commands",
+          "synergy": "Embedded commands can install the self-talk phrases themselves, making the positive self-talk feel like the listener's own thought rather than an external prescription.",
+          "sequencePosition": "after",
+          "combinedEffect": "The embedded commands plant the seeds of specific self-talk phrases, so when the listener is guided to adopt them, the phrases already feel familiar -- as if they thought of them independently.",
+          "transitionLanguage": "And you may have already noticed a phrase forming in your mind -- a truth about yourself that wants to be spoken..."
+        },
+        {
+          "id": "arousal_regulation",
+          "name": "Arousal Regulation",
+          "synergy": "Self-talk serves as the verbal mechanism for arousal regulation itself -- energizing self-talk drives activation while calming self-talk drives deactivation. The two techniques are naturally intertwined.",
+          "sequencePosition": "either",
+          "combinedEffect": "Self-talk becomes the steering wheel for arousal regulation, giving the listener an internal tool they can use independently. The combination makes arousal regulation self-sustaining.",
+          "transitionLanguage": "And as you hold this zone, give it a voice inside your head. What does your best self say right now when everything is calibrated?"
+        },
+        {
+          "id": "autogenic_training",
+          "name": "Autogenic Training",
+          "synergy": "AT's autosuggestion formulas are themselves a form of self-talk, making the transition to motivational self-statements seamless. The parasympathetic state reduces the critical resistance that often blocks positive self-talk.",
+          "sequencePosition": "after",
+          "combinedEffect": "AT lowers the drawbridge of the critical mind; positive self-talk then enters without the usual skepticism. Affirmations delivered after AT are absorbed more deeply because the listener is in a suggestible, non-resistant state.",
+          "transitionLanguage": "From this place of deep calm, let these words settle into you -- not as wishes, but as truths your body already knows..."
+        },
+        {
+          "id": "thought_stopping",
+          "name": "Thought-Stopping",
+          "synergy": "Thought-stopping creates the gap; positive self-talk fills it. Without a prepared replacement, the stopped thought rebounds.",
+          "sequencePosition": "after",
+          "combinedEffect": "Complete thought-replacement protocol: interrupt + redirect. Neither works as well alone.",
+          "transitionLanguage": "Now that the noise is gone, here is what takes its place..."
+        },
+        {
+          "id": "growth_mindset_cultivation",
+          "name": "Growth Mindset Cultivation",
+          "synergy": "Growth mindset provides the beliefs; positive self-talk provides the daily voice that reinforces those beliefs through repetition",
+          "sequencePosition": "after",
+          "combinedEffect": "Growth mindset changes what the listener believes about their potential; self-talk scripts install those beliefs as an ongoing internal narrative that runs automatically during challenges.",
+          "transitionLanguage": "Now let us give this growth mindset a voice -- the voice you will hear inside your head the next time you struggle..."
+        },
+        {
+          "id": "meaning_making",
+          "name": "Meaning-Making",
+          "synergy": "Meaning-making excavates the purpose; positive self-talk installs that purpose as a repeatable internal mantra for deployment during difficulty",
+          "sequencePosition": "after",
+          "combinedEffect": "Meaning-making provides the 'why' at a deep emotional level; positive self-talk converts it into a portable phrase the listener can access in any moment of doubt. The combination ensures meaning is not just felt but repeatedly reinforced.",
+          "transitionLanguage": "You found your why. Now let us give it a voice -- the sentence you will say to yourself every time the doubt returns..."
+        },
+        {
+          "id": "verbal_persuasion",
+          "name": "Verbal Persuasion",
+          "synergy": "Verbal persuasion provides the external voice of belief; positive self-talk internalizes it as the listener's own inner voice. The transition from 'I believe in you' to 'now say it yourself' is the handoff from persuasion to self-talk.",
+          "sequencePosition": "after",
+          "combinedEffect": "The external voice builds conviction; the self-talk installs it as an ongoing internal narrative. Together they transform a speech moment into a lasting internal resource.",
+          "transitionLanguage": "I have told you what I see. Now it is your turn. Say it to yourself with the same conviction: I am ready. I am capable. I am going."
         }
       ],
       "contradictsWithout": [],
@@ -1574,6 +1814,46 @@
           "sequencePosition": "before",
           "combinedEffect": "The embedded commands plant the seeds of specific self-talk phrases, so when the listener is guided to adopt them, the phrases already feel familiar -- as if they thought of them independently.",
           "transitionLanguage": "And you may have already noticed a phrase forming in your mind -- a truth about yourself that wants to be spoken..."
+        },
+        {
+          "id": "pacing_and_leading",
+          "name": "Pacing and Leading",
+          "synergy": "Pacing establishes the yes-set that makes embedded commands bypass the critical factor. Without pacing first, embedded commands feel manipulative rather than natural.",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener accepts the embedded commands as part of the natural flow of language because the pacing has established unconscious trust",
+          "transitionLanguage": "And as you continue to notice these things, you can begin to feel yourself becoming more confident..."
+        },
+        {
+          "id": "confusion_technique",
+          "name": "Confusion Technique",
+          "synergy": "Embedded commands can be woven into the confusion such that they bypass the overwhelmed critical faculty entirely.",
+          "sequencePosition": "either",
+          "combinedEffect": "The confused conscious mind cannot identify and filter the embedded commands, allowing them to reach the unconscious directly.",
+          "transitionLanguage": "Within the confusion itself -- 'And as you try to follow this, you can simply RELAX DEEPLY and let your body FEEL CALM...'"
+        },
+        {
+          "id": "fractionation",
+          "name": "Fractionation",
+          "synergy": "At the deep trance levels achieved through fractionation, embedded commands bypass the critical faculty entirely.",
+          "sequencePosition": "before",
+          "combinedEffect": "Commands that might be detected and resisted at lighter trance levels are absorbed seamlessly at fractionation-level depth.",
+          "transitionLanguage": "From this deep place, simply absorb what comes next. Your unconscious mind will know what to do with it."
+        },
+        {
+          "id": "metaphor_storytelling",
+          "name": "Metaphor and Storytelling",
+          "synergy": "Embedded commands hidden within the narrative structure deliver direct therapeutic suggestions while the conscious mind follows the story. The story provides cover; the commands do the work.",
+          "sequencePosition": "either",
+          "combinedEffect": "The listener consciously processes the story while unconsciously receiving specific behavioral and state-change commands. The narrative absorption prevents the critical faculty from filtering out the commands, dramatically increasing their impact.",
+          "transitionLanguage": "No explicit transition needed -- embedded commands are woven INTO the story. Example: 'And she realized she could let go of that weight now and feel lighter than she had in years.' The command 'let go of that weight now' and 'feel lighter' are delivered inside the narrative."
+        },
+        {
+          "id": "naturalistic_trance_induction",
+          "name": "Naturalistic Trance Induction",
+          "synergy": "Naturalistic trance creates the absorptive state where embedded commands land without conscious detection. The story provides cover for direct suggestions that would trigger resistance if delivered openly.",
+          "sequencePosition": "either",
+          "combinedEffect": "The narrative carries embedded commands ('she found herself becoming calm... her body knew exactly what to do') that the conscious mind processes as story description while the unconscious receives as direct instructions. Neither technique reaches full potency alone.",
+          "transitionLanguage": "No explicit transition needed -- embedded commands are woven directly into the narrative fabric. The story IS the delivery vehicle."
         }
       ],
       "contradictsWithout": [],
@@ -1887,6 +2167,70 @@
           "sequencePosition": "interleaved",
           "combinedEffect": "Visualization builds the vivid internal representation of the future scene; the post-hypnotic suggestion anchors the desired state to a specific sensory cue within that scene. The combination creates a trigger that is both contextually rich and somatically anchored.",
           "transitionLanguage": "As this scene becomes vivid and real in your mind -- every detail, every sensation -- I want you to notice one specific moment within it..."
+        },
+        {
+          "id": "circle_of_excellence",
+          "name": "Circle of Excellence",
+          "synergy": "The circle becomes a post-hypnotic trigger: 'Whenever you imagine stepping into your circle, all resources activate automatically.'",
+          "sequencePosition": "before",
+          "combinedEffect": "The circle transitions from a conscious visualization exercise to an automatic trigger that fires without deliberate effort.",
+          "transitionLanguage": "Your circle is fully loaded. Now let's make it automatic -- so that the moment you see it in your mind, everything activates without you having to think..."
+        },
+        {
+          "id": "psycap_development",
+          "name": "Psychological Capital (PsyCap) Development",
+          "synergy": "After building the full HERO state, a post-hypnotic suggestion can anchor the integrated PsyCap state to a specific future trigger, ensuring the listener can access all four resources instantly when they need them most.",
+          "sequencePosition": "after",
+          "combinedEffect": "PsyCap builds the comprehensive state; the post-hypnotic suggestion ensures on-demand access. The listener does not need to run through all four HERO components in the moment -- the trigger activates the integrated state automatically.",
+          "transitionLanguage": "You feel all four of these now -- Hope, Efficacy, Resilience, Optimism -- working together. Now let us lock this feeling to the moment you will need it most."
+        },
+        {
+          "id": "autogenic_training",
+          "name": "Autogenic Training",
+          "synergy": "AT naturally produces a light-to-medium trance state through its progressive autosuggestion sequence. This trance state creates an ideal window for installing post-hypnotic suggestions before the cancellation procedure.",
+          "sequencePosition": "after",
+          "combinedEffect": "AT builds the trance depth organically through body-focused formulas; post-hypnotic suggestions then leverage that trance to install lasting behavioral or emotional triggers. The combination produces both immediate relaxation and long-term change.",
+          "transitionLanguage": "And in this deep state of calm, while your body is heavy and warm and your mind is quiet, there is something important for your unconscious mind to receive..."
+        },
+        {
+          "id": "dave_elman_induction",
+          "name": "Dave Elman Induction",
+          "synergy": "The Elman achieves the somnambulistic depth required for post-hypnotic suggestions to install with maximum effectiveness",
+          "sequencePosition": "after",
+          "combinedEffect": "Rapid trance depth plus powerful suggestion installation. The Elman creates the receptive state; post-hypnotic suggestion programs the behavioral change.",
+          "transitionLanguage": "And in this deep, receptive state, your unconscious mind is now ready to accept and hold something powerful..."
+        },
+        {
+          "id": "arm_levitation_induction",
+          "name": "Arm Levitation Induction",
+          "synergy": "Arm levitation creates deep trance ideal for installing post-hypnotic suggestions that transfer to performance contexts.",
+          "sequencePosition": "after",
+          "combinedEffect": "The trance depth achieved through arm levitation makes post-hypnotic suggestions more durable and automatic.",
+          "transitionLanguage": "Now that you are at this comfortable depth, your unconscious mind is open and receptive. Here is what I would like it to remember..."
+        },
+        {
+          "id": "countdown_breathing",
+          "name": "Countdown Breathing",
+          "synergy": "Countdown breathing creates reliable trance depth for installing post-hypnotic suggestions.",
+          "sequencePosition": "after",
+          "combinedEffect": "The gradual, non-threatening nature of countdown breathing creates a receptive state without the resistance that more dramatic inductions might trigger.",
+          "transitionLanguage": "You have counted yourself into a deep, comfortable place. Now, from this place, your unconscious mind is open to a suggestion..."
+        },
+        {
+          "id": "fractionation",
+          "name": "Fractionation",
+          "synergy": "The somnambulistic depth achieved through fractionation is the ideal state for installing durable post-hypnotic suggestions.",
+          "sequencePosition": "after",
+          "combinedEffect": "Suggestions installed at somnambulistic depth transfer more reliably to waking contexts and persist longer.",
+          "transitionLanguage": "You are now at a depth where suggestions take root deeply and permanently. Here is what your unconscious mind will carry with you..."
+        },
+        {
+          "id": "progressive_relaxation_induction",
+          "name": "Progressive Relaxation Induction",
+          "synergy": "The trance state achieved through progressive relaxation is ideal for embedding post-hypnotic suggestions",
+          "sequencePosition": "after",
+          "combinedEffect": "Suggestions delivered at trance depth have stronger encoding and more automatic activation",
+          "transitionLanguage": "In this deeply relaxed state, your unconscious mind is open and receptive, and I'd like to plant a seed..."
         }
       ],
       "contradictsWithout": [],
@@ -2197,6 +2541,22 @@
           "sequencePosition": "before",
           "combinedEffect": "Mastery experiences charge three of the four HERO components simultaneously, making the PsyCap intervention richer and more personally grounded. The listener does not build PsyCap from theory but from their own evidence.",
           "transitionLanguage": "Look at everything you have accomplished. Now let us use that evidence to build something even more powerful -- a complete framework for how you face what comes next."
+        },
+        {
+          "id": "growth_mindset_cultivation",
+          "name": "Growth Mindset Cultivation",
+          "synergy": "Growth mindset provides the belief that improvement is possible; mastery experiences provide the evidence that it is actually happening",
+          "sequencePosition": "after",
+          "combinedEffect": "Growth mindset opens the door to effort; mastery experiences walk through it by creating tangible evidence of progress. The combination prevents growth mindset from becoming empty affirmation by grounding it in real achievement.",
+          "transitionLanguage": "You believe you can grow. Good. Now let us look at the proof that you already are..."
+        },
+        {
+          "id": "verbal_persuasion",
+          "name": "Verbal Persuasion",
+          "synergy": "Mastery experiences are the strongest source of self-efficacy in Bandura's model. Verbal persuasion amplifies their impact by making the listener conscious of evidence they may be overlooking or minimizing.",
+          "sequencePosition": "either",
+          "combinedEffect": "Mastery experiences provide the raw evidence; verbal persuasion frames and amplifies that evidence into a coherent narrative of capability. The combination is the two most powerful sources of self-efficacy working in concert.",
+          "transitionLanguage": "Remember what you accomplished when the odds were against you. That was not luck. That was capability. Let me tell you what that says about what you can do next..."
         }
       ],
       "contradictsWithout": [],
@@ -2516,6 +2876,14 @@
           "sequencePosition": "before",
           "combinedEffect": "PsyCap builds the comprehensive state; the post-hypnotic suggestion ensures on-demand access. The listener does not need to run through all four HERO components in the moment -- the trigger activates the integrated state automatically.",
           "transitionLanguage": "You feel all four of these now -- Hope, Efficacy, Resilience, Optimism -- working together. Now let us lock this feeling to the moment you will need it most."
+        },
+        {
+          "id": "verbal_persuasion",
+          "name": "Verbal Persuasion",
+          "synergy": "Verbal persuasion directly builds the efficacy component of PsyCap and supports the hope, resilience, and optimism components through evidence-based encouragement.",
+          "sequencePosition": "either",
+          "combinedEffect": "Verbal persuasion provides the emotional activation; PsyCap development provides the structural framework for sustaining that activation across multiple challenges.",
+          "transitionLanguage": "This confidence you feel right now is not a moment. It is a resource you can build on. Let us talk about how to make it last..."
         }
       ],
       "contradictsWithout": [],
@@ -2831,6 +3199,14 @@
           "sequencePosition": "interleaved",
           "combinedEffect": "Self-talk becomes the steering wheel for arousal regulation, giving the listener an internal tool they can use independently. The combination makes arousal regulation self-sustaining.",
           "transitionLanguage": "And as you hold this zone, give it a voice inside your head. What does your best self say right now when everything is calibrated?"
+        },
+        {
+          "id": "pre_performance_routines",
+          "name": "Pre-Performance Routines",
+          "synergy": "PPRs inherently include arousal regulation elements, but explicit arousal regulation training strengthens the physiological component of the routine",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener first learns to control their arousal level, then embeds that skill as a routine element. The combination ensures the physiological foundation is solid before building the behavioral sequence on top.",
+          "transitionLanguage": "You have learned to control your engine speed. Now let us build that control into a routine that fires automatically..."
         }
       ],
       "contradictsWithout": [],
@@ -3443,6 +3819,46 @@
           "sequencePosition": "after",
           "combinedEffect": "Centering provides the initial drop in arousal; PMR deepens it systematically through each muscle group, producing profound physical readiness.",
           "transitionLanguage": "You have found your center. Now let us release any remaining tension your body is holding..."
+        },
+        {
+          "id": "cognitive_reframing",
+          "name": "Cognitive Reframing",
+          "synergy": "Centering calms the nervous system enough for the prefrontal cortex to engage in reframing, which requires cognitive resources that anxiety depletes",
+          "sequencePosition": "before",
+          "combinedEffect": "Centering creates the physiological calm; reframing uses that calm to do cognitive work. The combination addresses both body and mind.",
+          "transitionLanguage": "From this centered, grounded place, you have the clarity to look at this situation differently..."
+        },
+        {
+          "id": "thought_stopping",
+          "name": "Thought-Stopping",
+          "synergy": "The centering breath between STOP and replacement thought deepens the reset and engages the body.",
+          "sequencePosition": "either",
+          "combinedEffect": "Adds a physiological dimension to what is otherwise a purely cognitive technique, making the state change more complete.",
+          "transitionLanguage": "Breathe into the center of your body. Feel the ground beneath you. From this centered place, choose your next thought."
+        },
+        {
+          "id": "betty_erickson_321",
+          "name": "Betty Erickson 3-2-1 Technique",
+          "synergy": "Both techniques use sensory grounding but from different frameworks. Combined, they provide comprehensive present-moment anchoring.",
+          "sequencePosition": "either",
+          "combinedEffect": "Centering provides the breath and body awareness; 3-2-1 adds structured visual and auditory grounding.",
+          "transitionLanguage": "From this centered place, let's deepen the focus. Notice three things you can see..."
+        },
+        {
+          "id": "implementation_intentions",
+          "name": "Implementation Intentions",
+          "synergy": "Centering can be the planned response in a distress-management implementation intention, creating an automatic calming protocol triggered by specific anxiety cues",
+          "sequencePosition": "either",
+          "combinedEffect": "The implementation intention ensures centering happens automatically at the right moment rather than requiring the presence of mind to remember it. This is critical because anxiety impairs executive function, making spontaneous recall of coping strategies unreliable.",
+          "transitionLanguage": "If I feel my heart rate spike, then I center: breath, belly, cue word. Automatic."
+        },
+        {
+          "id": "pre_performance_routines",
+          "name": "Pre-Performance Routines",
+          "synergy": "Centering provides the arousal regulation component that is often the first element of a PPR -- the breath that starts the sequence",
+          "sequencePosition": "either",
+          "combinedEffect": "Centering becomes the opening element of the PPR, creating a smooth entry point from anxiety to routine. The combination produces a complete pre-performance system: regulate arousal, then execute the behavioral sequence.",
+          "transitionLanguage": "That centered breath you just took? That is step one of your routine. Now let us build the rest..."
         }
       ],
       "contradictsWithout": [],
@@ -3758,6 +4174,118 @@
           "sequencePosition": "after",
           "combinedEffect": "Centering creates the physiological calm; reframing uses that calm to do cognitive work. The combination addresses both body and mind.",
           "transitionLanguage": "From this centered, grounded place, you have the clarity to look at this situation differently..."
+        },
+        {
+          "id": "embedded_commands",
+          "name": "Embedded Commands",
+          "synergy": "Cognitive reframing provides the conscious-level perspective shift while embedded commands install the new belief beneath conscious awareness. The reframe gives the listener a reason to change; the embedded commands make the change feel automatic.",
+          "sequencePosition": "either",
+          "combinedEffect": "The listener consciously agrees with the reframe while unconsciously absorbing the embedded commands, creating both intellectual and felt change. Neither technique alone achieves this dual-level transformation.",
+          "transitionLanguage": "And as you see this situation differently now, you might notice something interesting -- you can FEEL THE SHIFT happening inside you without even trying."
+        },
+        {
+          "id": "mastery_experiences",
+          "name": "Mastery Experiences (Bandura)",
+          "synergy": "Mastery experiences provide the raw evidence; cognitive reframing ensures the listener interprets that evidence correctly. Without reframing, the listener may access the memory but still attribute success to luck. Reframing locks in the correct attribution: 'you did this because of who you are.'",
+          "sequencePosition": "either",
+          "combinedEffect": "The mastery recall surfaces the evidence; the reframe ensures it sticks. Together they produce evidence-based confidence that is resistant to self-doubt because both the data and the interpretation are aligned.",
+          "transitionLanguage": "And notice what that success actually reveals about you. Not luck. Not timing. This is who you are when it matters."
+        },
+        {
+          "id": "psycap_development",
+          "name": "Psychological Capital (PsyCap) Development",
+          "synergy": "Cognitive reframing is built into PsyCap's Optimism component (explanatory style) and Resilience component (growth reframing of adversity). Using dedicated reframing before PsyCap clears the cognitive distortions that would otherwise undermine the HERO assessment.",
+          "sequencePosition": "before",
+          "combinedEffect": "Reframing removes the distorted lens; PsyCap installs the accurate one. The listener first sees their situation clearly (reframe), then assesses their resources accurately (PsyCap). The combination prevents the common failure mode where PsyCap is attempted but the listener's negative cognitive filters dismiss every piece of evidence.",
+          "transitionLanguage": "Now that you see this situation for what it actually is, let us take stock of what you are bringing to it."
+        },
+        {
+          "id": "pacing_and_leading",
+          "name": "Pacing and Leading",
+          "synergy": "Pacing the listener's current painful interpretation builds the trust needed for them to accept the reframe",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener feels heard before being redirected, making the reframe feel like a discovery rather than a correction",
+          "transitionLanguage": "You have been carrying this interpretation, and it has been heavy. But as you sit with it here, you begin to notice something else..."
+        },
+        {
+          "id": "attribution_retraining",
+          "name": "Attribution Retraining",
+          "synergy": "Cognitive reframing provides broader perspective shifts; attribution retraining is a specific, targeted application of reframing to causal explanations.",
+          "sequencePosition": "before",
+          "combinedEffect": "Attribution retraining changes the explanation; cognitive reframing changes the meaning of the setback itself.",
+          "transitionLanguage": "Now that you see the real cause, let's also look at what this setback is actually teaching you."
+        },
+        {
+          "id": "explanatory_style_modification",
+          "name": "Explanatory Style Modification",
+          "synergy": "ESM modifies the causal explanation; cognitive reframing modifies the meaning. Together they change both why it happened and what it means.",
+          "sequencePosition": "either",
+          "combinedEffect": "The listener not only explains the setback differently but sees it as a different kind of event entirely -- perhaps an opportunity or a necessary course correction.",
+          "transitionLanguage": "Now that you see the real cause, let's look at what this setback is actually offering you."
+        },
+        {
+          "id": "future_pacing",
+          "name": "Future Pacing",
+          "synergy": "Cognitive reframing shifts the interpretation of a challenge; future pacing then rehearses the listener responding from that new interpretation in the actual situation",
+          "sequencePosition": "before",
+          "combinedEffect": "The reframe changes how the listener sees the challenge; future pacing programs how they will act on that new seeing. The combination ensures intellectual insight becomes embodied behavior.",
+          "transitionLanguage": "You see it differently now. Let us step into that future moment and watch what this new perspective makes possible..."
+        },
+        {
+          "id": "growth_mindset_cultivation",
+          "name": "Growth Mindset Cultivation",
+          "synergy": "Cognitive reframing provides the specific technique for reinterpreting a single setback; growth mindset cultivation provides the global belief system that makes all future reframes automatic",
+          "sequencePosition": "either",
+          "combinedEffect": "Reframing handles the immediate situation; growth mindset installs the operating system that makes reframing a default response. Together they produce both immediate relief and long-term resilience.",
+          "transitionLanguage": "And this is not just about this one setback. This is about how you see every challenge from this moment forward..."
+        },
+        {
+          "id": "implementation_intentions",
+          "name": "Implementation Intentions",
+          "synergy": "Implementation intentions can program automatic reframes as the planned response, ensuring that cognitive restructuring happens in the moment rather than after the fact",
+          "sequencePosition": "before",
+          "combinedEffect": "Reframing identifies the more adaptive interpretation; implementation intentions automate accessing that interpretation the instant the trigger appears. The combination makes reframing instantaneous rather than reflective.",
+          "transitionLanguage": "Now that you have the reframe, let us make it automatic. If that thought appears, then this reframe fires instantly..."
+        },
+        {
+          "id": "meaning_making",
+          "name": "Meaning-Making",
+          "synergy": "Cognitive reframing changes how the listener interprets a specific situation; meaning-making provides the deepest possible reframe -- connecting the situation to life purpose",
+          "sequencePosition": "before",
+          "combinedEffect": "Cognitive reframing says 'this setback is actually an opportunity.' Meaning-making says 'and this opportunity is connected to the reason you exist.' The combination moves from tactical reframe to existential reframe.",
+          "transitionLanguage": "You see this differently now. But let us go even deeper. This is not just an opportunity. This is an expression of everything you stand for..."
+        },
+        {
+          "id": "perceptual_positions",
+          "name": "Perceptual Positions",
+          "synergy": "Perceptual positions provides the raw material -- new perspectives -- that cognitive reframing then crystallizes into a specific empowering interpretation",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener first sees the situation from multiple angles, then selects and locks in the most useful reframe. The combination produces insight that is both emotionally resonant (from the perspective shifts) and cognitively durable (from the reframe).",
+          "transitionLanguage": "Now that you have seen this from every angle, let us choose the perspective that serves you best..."
+        },
+        {
+          "id": "submodalities_work",
+          "name": "Submodalities Work",
+          "synergy": "Submodalities change the felt intensity of a memory; cognitive reframing changes its meaning. Working both channels simultaneously produces deeper and more durable change.",
+          "sequencePosition": "either",
+          "combinedEffect": "The unwanted experience is both visually diminished and cognitively reinterpreted, making it nearly impossible for the old reaction to reassert itself.",
+          "transitionLanguage": "Now that you have turned down the volume on that image, let us look at what it actually means from a different angle..."
+        },
+        {
+          "id": "swish_pattern",
+          "name": "Swish Pattern",
+          "synergy": "Cognitive reframing provides the logical justification for the new self-image, making the swish-installed identity change intellectually coherent as well as viscerally felt.",
+          "sequencePosition": "either",
+          "combinedEffect": "The swish changes the image; reframing changes the story. Together they address both the visual and narrative dimensions of self-concept.",
+          "transitionLanguage": "Your brain has already chosen the new image. Now let us understand why that image is not just compelling -- it is true..."
+        },
+        {
+          "id": "verbal_persuasion",
+          "name": "Verbal Persuasion",
+          "synergy": "Cognitive reframing changes how the listener interprets their situation; verbal persuasion then fills the new frame with evidence-based belief. Reframing opens the door; persuasion walks through it.",
+          "sequencePosition": "before",
+          "combinedEffect": "The listener first sees their situation differently, then receives passionate, evidence-based encouragement within that new frame. The reframe makes the persuasion land harder because the doubt narrative has already been destabilized.",
+          "transitionLanguage": "Now that you see this for what it really is, let me tell you what that means about who you are and what you are about to do..."
         }
       ],
       "contradictsWithout": [],
@@ -4059,6 +4587,30 @@
           "sequencePosition": "before",
           "combinedEffect": "Trance-enhanced state access produces richer, more intense anchors. The compound state installed under hypnosis is more robust and fires more reliably.",
           "transitionLanguage": "From this deep place, we are going to access your most powerful states and wire them together..."
+        },
+        {
+          "id": "resource_anchoring",
+          "name": "Resource Anchoring",
+          "synergy": "Trance state amplifies the vividness of the recalled resource state, making the anchor installation more powerful",
+          "sequencePosition": "before",
+          "combinedEffect": "Hypnotic depth enhances emotional recall intensity, producing a stronger conditioning response and more robust anchor",
+          "transitionLanguage": "From this deep, receptive state, your memories are more vivid, more intense. Let us find the resource you need..."
+        },
+        {
+          "id": "fractionation",
+          "name": "Fractionation",
+          "synergy": "Fractionation is Phase 2 of the classic Elman induction. They were designed to work together.",
+          "sequencePosition": "before",
+          "combinedEffect": "The Elman induction creates initial relaxation and eye lock; fractionation rapidly deepens to somnambulistic levels needed for the final phase (mental relaxation/amnesia test).",
+          "transitionLanguage": "Your eyes are locked. Your body is relaxed. Now we go deeper. In a moment I'll ask you to open your eyes..."
+        },
+        {
+          "id": "staircase_deepener",
+          "name": "Staircase Deepener",
+          "synergy": "Elman induction creates rapid light trance; staircase takes it to profound depth",
+          "sequencePosition": "before",
+          "combinedEffect": "Rapid induction followed by gradual deepening achieves deep trance in under 5 minutes total",
+          "transitionLanguage": "You're already deeply relaxed. Now let's go even further. Picture a staircase appearing before you..."
         }
       ],
       "contradictsWithout": [],
@@ -4387,6 +4939,22 @@
           "sequencePosition": "after",
           "combinedEffect": "The listener does not feel 'pulled' into an imagination exercise. Instead, their current experience is acknowledged and gradually transformed into the performance reality.",
           "transitionLanguage": "You are here, breathing, listening, and as you continue to breathe, you begin to notice that you are no longer in this room..."
+        },
+        {
+          "id": "performance_cues_trigger_words",
+          "name": "Performance Cues / Trigger Words",
+          "synergy": "Using the cue word during mental rehearsal strengthens the word-performance association in the same neural pathways that will fire during actual performance",
+          "sequencePosition": "either",
+          "combinedEffect": "The cue word becomes embedded in the rehearsed motor sequence, so firing it during real performance triggers the entire rehearsed sequence automatically",
+          "transitionLanguage": "And as you see yourself approaching that moment in your rehearsal, let your word fire -- feel it activate the performance you just rehearsed..."
+        },
+        {
+          "id": "stacking_anchors",
+          "name": "Stacking Anchors",
+          "synergy": "Firing the compound anchor during mental rehearsal wires the full performance state into the rehearsed motor sequence",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener rehearses their performance while in their compound state, programming both the cognitive-emotional state and the motor execution simultaneously.",
+          "transitionLanguage": "Your compound state is loaded. Now, with your anchor active, step into the performance and rehearse from this place of total readiness..."
         }
       ],
       "contradictsWithout": [],
@@ -4687,6 +5255,46 @@
           "sequencePosition": "before",
           "combinedEffect": "The listener feels heard before being redirected, making the reframe feel like a discovery rather than a correction",
           "transitionLanguage": "You have been carrying this interpretation, and it has been heavy. But as you sit with it here, you begin to notice something else..."
+        },
+        {
+          "id": "safe_place_visualization",
+          "name": "Safe Place Visualization",
+          "synergy": "Pacing the listener's current stressed state before leading them into the safe place visualization creates a natural, non-jarring transition",
+          "sequencePosition": "before",
+          "combinedEffect": "The listener feels acknowledged in their current distress before being guided to safety, making the visualization feel earned rather than escapist",
+          "transitionLanguage": "You are carrying a lot right now. And you have earned a few minutes of peace. Let a safe place form in your mind..."
+        },
+        {
+          "id": "confusion_technique",
+          "name": "Confusion Technique",
+          "synergy": "Pacing establishes the rapport baseline that makes confusion safe; leading provides the restructuring direction.",
+          "sequencePosition": "after",
+          "combinedEffect": "The contrast between paced rapport and confusion amplifies the technique's power. The listener trusts you from the pacing, then surrenders during the confusion.",
+          "transitionLanguage": "You are sitting comfortably. Your breathing is easy. Everything I have said so far has made sense. Now let me show you what happens when it doesn't..."
+        },
+        {
+          "id": "metaphor_storytelling",
+          "name": "Metaphor and Storytelling",
+          "synergy": "Pacing the listener's current experience at the start of the story builds unconscious rapport and trust, which deepens the narrative absorption that makes the metaphor effective.",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener feels acknowledged and understood before the story begins, creating the psychological safety needed for deep narrative transportation. The pacing validates their current state; the story leads them to a new one.",
+          "transitionLanguage": "And as you sit here, perhaps noticing the thoughts still moving through your mind, I want to tell you about someone who found a way through something that might sound familiar..."
+        },
+        {
+          "id": "naturalistic_trance_induction",
+          "name": "Naturalistic Trance Induction",
+          "synergy": "Pacing the listener's current experience at the story's opening builds rapport and trust before the narrative leads them toward the therapeutic shift. The naturalistic frame makes the pacing invisible.",
+          "sequencePosition": "after",
+          "combinedEffect": "Pacing establishes 'yes-set' responsiveness by accurately describing the listener's current state, then the naturalistic narrative leads them from that state into trance and toward the embedded therapeutic outcome. The combination makes the entire experience feel like the listener's own natural progression.",
+          "transitionLanguage": "You have been carrying a lot lately, and I think you know that. It reminds me of someone I met who was carrying something similar..."
+        },
+        {
+          "id": "perceptual_positions",
+          "name": "Perceptual Positions",
+          "synergy": "The insights from perceptual positions -- understanding what the other person needs -- directly feed the ability to pace their experience before leading them",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener develops empathy through perspective shifts, then uses that empathy strategically through pacing and leading techniques in the actual conversation.",
+          "transitionLanguage": "Now that you know what they need to hear first, here is how you open that conversation..."
         }
       ],
       "contradictsWithout": [],
@@ -4983,6 +5591,30 @@
           "sequencePosition": "interleaved",
           "combinedEffect": "The cue word becomes embedded in the rehearsed motor sequence, so firing it during real performance triggers the entire rehearsed sequence automatically",
           "transitionLanguage": "And as you see yourself approaching that moment in your rehearsal, let your word fire -- feel it activate the performance you just rehearsed..."
+        },
+        {
+          "id": "thought_stopping",
+          "name": "Thought-Stopping",
+          "synergy": "Trigger words serve as pre-loaded replacement thoughts that fire instantly after the stop command.",
+          "sequencePosition": "before",
+          "combinedEffect": "Turns thought-stopping from a defensive technique into an offensive weapon -- the replacement cue activates peak state, not just neutral state.",
+          "transitionLanguage": "And into that silence, drop your word. The one that fires everything up."
+        },
+        {
+          "id": "implementation_intentions",
+          "name": "Implementation Intentions",
+          "synergy": "Trigger words can serve as the 'then' response in an implementation intention, creating a two-part system: if-then identifies the moment, the cue word activates the state",
+          "sequencePosition": "either",
+          "combinedEffect": "The implementation intention detects the critical moment; the trigger word activates the desired state. The combination provides both the 'when' and the 'what' of automatic performance responses.",
+          "transitionLanguage": "If that moment arrives, your cue word fires. If [trigger], then I say [cue word]. Automatic."
+        },
+        {
+          "id": "pre_performance_routines",
+          "name": "Pre-Performance Routines",
+          "synergy": "The cue word is the cognitive capstone of the PPR -- the final internal signal that transitions from preparation to execution",
+          "sequencePosition": "either",
+          "combinedEffect": "The routine builds readiness step by step; the trigger word compresses all of that readiness into a single moment of committed action.",
+          "transitionLanguage": "The routine has brought you here. Now one word launches you into it..."
         }
       ],
       "contradictsWithout": [],
@@ -5583,6 +6215,38 @@
           "sequencePosition": "after",
           "combinedEffect": "Hypnotic depth enhances emotional recall intensity, producing a stronger conditioning response and more robust anchor",
           "transitionLanguage": "From this deep, receptive state, your memories are more vivid, more intense. Let us find the resource you need..."
+        },
+        {
+          "id": "performance_cues_trigger_words",
+          "name": "Performance Cues / Trigger Words",
+          "synergy": "The cue word can be paired with a kinesthetic anchor, creating a dual-channel trigger that activates both verbal and somatic pathways simultaneously",
+          "sequencePosition": "either",
+          "combinedEffect": "Double-channel activation -- the word triggers the cognitive focus while the physical anchor triggers the emotional state. Together they produce a more complete performance state.",
+          "transitionLanguage": "As you say your word, press your anchor at the same moment -- let both channels fire together..."
+        },
+        {
+          "id": "safe_place_visualization",
+          "name": "Safe Place Visualization",
+          "synergy": "The safe place feeling can be anchored with a kinesthetic trigger, creating instant access to the calm state without needing the full visualization",
+          "sequencePosition": "either",
+          "combinedEffect": "The cue word provides verbal access; the physical anchor provides kinesthetic access. Dual-channel retrieval makes the safe place more reliable under stress.",
+          "transitionLanguage": "And as you feel this deep sense of safety, press your thumb and finger together, linking this place to that gesture..."
+        },
+        {
+          "id": "future_pacing",
+          "name": "Future Pacing",
+          "synergy": "Resource anchoring installs the desired state; future pacing projects that state into specific real-world contexts where it is needed. Anchoring without future pacing creates a resource with no address. Future pacing without anchoring has no resource to project.",
+          "sequencePosition": "before",
+          "combinedEffect": "The anchor provides the 'what' (the resourceful state); future pacing provides the 'where and when' (the specific contexts). Together they create a complete cue-response program that activates automatically in the target situation.",
+          "transitionLanguage": "Now that this state is anchored in your body, let us take it to exactly where you need it most..."
+        },
+        {
+          "id": "perceptual_positions",
+          "name": "Perceptual Positions",
+          "synergy": "The observer position generates wisdom and calm that can be anchored for future access, especially before difficult conversations",
+          "sequencePosition": "after",
+          "combinedEffect": "The expanded perspective becomes an anchored resource state -- the listener can fire the anchor before any challenging interaction to access multi-perspective awareness instantly.",
+          "transitionLanguage": "This wisdom you feel right now as the observer -- let us anchor it so you can access it the moment you need it..."
         }
       ],
       "contradictsWithout": [],
@@ -5877,6 +6541,38 @@
           "sequencePosition": "after",
           "combinedEffect": "The listener feels acknowledged in their current distress before being guided to safety, making the visualization feel earned rather than escapist",
           "transitionLanguage": "You are carrying a lot right now. And you have earned a few minutes of peace. Let a safe place form in your mind..."
+        },
+        {
+          "id": "betty_erickson_321",
+          "name": "Betty Erickson 3-2-1 Technique",
+          "synergy": "The 3-2-1 technique creates the trance state; safe place visualization uses that state to build a resource anchor.",
+          "sequencePosition": "after",
+          "combinedEffect": "The sensory awareness cultivated in the 3-2-1 transfers directly into richer, more vivid safe place imagery.",
+          "transitionLanguage": "And now from this internal place, allow a scene to form. A place where you feel completely safe, completely at ease..."
+        },
+        {
+          "id": "countdown_breathing",
+          "name": "Countdown Breathing",
+          "synergy": "The calm state from countdown breathing provides an ideal foundation for constructing a safe place anchor.",
+          "sequencePosition": "after",
+          "combinedEffect": "The physiological calm from the breathing adds a felt-sense of safety to the visualized safe place, making the anchor more embodied.",
+          "transitionLanguage": "From this place of deep breath and deep calm, allow a scene to form. A place where you feel completely safe..."
+        },
+        {
+          "id": "progressive_relaxation_induction",
+          "name": "Progressive Relaxation Induction",
+          "synergy": "Progressive relaxation creates the physiological state that makes safe place imagery maximally vivid and immersive",
+          "sequencePosition": "after",
+          "combinedEffect": "Deep somatic calm plus vivid environmental imagery creates a full mind-body sanctuary experience",
+          "transitionLanguage": "And from this place of deep physical stillness, your mind is now perfectly clear to create something beautiful..."
+        },
+        {
+          "id": "staircase_deepener",
+          "name": "Staircase Deepener",
+          "synergy": "The bottom of the staircase naturally becomes the safe place",
+          "sequencePosition": "after",
+          "combinedEffect": "The descent creates anticipation and depth; the safe place provides the destination and emotional payoff",
+          "transitionLanguage": "At the bottom of these stairs, a door opens into a place that is entirely yours..."
         }
       ],
       "contradictsWithout": [],
@@ -6807,6 +7503,22 @@
           "sequencePosition": "after",
           "combinedEffect": "Past setbacks are reframed as values-consistent choices or values-clarifying moments rather than failures.",
           "transitionLanguage": "Now that you know what matters most, look back at what you have been through. See how even the hardest moments were shaping this clarity."
+        },
+        {
+          "id": "mental_contrasting",
+          "name": "Mental Contrasting",
+          "synergy": "Values clarification ensures the wish in mental contrasting is genuinely meaningful rather than superficially appealing. When the goal is anchored in core values, the energization from the contrast is deeper and more sustainable.",
+          "sequencePosition": "after",
+          "combinedEffect": "The listener first connects with what truly matters to them, then uses mental contrasting to energize and strategize pursuit of that value-aligned goal. The combination prevents wasted energy on goals that do not actually matter.",
+          "transitionLanguage": "Now that you know what you truly value, let us take that and make it real. What is the one goal that would honor that value most?"
+        },
+        {
+          "id": "perceptual_positions",
+          "name": "Perceptual Positions",
+          "synergy": "After seeing multiple perspectives, the listener needs a compass for choosing how to act. Values clarification provides that compass.",
+          "sequencePosition": "after",
+          "combinedEffect": "Perceptual positions expands awareness; values clarification focuses it. The combination prevents the listener from being paralyzed by too many perspectives and instead acts from their deepest priorities.",
+          "transitionLanguage": "You can see all sides now. The question is: which response aligns with who you want to be?"
         }
       ],
       "contradictsWithout": [],
@@ -7097,7 +7809,7 @@
           "transitionLanguage": "Now that you are at this comfortable depth, your unconscious mind is open and receptive. Here is what I would like it to remember..."
         },
         {
-          "id": "mental_imagery",
+          "id": "mental_imagery_visualization",
           "name": "Mental Imagery Visualization",
           "synergy": "The trance state from arm levitation enhances vividness and emotional intensity of subsequent visualization.",
           "sequencePosition": "before",
@@ -7747,6 +8459,14 @@
           "sequencePosition": "interleaved",
           "combinedEffect": "The visualization becomes vivid enough for the brain to treat it as a proto-memory, increasing its motivational impact.",
           "transitionLanguage": "Make this picture as real as a memory. See the light. Hear the sounds. Feel the ground beneath your feet in this future."
+        },
+        {
+          "id": "explanatory_style_modification",
+          "name": "Explanatory Style Modification",
+          "synergy": "ESM clears pessimistic obstacles; BPS provides the optimistic destination to move toward.",
+          "sequencePosition": "after",
+          "combinedEffect": "Once the pessimistic explanation is dismantled, the BPS exercise fills the newly opened space with a compelling, achievable vision.",
+          "transitionLanguage": "Now that the old explanation has been replaced, imagine where the new one leads. See yourself in the future where this optimistic accuracy plays out..."
         }
       ],
       "contradictsWithout": [],
@@ -9635,6 +10355,14 @@
           "sequencePosition": "after",
           "combinedEffect": "Visualization develops the 'camera'; future pacing points that camera at the specific scenes where performance matters most. Together they create targeted, high-fidelity mental rehearsal.",
           "transitionLanguage": "You have seen what excellence looks like. Now let us place it in the exact moment where you will need it..."
+        },
+        {
+          "id": "submodalities_work",
+          "name": "Submodalities Work",
+          "synergy": "After the positive state is amplified, future pacing projects it into the specific upcoming situation, rehearsing the new response in context.",
+          "sequencePosition": "before",
+          "combinedEffect": "Submodalities create the desired state; future pacing installs it in the exact moment it will be needed. The combination moves from general state change to situation-specific preparation.",
+          "transitionLanguage": "Carrying this bright, vivid state with you, now see yourself walking into that moment tomorrow..."
         }
       ],
       "contradictsWithout": [],
@@ -9986,6 +10714,14 @@
           "sequencePosition": "before",
           "combinedEffect": "Growth mindset says 'this struggle is building you.' Meaning-making says 'and what you are building matters.' Together they provide both the mechanism (growth) and the motivation (purpose) for sustained effort through adversity.",
           "transitionLanguage": "You are growing through this. But let us go deeper. Why does this growth matter? What is it all for?"
+        },
+        {
+          "id": "attribution_retraining",
+          "name": "Attribution Retraining",
+          "synergy": "Attribution retraining provides the specific mechanism; growth mindset provides the overarching belief framework.",
+          "sequencePosition": "either",
+          "combinedEffect": "Growth mindset says abilities can grow. Attribution retraining says here is exactly how your explanation of failure determines whether they grow or not.",
+          "transitionLanguage": "And this shift in explanation is not a one-time trick. It is a way of seeing the world. A mindset."
         }
       ],
       "contradictsWithout": [],
@@ -12882,7 +13618,7 @@
           "transitionLanguage": "In this deeply relaxed state, your unconscious mind is open and receptive, and I'd like to plant a seed..."
         },
         {
-          "id": "mental_imagery",
+          "id": "mental_imagery_visualization",
           "name": "Mental Imagery Visualization",
           "synergy": "Physical relaxation removes muscular noise that interferes with vivid mental imagery",
           "sequencePosition": "before",
@@ -13193,7 +13929,7 @@
           "transitionLanguage": "At the bottom of these stairs, a door opens into a place that is entirely yours..."
         },
         {
-          "id": "mental_imagery",
+          "id": "mental_imagery_visualization",
           "name": "Mental Imagery Visualization",
           "synergy": "Deep trance from the staircase maximizes imagery vividness and emotional impact",
           "sequencePosition": "before",
@@ -13513,7 +14249,7 @@
           "transitionLanguage": "From this state of excellence, let's map exactly what's running inside you right now..."
         },
         {
-          "id": "mental_imagery",
+          "id": "mental_imagery_visualization",
           "name": "Mental Imagery Visualization",
           "synergy": "Mental imagery is used within installation to rehearse the strategy in the target context",
           "sequencePosition": "interleaved",
