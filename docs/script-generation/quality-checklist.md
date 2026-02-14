@@ -1,42 +1,82 @@
-# Energizing Script Quality Checklist
+# Self-Rally Script Quality Checklist
 
-**Use this checklist to validate every generated energizing script before approval.**
+**Use this checklist to validate every generated script before approval.**
+
+> **Architecture shift (2026-02):** Updated from group-speech validation to Self-Rally Arc criteria. Key change: no "we/us/together" language, pronoun arc required, questionnaire data must be used.
 
 ---
 
 ## Script Structure Validation
 
-- [ ] Contains all 5 psychological phases (see [five-phase-architecture.md](./five-phase-architecture.md))
-- [ ] Phase proportions roughly match targets (10-15% / 20-25% / 20-25% / 20-25% / 10-15%)
+- [ ] Contains all 5 Self-Rally beats (see [five-phase-architecture.md](./five-phase-architecture.md))
+- [ ] Beat proportions roughly match targets: Spiral 10-15% / Confrontation 10-15% / Reframe 20-25% / Fuel 20-25% / Lock-In 10-15%
 - [ ] Word count within 5% of target (session minutes x 170 WPM)
-- [ ] No section feels significantly longer or shorter than intended
+- [ ] No beat feels significantly longer or shorter than intended
 
 ---
 
-## Good Energizing Script
+## Pronoun Architecture (CRITICAL)
 
-- [ ] Feels like a coach's pep talk, not a bedtime meditation
+- [ ] Beat 1 (Spiral): First-person adjacent — "I know..." / "That voice..." / "Right now..."
+- [ ] Beat 2 (Confrontation): Direct second-person — "You know better" / "Is that who you are?"
+- [ ] Beat 3 (Reframe): Second-person intimate — "You are someone who..."
+- [ ] Beat 4 (Fuel): Second-person + name (if available) — most intimate
+- [ ] Beat 5 (Lock-In): Imperative commands — "Stand up." / "Breathe." / "Go."
+- [ ] **ZERO instances** of "we," "us," "together," or collective/tribal language
+
+---
+
+## Good Self-Rally Script
+
+- [ ] Feels like a fierce inner ally speaking directly to ONE person
 - [ ] Makes you want to take action NOW
-- [ ] Uses "we/us/together" language heavily (identity activation)
-- [ ] Has concrete, sensory imagery you can visualize (not abstract concepts)
-- [ ] Ends with ONE crystal-clear next step
-- [ ] Maintains high energy throughout (no energy dips)
-- [ ] Uses present tense ("You ARE ready", not "You will be ready")
-- [ ] Contains 3+ anaphora sequences (strategic repetition)
-- [ ] Includes brief vulnerability before pivoting to conviction
+- [ ] Opens by NAMING the listener's specific darkness (not generic urgency)
+- [ ] Has a clear confrontation moment — the hinge where doubt becomes fuel
+- [ ] Rebuilds identity using the listener's own words (identity statement, values)
+- [ ] Contains vivid, sensory imagery specific to their context and visualization style
+- [ ] Uses The Callback — Beat 1's fear returns in Beat 4-5, transformed
+- [ ] Ends with a PHYSICAL action (not a thought or feeling)
+- [ ] Maintains intensity throughout — intimate conviction, not crowd energy
+- [ ] Uses present tense for future pacing ("You ARE walking in..." not "You will walk in...")
 
 ---
 
-## Bad Energizing Script (Reject If)
+## Questionnaire Data Usage
 
-- [ ] Feels calming, relaxing, or contemplative
-- [ ] Uses calming language: "allow yourself", "gently notice", "surrender"
+- [ ] `innerCritic` appears in Beat 1-2 (named in Spiral, confronted in Confrontation)
+- [ ] `pastSuccess` woven into Beat 4 as vivid sensory flashback
+- [ ] `victoryVision` painted in Beat 4 in present tense
+- [ ] `identityStatement` threaded through Beat 3 as core identity
+- [ ] `physicalCue` used in Beat 5 as the physical lock-in action
+- [ ] `visualizationStyle` guides sensory approach in Beat 4
+- [ ] If data isn't available, script still works — but if provided, it MUST be used
+
+---
+
+## Bad Self-Rally Script (Reject If)
+
+- [ ] Uses "we/us/together" language (group-speech leftover)
+- [ ] Feels like a coach addressing a team
+- [ ] Uses calming language: "allow yourself," "gently notice," "surrender"
 - [ ] Has long pauses for contemplation or reflection
+- [ ] Opens with generic urgency instead of naming the listener's actual state
+- [ ] Skips the confrontation — goes straight from acknowledgment to positivity
 - [ ] Uses abstract concepts without concrete sensory details
 - [ ] Has vague or multiple action steps at the end
-- [ ] Uses passive, soft, or conditional language ("you might", "you can")
-- [ ] Repeats exact phrases/structures across different meditations (template feel)
-- [ ] Uses generic imagery not specific to the user's context
+- [ ] Uses passive, soft, or conditional language ("you might," "you can")
+- [ ] Ignores questionnaire data that was provided
+- [ ] Uses polished anaphora ("We are the ones who...") instead of self-speech devices
+
+---
+
+## Self-Speech Devices Check
+
+- [ ] **Obsessive Repetition**: At least 1 instance of phrase hammered 3+ times with escalating intensity
+- [ ] **Antithesis**: At least 1 juxtaposition of weakness/strength in same breath
+- [ ] **Rhetorical Question to Self**: At least 1 question the listener asks themselves
+- [ ] **Memory Fragment**: At least 1 vivid, specific flash from their past (if pastSuccess provided)
+- [ ] **Physical Punctuation**: At least 1 body-command that breaks a mental loop
+- [ ] **The Callback**: Fear/doubt from Beat 1 reappears in Beat 4-5, transformed
 
 ---
 
@@ -44,10 +84,11 @@
 
 - [ ] Audio tags use ONLY square brackets: `[excited]`, `[intense]`, `[confident]`, `[determined]`, `[passionate]`
 - [ ] Audio tags used sparingly (5-8 times per script maximum)
+- [ ] Tags placed at KEY psychological shift moments (beat transitions, emotional peaks)
 - [ ] NO old-style markers: `**(build intensity)**` (these get spoken aloud!)
 - [ ] NO SSML break tags: `<break time="X.Xs" />` (not supported by eleven_v3)
 - [ ] NO ellipses: `...` or `.....` (create inconsistent pauses)
-- [ ] Pauses use punctuation only: commas, em-dashes, periods, paragraph breaks
+- [ ] Pauses use punctuation only: commas, em-dashes (—), periods, paragraph breaks
 
 ---
 
@@ -58,33 +99,36 @@
 | Words per minute | 160-180 | 140-160 |
 | Speaking rate | 1.1x | 0.95x |
 | Pause style | Brief (momentum) | Extended (contemplation) |
-| ElevenLabs stability | 0.0 (Creative) | 1.0 (Robust) |
+| ElevenLabs stability | 0.4 (dynamic) | 0.75 (steady) |
 
 ---
 
 ## Testing Protocol
 
 ### Quick Validation (2 minutes)
-1. Read the opening — does it create urgency immediately?
-2. Search for "we" and "us" — does collective language appear in Phase 2?
-3. Check the ending — is there ONE clear, specific action?
-4. Count word count — within 5% of target?
+1. Read the opening — does it name the listener's specific darkness?
+2. Search for "we" and "us" — should find ZERO instances
+3. Check the confrontation — is there a clear hinge moment?
+4. Check the ending — is there a physical action (not just words)?
+5. Count word count — within 5% of target?
 
 ### Full Validation (5 minutes)
 1. Read the complete script aloud at ~170 WPM
-2. Verify all 5 phases are present and properly proportioned
-3. Check imagery is specific to user's context (not generic)
-4. Verify ElevenLabs formatting is correct
-5. Confirm script doesn't repeat structures from recent meditations
+2. Verify all 5 beats are present and properly proportioned
+3. Track the pronoun arc — does it shift correctly through beats?
+4. Verify questionnaire data is woven in (not just mentioned)
+5. Check for The Callback — does Beat 1's fear return transformed?
+6. Verify ElevenLabs formatting is correct
 
 ### Expected User Response
 After listening, the user should feel:
-- **Energized** (not calm or relaxed)
-- **Ready to act** (not contemplative)
-- **Clear on next step** (not overwhelmed with options)
-- **Urgent** (not patient or at peace)
+- **Seen** — "That's exactly what I was feeling"
+- **Confronted** — "Okay, that hit hard"
+- **Rebuilt** — "Right, I AM that person"
+- **Fired up** — "I can already see it happening"
+- **Ready to move** — body wants to act, not sit
 
-If the user feels calm or relaxed, the script needs more intensity.
+If the user feels calm, relaxed, or like they were listening to a generic pep talk, the script missed.
 
 ---
 
@@ -92,18 +136,19 @@ If the user feels calm or relaxed, the script needs more intensity.
 
 | Issue | Fix |
 |-------|-----|
-| Script feels too calm | Verify energizing generator is being called, not calming |
+| Script uses "we/us" language | Rewrite with self-speech pronoun arc |
+| No clear confrontation moment | Add Beat 2 with antithesis + rhetorical question |
+| Generic opening urgency | Replace with specific naming of listener's inner state |
+| Questionnaire data ignored | Map each field to its target beat (see architecture doc) |
+| Ends with abstract motivation | Replace with physical action sequence |
+| No Callback | Reference Beat 1's specific fear in Beat 4, now transformed |
 | Pacing too slow | Check word count matches ~170 WPM target |
-| Markers spoken aloud | Replace `**(markers)**` with `[audio tags]` |
-| No urgency | Strengthen Phase 1 opening with temporal immediacy |
-| Generic imagery | Rewrite Phase 4 with user-specific sensory details |
-| Multiple action steps | Reduce Phase 5 to ONE singular next step |
+| Audio tags spoken aloud | Replace `**(markers)**` with `[audio tags]` |
 
 ---
 
 ## Related Files
 
-- [five-phase-architecture.md](./five-phase-architecture.md) — Phase structure reference
-- [script-example.md](./script-example.md) — Annotated 5-minute example
+- [five-phase-architecture.md](./five-phase-architecture.md) — Self-Rally Arc structure reference
+- [script-example.md](./script-example.md) — Annotated 5-minute self-rally example
 - [psychology-and-rhetoric.md](./psychology-and-rhetoric.md) — Research foundation
-- [../voice-audio/elevenlabs-guide.md](../voice-audio/elevenlabs-guide.md) — Voice formatting guide
