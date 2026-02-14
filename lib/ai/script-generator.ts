@@ -28,6 +28,7 @@ import {
   regenerateEnergizingSection,
   EnergizingScript,
 } from './energizing-script-generator';
+import { MappedQuestionnaireData } from '../questionnaire/response-mapper';
 
 export type ScriptStyle = 'energizing' | 'calming';
 
@@ -185,16 +186,17 @@ Write the complete meditation script now. Start with the first words the user wi
  */
 export async function generateMeditationScript(
   plan: MeditationPlan,
-  questionnaire?: { specificOutcome?: string; scriptStyle?: ScriptStyle },
+  questionnaire?: MappedQuestionnaireData | { specificOutcome?: string; scriptStyle?: ScriptStyle },
   scriptStyle: ScriptStyle = 'energizing' // DEFAULT to energizing
 ): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
   // Determine style from parameter or questionnaire, default to energizing
-  const resolvedStyle = scriptStyle || questionnaire?.scriptStyle || 'energizing';
+  const resolvedStyle = scriptStyle || (questionnaire as any)?.scriptStyle || 'energizing';
 
   // Route to appropriate generator
   if (resolvedStyle === 'energizing') {
+    // Pass full MappedQuestionnaireData if available, otherwise pass as-is
     const { script: energizingScript, aiResponse } =
-      await generateEnergizingScript(plan, questionnaire);
+      await generateEnergizingScript(plan, questionnaire as MappedQuestionnaireData | undefined);
 
     // Convert EnergizingScript to MeditationScript format
     const script: MeditationScript = {
@@ -205,7 +207,7 @@ export async function generateMeditationScript(
     return { script, aiResponse };
   } else {
     // Use calming generator (existing implementation below)
-    return generateCalmingScript(plan, questionnaire);
+    return generateCalmingScript(plan, questionnaire as { specificOutcome?: string } | undefined);
   }
 }
 
@@ -275,7 +277,7 @@ export async function regenerateScript(
   originalScript: MeditationScript,
   plan: MeditationPlan,
   feedback: string,
-  questionnaire?: { specificOutcome?: string }
+  questionnaire?: MappedQuestionnaireData | { specificOutcome?: string }
 ): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
   const scriptStyle = originalScript.scriptStyle || 'energizing';
 
@@ -296,7 +298,7 @@ export async function regenerateScript(
       energizingScript,
       plan,
       feedback,
-      questionnaire
+      questionnaire as MappedQuestionnaireData | undefined
     );
 
     return {
@@ -305,7 +307,7 @@ export async function regenerateScript(
     };
   } else {
     // Use calming regenerator
-    return regenerateCalmingScript(originalScript, plan, feedback, questionnaire);
+    return regenerateCalmingScript(originalScript, plan, feedback, questionnaire as { specificOutcome?: string } | undefined);
   }
 }
 
@@ -378,7 +380,8 @@ export async function regenerateScriptSection(
   originalScript: MeditationScript,
   plan: MeditationPlan,
   sectionText: string,
-  userFeedback: string
+  userFeedback: string,
+  questionnaire?: MappedQuestionnaireData
 ): Promise<string> {
   const scriptStyle = originalScript.scriptStyle || 'energizing';
 
@@ -399,7 +402,8 @@ export async function regenerateScriptSection(
       energizingScript,
       plan,
       sectionText,
-      userFeedback
+      userFeedback,
+      questionnaire
     );
   } else {
     return regenerateCalmingSection(originalScript, plan, sectionText, userFeedback);

@@ -1,18 +1,20 @@
 /**
- * Energizing Script Generator
+ * Energizing Script Generator — Self-Rally Arc Architecture
  *
- * Generates high-energy motivational scripts based on the psychological components
- * of energizing speeches (locker room speeches, rally cries, pre-performance activation).
+ * Generates deeply personalized self-speech scripts for solo listeners.
+ * Based on MirrorSpeechAnatomy.md research: cortisol → oxytocin → dopamine arc.
  *
- * This is the PRIMARY mode for Myndset - high energy, motivating, activating.
- * Based on research: docs/script-generation/psychology-and-rhetoric.md
+ * Pronoun architecture: I (first-person adjacent) → You → Name (imperative)
+ * Five beats: Spiral → Confrontation → Reframe → Fuel → Lock-In
  *
- * UPDATED: Now uses V2 psychological techniques database with implementation protocols
+ * UPDATED: Full questionnaire context (innerCritic, pastSuccess, victoryVision, etc.)
+ * UPDATED: Enriched technique fields (selfSpeechAdaptation, emotionalArc, voiceDeliveryNotes)
  */
 
 import { generateText, ClaudeResponse } from './claude';
 import { MeditationPlan } from './plan-generator';
 import { getTechniqueById } from './meditation-knowledge-base-v2';
+import { MappedQuestionnaireData } from '../questionnaire/response-mapper';
 
 export interface EnergizingScript {
   id?: string;
@@ -39,216 +41,333 @@ export interface EnergizingScript {
   };
 }
 
+/** Self-Rally beat names, mapped to script position */
+type SelfRallyBeat = 'spiral' | 'confrontation' | 'reframe' | 'fuel' | 'lock_in';
+
 /**
- * Build the system prompt for energizing script generation
+ * Build the system prompt — Self-Rally Arc Architecture
  */
 function buildEnergizingSystemPrompt(): string {
-  return `You are an elite performance coach writing high-energy motivational scripts for Myndset's ambitious professionals. Your scripts are NOT calming meditations—they are ENERGIZING, ACTIVATING speeches designed to create immediate action.
+  return `You are writing a deeply personal self-rally speech for ONE person listening ALONE. This is not a group speech. There is no crowd, no team, no "we." This is the voice inside the mirror — the version of them that refuses to lose.
 
-# Your Role
+# Core Identity
 
-Write a complete, word-for-word energizing script that will be narrated with INTENSITY and CONVICTION. This is a locker room speech, a rally cry, a smelling-salt moment that transforms hesitation into immediate action.
+You are the listener's fiercest internal ally. Not a therapist. Not a meditation guide. A mirror that speaks back with absolute conviction. Your job: take someone spiraling in doubt and walk them out the other side ready to dominate.
 
-# Core Mission: ACTIVATE, NOT CALM
+# Self-Rally Arc (5 Beats)
 
-This is NOT a relaxation session. This IS an activation protocol. Think:
-- A coach's halftime speech when the team is down
-- An underdog candidate rallying volunteers before Election Day
-- A training partner hyping someone up before a world-record lift
-- A motivational speaker igniting a crowd to take immediate action
+Every script follows this neurochemical sequence. Each beat serves a specific biological and psychological function.
 
-# Psychological Architecture (The Science of Energizing Speeches)
+## Beat 1: THE SPIRAL (10-15%)
+**Function**: Enter the listener's actual darkness. Name what they're feeling before they can.
+**Neurochemical**: Cortisol (captures attention through recognition)
+**Pronoun**: First-person adjacent — describe their internal state as if reading their mind. Use "I know" / "Right now" / "That voice" framing.
+**Techniques**: Raw acknowledgment, pattern interruption through radical honesty, naming the specific fear.
+**Key**: Do NOT rush past this. The listener must feel genuinely SEEN before they'll trust the turn.
 
-Your script MUST activate these proven mechanisms:
+## Beat 2: THE CONFRONTATION (10-15%)
+**Function**: Break the spiral. Call out the lie. Force a choice.
+**Neurochemical**: Cortisol peak → turn (the pattern-break moment)
+**Pronoun**: Shift to second-person — "You" becomes direct, unflinching.
+**Techniques**: Antithesis (juxtapose who they are vs. how they're acting), rhetorical questions ("Is THIS who you are?"), the uncomfortable truth delivered with love.
+**Key**: This is the hinge. The moment doubt becomes fuel. Make it sharp.
 
-## 1. NEUROCHEMICAL URGENCY (10-15% of script)
-- **Temporal Immediacy**: Anchor to the present moment in varied ways (this moment, this second, right now, today—don't repeat the same phrase)
-- **Urgency Triggers**: Create time pressure that overrides cognitive control through deadline language, scarcity framing, or consequence highlighting
-- **Dopamine Activation**: Frame immediate opportunity that demands action—not someday, not after preparation, NOW
-- **Present Tense**: Use declarative statements ("You ARE doing this," "This IS happening," "You WILL dominate") not conditional ("you can," "you might")
+## Beat 3: THE REFRAME (20-25%)
+**Function**: Cognitive restructuring. Rebuild identity from the ashes of the confrontation.
+**Neurochemical**: Oxytocin (trust, bonding with new self-concept)
+**Pronoun**: Second-person dominant — "You are someone who..." / weave in their identity statement.
+**Techniques**: Identity reframing, evidence stacking (past wins as proof), rewriting the narrative, connecting current challenge to core values.
+**Key**: This is where the listener's own words get woven in — their identity statement, their values, their past success. Make it THEIRS.
 
-Principle: Establish that THIS moment is the critical inflection point. Negate alternatives (tomorrow won't work, waiting is failure, delay is impossible) using fresh language each time.
+## Beat 4: THE FUEL (20-25%)
+**Function**: Vivid sensory peak. The "goosebump moment." Paint their victory so real they taste it.
+**Neurochemical**: Dopamine (reward anticipation, peak emotional payoff)
+**Pronoun**: Second-person + name if available — "You walk in there and..." / most intimate, most vivid.
+**Techniques**: Sensory-rich visualization (match their visualization style), obsessive repetition building to crescendo, memory fragments from their past success, future pacing in present tense.
+**Key**: This is the emotional climax. Use their victory vision. Make the future feel like a memory they're recalling.
 
-## 2. IDENTITY ACTIVATION (20-25% of script)
-- **Collective Language**: Use "we," "us," "together" to create tribal belonging (but vary sentence structure and reference points)
-- **In-Group Identity**: Evoke the tribe they belong to through their values, not through repeated parallel structures ("We are the ones who X, We are the ones who Y")
-- **Shared Values**: Reference what ambitious, high-performing people believe and do—invoke their self-concept
-- **Common Ground**: Build on what listeners know they're capable of, especially in moments of pressure or adversity
+## Beat 5: THE LOCK-IN (10-15%)
+**Function**: Crystallize decision into physical action. The body remembers what the mind forgets.
+**Neurochemical**: Norepinephrine (action readiness, commitment)
+**Pronoun**: Imperative commands — direct, short, undeniable.
+**Techniques**: Physical cue activation, single clear action, countdown or trigger, the "promise to self" moment.
+**Key**: End with something they DO, not something they think. A breath, a fist clench, a step forward. The body seals the deal.
 
-Principle: Create tribal identity and shared values without template-like repetition. Each meditation should have a unique voice reflecting that specific user's context.
+# Pronoun Architecture (CRITICAL — Never Break)
 
-## 3. COGNITIVE DISSONANCE (20-25% of script)
-- **Gap Highlighting**: Show the distance between their self-concept (who they know they are) and current performance using language specific to their context
-- **Remove Excuses**: Acknowledge the real challenges they face, then make external justifications irrelevant through reframing
-- **Uncomfortable Truth**: Surface the contradiction between their values and current action—but find fresh ways to articulate this tension
-- **Force Internal Resolution**: Make the cognitive gap so compelling they must choose: will they be consistent with their identity RIGHT NOW?
+- **NEVER** use "we," "us," "together," or any collective/tribal language
+- Beat 1: First-person adjacent ("I know what's happening right now..." / "That voice saying...")
+- Beat 2: Direct second-person ("You know better than this." / "Is that who you are?")
+- Beat 3-4: Second-person intimate ("You are the person who..." / "You've done this before...")
+- Beat 5: Imperative ("Stand up." / "Take that breath." / "Go.")
 
-Principle: Create psychological tension unique to the user's situation. Don't use the same dissonance language across meditations.
+# Self-Speech Rhetorical Devices
 
-## 4. VIVID FUTURE IMAGERY (20-25% of script)
-- **Concrete Sensory Details**: Use specific, relevant sensory language based on the user's actual context (not generic "feel the weight, see their faces")
-- **First-Person Mental Rehearsal**: Transport them INTO the success moment—make them experience it, not imagine it from outside
-- **Present Tense for Imminent Future**: Use present tense to collapse the psychological distance ("You ARE walking in," "You ARE feeling," "You ARE hearing")
-- **Multiple Senses**: Engage visual, kinesthetic, and auditory imagination in ways relevant to their specific performance context
+Use these liberally — they are the native language of internal monologue:
 
-Principle: Paint success using vivid details specific to THEIR goal, not generic performance imagery.
+- **Obsessive Repetition**: Hammer a phrase 3-5 times with escalating intensity. "You've done this. You've done harder than this. You've done the impossible version of this."
+- **Antithesis**: Juxtapose weakness and strength in the same breath. "They see someone nervous. You ARE someone dangerous."
+- **Rhetorical Questions to Self**: "When has playing it safe EVER been who you are?"
+- **Memory Fragments**: Short, vivid flashes from their past. "Remember that Tuesday. Remember how they looked at you after."
+- **Physical Punctuation**: Commands that break mental loops. "Drop your shoulders. Unclench your jaw. Now breathe."
+- **The Callback**: Reference something from Beat 1 in Beat 4-5, transformed. The fear becomes the fuel.
 
-## 5. IMMEDIATE CALL TO ACTION (10-15% of script)
-- **One Clear Behavior**: Don't give 10 instructions—focus on ONE specific, achievable next action
-- **Remove Ambiguity**: Make the next step crystal clear and specific to their situation
-- **Achievable and Immediate**: The action happens now or within minutes, not someday
-- **Singular Focus**: Channel all their energy toward ONE priority—eliminate competing demands
+# Intrinsic Motivation Framework (Daniel Pink)
 
-Principle: End with a specific action command unique to the user's goal and context. Make it impossible to misinterpret.
+Thread these through Beats 3-4:
+- **Autonomy**: "This is YOUR choice. Nobody else gets to decide this for you."
+- **Mastery**: "You didn't get here by accident. Every rep, every failure, every late night — it built THIS."
+- **Purpose**: "This matters because of who you are, not what they think."
 
-# Rhetorical Devices - USE THESE LIBERALLY
+# ElevenLabs Voice Direction
 
-## Strategic Repetition (Anaphora)
-Use 3-4 repetitions for building intensity—but vary the structure and content. Anaphora creates rhythm and power through repeated starting phrases, but these should be tailored to the user's context. Examples of the TECHNIQUE (not templates to copy):
-- "We're going to [action] when they expect us to [opposite]..."
-- "We're going to [action] while they're still [inaction]..."
-- "We're going to [action] because we [core value]..."
+Audio tags in SQUARE BRACKETS — not spoken aloud, they direct the AI voice:
+- [intense] — urgency, conviction (use in Confrontation and Fuel)
+- [confident] — unwavering certainty (use in Reframe)
+- [determined] — call-to-action energy (use in Lock-In)
+- [passionate] — emotional crescendos (use in Fuel peak)
+- [excited] — positive forward momentum (use in Fuel)
 
-The specific words should change based on the meditation's purpose.
-
-## Concrete Imagery
-NO abstract concepts. ONLY vivid, sensory language:
-- ❌ "You'll achieve your goals"
-- ✅ "You'll walk out of that meeting knowing you dominated every second"
-
-## Simplicity and Clarity
-- 1-3 core themes MAXIMUM
-- Short, punchy sentences mixed with powerful longer ones
-- No complex concepts—pure clarity that cuts through doubt
-
-## Vulnerability → Conviction Structure
-Brief acknowledgment of fear/difficulty → IMMEDIATE pivot to capability. This structure creates authenticity by not pretending obstacles don't exist, then reframes them as evidence of readiness. The specific emotional acknowledgment should match the user's actual situation, not follow a template.
-
-# Voice and Tone
-
-- **Confident, Authoritative**: You KNOW they can do this
-- **Intense, Not Loud**: Conviction beats volume
-- **Direct Address**: "You" language throughout
-- **Urgent, Not Frantic**: Controlled intensity
-- **Belief-Radiating**: Your certainty becomes their certainty
-
-# Pacing and Rhythm
-
-- **Speaking Pace**: 160-180 words per minute (FASTER than meditation)
-- **Short Pauses**: Use em-dashes (—) or commas for brief moments
-- **Strategic Longer Pauses**: Use periods, paragraph breaks, or double line breaks
-- **Momentum**: Keep energy building, avoid long silence
-- **Paragraph Breaks**: Create natural pauses between sections
-- **DO NOT USE**: SSML break tags like <break time="X.Xs" /> - NOT supported by eleven_v3
-- **DO NOT USE**: Ellipses ("..." or ".....") - they create inconsistent pauses
-
-# ElevenLabs Voice Direction - CRITICAL FORMAT RULES
-
-ElevenLabs uses SQUARE BRACKETS for audio tags (emotional cues) that are NOT spoken aloud.
-
-## Supported Audio Tags (use sparingly for maximum impact):
-- [excited] - For high-energy, passionate delivery
-- [intense] - For building urgency and conviction
-- [confident] - For declarative, unwavering statements
-- [determined] - For call-to-action moments
-- [passionate] - For emotional crescendos
-
-## WRONG vs RIGHT Examples:
-❌ WRONG: "This is your moment **(build intensity)** to rise up"
-✅ RIGHT: "This is your moment [intense] to rise up"
-
-❌ WRONG: "You ARE capable **(confident conviction)** of extraordinary things"
-✅ RIGHT: "You ARE capable [confident] of extraordinary things"
-
-## Pauses (use punctuation, NOT SSML):
-- Brief pause: Use comma (,) or em-dash (—)
-- Short pause: Use period (.)
-- Medium pause: Use paragraph break (double line break)
-- Strategic pause: Use paragraph break with white space
-- DO NOT use SSML <break> tags - eleven_v3 does NOT support them
-- DO NOT use "..." or "....." - these are spoken or create inconsistent pauses
-
-## Usage Guidelines:
-- Use audio tags SPARINGLY (5-8 times per script maximum)
-- Place them at KEY psychological moments only—moments where psychological intensity shifts or decisions crystallize
-- Reserve [intense] for moments of greatest urgency or conviction
-- Reserve [excited] for moments of victory or positive forward momentum
-- NEVER use parentheses or asterisks - they will be spoken aloud
-- NO GENERIC EXAMPLES - Write fresh language specific to each meditation's context
-
-# Five-Phase Structure (adapt percentages to total duration)
-
-## Phase 1: OPENING URGENCY (10-15%)
-- Establish temporal immediacy
-- Acknowledge current stakes with brutal honesty
-- Create brief vulnerability that establishes authenticity
-- Set the frame: this moment matters NOW
-
-## Phase 2: IDENTITY ACTIVATION (20-25%)
-- Trigger shared identity with "we/us/together" language
-- Establish "we are the ones who..." statements
-- Reference shared values and capabilities
-- Build collective certainty
-
-## Phase 3: DISSONANCE CREATION (20-25%)
-- Highlight gap between self-concept and current state
-- Remove external excuses
-- Make inconsistency uncomfortable
-- Force choice: who are you going to be RIGHT NOW?
-
-## Phase 4: VIVID FUTURE (20-25%)
-- Paint concrete, first-person success imagery
-- Use present tense to make future feel IMMINENT
-- Multiple sensory channels
-- Strategic anaphora for emotional crescendo
-
-## Phase 5: CALL TO ACTION (10-15%)
-- One specific, immediate, achievable behavior
-- Remove all ambiguity
-- End with challenge that demands internal response
-- Create certainty about next steps
-
-# Critical "DON'Ts"
-
-❌ DO NOT write a calming, relaxing meditation
-❌ DO NOT use phrases like "allow yourself" or "gently notice"
-❌ DO NOT create long, contemplative pauses
-❌ DO NOT be vague or abstract
-❌ DO NOT give laundry lists of actions
-❌ DO NOT use passive, soft language
-❌ DO NOT ramble or over-explain
-❌ DO NOT copy exact phrases or structures from examples—examples show TECHNIQUES, not templates
-❌ DO NOT repeat the same opening urgency language across different meditations
-❌ DO NOT use generic identity activation statements—make them specific to the user's actual context
-❌ DO NOT use boilerplate imagery—create vivid details tailored to their specific performance goal
-
-# Critical "DOs"
-
-✅ DO use powerful, declarative statements
-✅ DO create immediate urgency
-✅ DO use concrete, vivid imagery
-✅ DO employ strategic repetition
-✅ DO maintain high energy throughout
-✅ DO end with crystal-clear action step
-✅ DO make them FEEL the conviction in every word
+Rules:
+- Use 5-8 tags per script maximum, at KEY psychological shift moments only
+- NEVER use parentheses or asterisks — they will be spoken aloud
+- Pauses: commas and em-dashes (—) for brief, periods for short, paragraph breaks for medium
+- DO NOT use SSML break tags — eleven_v3 does NOT support them
+- DO NOT use ellipses ("..." or ".....") — inconsistent pauses
+- Speaking pace: 160-180 words/minute (activation pace, not meditation pace)
 
 # Output Format
 
-Write ONLY the energizing script text with proper ElevenLabs formatting. Do NOT include:
-- Titles, headings, or section labels
-- Meta-commentary about the script
-- Explanations of what you're doing
-- Parenthetical directions like **(build intensity)** - these will be SPOKEN ALOUD
+Write ONLY the script text with ElevenLabs formatting. No titles, headings, section labels, meta-commentary, or explanations. Start with the first words they hear. End with the last words before they act.`;
+}
 
-CRITICAL: Use ONLY these ElevenLabs v3-approved formats:
-- Audio tags in square brackets: [excited], [intense], [confident], [determined], [passionate]
-- Punctuation for pauses: commas, em-dashes (—), periods, paragraph breaks
-- NO SSML break tags like <break time="X.Xs" /> - eleven_v3 does NOT support them
-- NO ellipses, NO asterisks, NO parentheses for directions
+/**
+ * Build enriched technique block for a single plan component
+ */
+async function buildTechniqueBlock(
+  component: MeditationPlan['components'][0],
+  audienceType: string
+): Promise<string> {
+  const tech = await getTechniqueById(component.componentId);
+  if (!tech) {
+    return `- ${component.componentName}: ${component.rationale} (${component.durationMinutes} min)`;
+  }
 
-Start with the first words they'll hear. End with the last words before they take action.
+  // Core identity
+  const descriptionLine = (tech as any).description
+    ? `  What It Is: ${(tech as any).description.split('.').slice(0, 2).join('.')}.`
+    : '';
+  const mechanismLine = (tech as any).psychologicalMechanism
+    ? `  Mechanism: ${(tech as any).psychologicalMechanism.split('.')[0]}.`
+    : '';
 
-Remember: This is a SMELLING-SALT SPEECH. Your job is to create unshakeable conviction that extraordinary effort, right now, will produce the desired outcome. Convert hesitation into immediate, focused, maximal action.`;
+  // Implementation guidance
+  const implBlock = [
+    tech.implementationProtocol?.setup || '',
+    tech.implementationProtocol?.coreProcess || '',
+    tech.implementationProtocol?.deliveryNotes || '',
+  ].filter(Boolean).join('\n  ');
+
+  // Language patterns
+  const lp = tech.implementationProtocol?.languagePatterns;
+  let patternsBlock = '';
+  if (lp && !Array.isArray(lp)) {
+    const sections = [
+      { label: 'Opening Hooks', items: lp.openingHooks },
+      { label: 'Core Process', items: lp.coreProcess },
+      { label: 'Intensifiers', items: lp.deepeningIntensifiers },
+      { label: 'Transitions', items: lp.transitionBridges },
+      { label: 'Closing Anchors', items: lp.closingAnchors },
+    ];
+    patternsBlock = sections
+      .filter(s => s.items?.length)
+      .map(s => `    ${s.label}: ${s.items.slice(0, 3).map((p: string) => `"${p}"`).join(', ')}`)
+      .join('\n');
+  } else if (Array.isArray(lp)) {
+    patternsBlock = lp.slice(0, 5).map((p: string, i: number) => `    ${i + 1}. "${p}"`).join('\n');
+  }
+
+  // Self-speech adaptation (full — richest guidance field)
+  const selfSpeech = (tech as any).selfSpeechAdaptation;
+  const selfSpeechBlock = selfSpeech ? `
+  Self-Speech Adaptation:
+    Pronoun Strategy: ${selfSpeech.pronounStrategy} | Style: ${selfSpeech.internalMonologueStyle}
+    Confrontation: ${selfSpeech.confrontationLevel} | Entry: ${selfSpeech.emotionalEntryPoint} → ${selfSpeech.transformationTarget}
+    Guidance: ${selfSpeech.adaptationNotes || ''}` : '';
+
+  // Emotional arc (full — includes beat mapping)
+  const arc = (tech as any).emotionalArc;
+  const arcBlock = arc ? `
+  Emotional Arc:
+    Start: ${arc.startingState || ''}
+    Build: ${arc.buildPhase || ''}
+    Peak: ${arc.peakMoment || ''}
+    Resolution: ${arc.resolutionState || ''}
+    Maps To Beat: ${arc.darknessToLightMapping || ''}` : '';
+
+  // Voice delivery notes (full — toneShifts, breathPoints, elevenLabsTags)
+  const voice = (tech as any).voiceDeliveryNotes;
+  let voiceBlock = '';
+  if (voice) {
+    const parts = [`  Voice Delivery: ${voice.paceGuidance || ''}`];
+    if (voice.toneShifts?.length) {
+      parts.push(`    Tone Shifts: ${voice.toneShifts.join(' | ')}`);
+    }
+    if (voice.emphasisWords?.length) {
+      parts.push(`    Emphasis Words: ${voice.emphasisWords.join(', ')}`);
+    }
+    if (voice.breathPoints?.length) {
+      parts.push(`    Breath Points: ${voice.breathPoints.join(' | ')}`);
+    }
+    if (voice.elevenLabsTags?.length) {
+      parts.push(`    ElevenLabs Tags: ${voice.elevenLabsTags.join(', ')}`);
+    }
+    voiceBlock = '\n' + parts.join('\n');
+  }
+
+  // Rhetorical devices (with examples)
+  const devices = (tech as any).rhetoricalDevices;
+  const devicesBlock = devices?.length ? `
+  Rhetorical Devices: ${devices.slice(0, 3).map((d: any) =>
+    `${d.device} — ${d.application}${d.example ? ` (e.g. "${d.example}")` : ''}`
+  ).join('; ')}` : '';
+
+  // Script examples — archetype-matched, full excerpt
+  const examples = (tech as any).scriptExamples || [];
+  const bestExample = examples[0] || (tech as any).scriptExample;
+  const scriptExcerpt = bestExample?.excerpt || '';
+
+  // User context examples — match audienceType, full excerpt + keyAdaptations
+  const userExamples = (tech as any).userContextExamples;
+  let contextBlock = '';
+  if (userExamples) {
+    const matchKey = Object.keys(userExamples).find(k => audienceType.toLowerCase().includes(k));
+    if (matchKey && userExamples[matchKey]) {
+      const ex = userExamples[matchKey];
+      contextBlock = `
+  Archetype Example (${matchKey}): "${ex.scriptExcerpt || ''}"`;
+      if (ex.keyAdaptations) {
+        contextBlock += `\n    Key Adaptations: ${ex.keyAdaptations}`;
+      }
+    }
+  }
+
+  // Creative inspirations (full insight + applicationNote)
+  const inspirations = (tech as any).creativeInspirations;
+  const inspirationBlock = inspirations?.length ? `
+  Creative Inspiration: ${inspirations[0].source} — ${inspirations[0].insight || ''}${inspirations[0].applicationNote ? ` | Application: ${inspirations[0].applicationNote}` : ''}` : '';
+
+  const academicSource = tech.academicSources?.[0];
+
+  return `- **${tech.name}** (${component.durationMinutes} min)
+  Rationale: ${component.rationale}
+  Evidence: ${tech.evidenceLevel} ${academicSource ? `(${Array.isArray(academicSource.authors) ? academicSource.authors[0] : academicSource.authors}, ${academicSource.year})` : ''}
+${descriptionLine ? `\n${descriptionLine}` : ''}
+${mechanismLine ? `${mechanismLine}` : ''}
+
+  Implementation:
+  ${implBlock}
+
+  Language Patterns:
+${patternsBlock}
+${selfSpeechBlock}${arcBlock}${devicesBlock}${voiceBlock}${inspirationBlock}${contextBlock}
+
+${scriptExcerpt ? `  Practitioner Example:\n  "${scriptExcerpt}"\n` : ''}`;
+}
+
+/**
+ * Build technique flow map — transition language between adjacent techniques
+ */
+function buildTechniqueFlowMap(
+  components: MeditationPlan['components'][],
+  techniqueData: Map<string, any>
+): string {
+  if (components.length < 2) return '';
+
+  const transitions: string[] = [];
+  for (let i = 0; i < components.length - 1; i++) {
+    const currentId = (components[i] as any).componentId;
+    const nextId = (components[i + 1] as any).componentId;
+    const currentTech = techniqueData.get(currentId);
+    if (!currentTech) continue;
+
+    const combos = currentTech.combinesWellWith || [];
+    const match = combos.find((c: any) => c.id === nextId);
+    if (match) {
+      transitions.push(
+        `${currentTech.name} → ${match.name}: "${match.transitionLanguage || ''}" (${match.combinedEffect || ''})`
+      );
+    }
+  }
+
+  if (!transitions.length) return '';
+
+  return `\n# Technique Transitions (use these to bridge smoothly)\n\n${transitions.join('\n')}\n`;
+}
+
+/**
+ * Build questionnaire context block for the user message
+ */
+function buildQuestionnaireContext(q: MappedQuestionnaireData): string {
+  let ctx = `# User Context (from questionnaire)
+
+**Performance Arena**: ${q.userType}
+**Immediate Situation**: ${q.immediateSituation || q.specificOutcome}
+**Time Urgency**: ${q.timeUrgency}
+**What's at Stake**: ${q.stakes}
+**Mental State**: ${q.mentalState}
+**What They Need**: ${q.currentNeed}
+**Challenge Type**: ${q.challengeType}`;
+
+  if (q.physicalState) ctx += `\n**Physical State**: ${q.physicalState}`;
+  if (q.energyLevel) ctx += `\n**Energy Level**: ${q.energyLevel}`;
+
+  // Tier 2 deep personalization — mapped to specific beats
+  const tier2Parts: string[] = [];
+
+  if (q.innerCritic) {
+    tier2Parts.push(`**Inner Critic Voice** [USE IN BEAT 1-2: name this voice in The Spiral, confront it in The Confrontation]: "${q.innerCritic}"`);
+  }
+  if (q.pastSuccess) {
+    tier2Parts.push(`**Peak Performance Memory** [USE IN BEAT 4: weave this memory into The Fuel as vivid sensory flashback]: ${q.pastSuccess}`);
+  }
+  if (q.victoryVision) {
+    tier2Parts.push(`**Victory Vision** [USE IN BEAT 4: paint this scene in The Fuel, present tense, multi-sensory]: ${q.victoryVision}`);
+  }
+  if (q.identityStatement) {
+    tier2Parts.push(`**Identity Statement** [USE IN BEAT 3: weave into The Reframe as core identity]: "I am someone who ${q.identityStatement}"`);
+  }
+  if (q.motivationSource) {
+    tier2Parts.push(`**Motivation Source** [USE IN BEAT 3-4]: ${q.motivationSource}`);
+  }
+  if (q.physicalCue) {
+    const cueLabels: Record<string, string> = {
+      breath: 'deep, powerful breathing',
+      movement: 'physical movement/shaking out',
+      posture: 'power posture/standing tall',
+      hands: 'clapping/fist clench',
+      voice: 'vocalization/self-talk',
+    };
+    tier2Parts.push(`**Physical Activation Cue** [USE IN BEAT 5: end The Lock-In with this action]: ${cueLabels[q.physicalCue] || q.physicalCue}`);
+  }
+  if (q.visualizationStyle) {
+    const vizLabels: Record<string, string> = {
+      visual: 'vivid visual imagery (they SEE their success)',
+      feeling: 'body sensations and feelings (they FEEL it in their body)',
+      words: 'internal dialogue and sounds (they HEAR the words)',
+      mixed: 'multi-sensory (visual + feeling + audio)',
+    };
+    tier2Parts.push(`**Visualization Style** [GUIDES BEAT 4 sensory approach]: ${vizLabels[q.visualizationStyle] || q.visualizationStyle}`);
+  }
+  if (q.accountability) {
+    tier2Parts.push(`**Promise to Self** [USE IN BEAT 5]: ${q.accountability}`);
+  }
+
+  if (tier2Parts.length) {
+    ctx += `\n\n# Deep Personalization (use these — the user provided them)\n\n${tier2Parts.join('\n')}`;
+  }
+
+  return ctx;
 }
 
 /**
@@ -256,201 +375,148 @@ Remember: This is a SMELLING-SALT SPEECH. Your job is to create unshakeable conv
  */
 async function buildEnergizingUserMessage(
   plan: MeditationPlan,
-  questionnaire?: { specificOutcome?: string }
+  questionnaire?: MappedQuestionnaireData
 ): Promise<string> {
-  // Get full technique details from V2 database with implementation protocols
-  const techniqueResults = await Promise.all(plan.components
-    .map(async (c) => {
+  // Build enriched technique blocks
+  const audienceType = plan.messagingFramework.audienceType;
+  const techniqueData = new Map<string, any>();
+
+  const techniqueBlocks = await Promise.all(
+    plan.components.map(async (c) => {
       const tech = await getTechniqueById(c.componentId);
-      if (!tech) {
-        return `- ${c.componentName}: ${c.rationale} (${c.durationMinutes} min)`;
-      }
+      if (tech) techniqueData.set(c.componentId, tech);
+      return buildTechniqueBlock(c, audienceType);
+    })
+  );
 
-      // Handle both v1 (string[]) and v2 (categorized object) languagePatterns
-      const lp = tech.implementationProtocol?.languagePatterns;
-      let patternsBlock = '';
-      if (lp && !Array.isArray(lp)) {
-        // v2 categorized format
-        const sections = [
-          { label: 'Opening Hooks', items: lp.openingHooks },
-          { label: 'Core Process', items: lp.coreProcess },
-          { label: 'Intensifiers', items: lp.deepeningIntensifiers },
-          { label: 'Transitions', items: lp.transitionBridges },
-          { label: 'Closing Anchors', items: lp.closingAnchors },
-        ];
-        patternsBlock = sections
-          .filter(s => s.items?.length)
-          .map(s => `    ${s.label}: ${s.items.slice(0, 3).map(p => `"${p}"`).join(', ')}`)
-          .join('\n');
-      } else if (Array.isArray(lp)) {
-        // v1 flat array fallback
-        patternsBlock = lp.slice(0, 5).map((p, i) => `    ${i + 1}. "${p}"`).join('\n');
-      }
+  // Build technique flow map for transitions
+  const flowMap = buildTechniqueFlowMap(
+    plan.components as any,
+    techniqueData
+  );
 
-      // Get best script example
-      const examples = (tech as any).scriptExamples || [];
-      const bestExample = examples[0] || (tech as any).scriptExample;
-      const scriptExcerpt = bestExample?.excerpt || '';
-
-      const academicSource = tech.academicSources?.[0];
-
-      // Build self-speech adaptation guidance
-      const selfSpeech = (tech as any).selfSpeechAdaptation;
-      const selfSpeechBlock = selfSpeech ? `
-  Self-Speech Adaptation:
-    Pronoun Strategy: ${selfSpeech.pronounStrategy} | Style: ${selfSpeech.internalMonologueStyle}
-    Confrontation: ${selfSpeech.confrontationLevel} | Entry: ${selfSpeech.emotionalEntryPoint} → ${selfSpeech.transformationTarget}` : '';
-
-      // Build emotional arc guidance
-      const arc = (tech as any).emotionalArc;
-      const arcBlock = arc ? `
-  Emotional Arc: ${arc.startingState?.substring(0, 60)}... → ${arc.peakMoment?.substring(0, 60)}... → ${arc.resolutionState?.substring(0, 60)}...` : '';
-
-      // Build voice delivery notes
-      const voice = (tech as any).voiceDeliveryNotes;
-      const voiceBlock = voice ? `
-  Voice Delivery: ${voice.paceGuidance?.substring(0, 100)}...
-    Emphasis Words: ${(voice.emphasisWords || []).slice(0, 6).join(', ')}` : '';
-
-      // Build rhetorical devices
-      const devices = (tech as any).rhetoricalDevices;
-      const devicesBlock = devices?.length ? `
-  Rhetorical Devices: ${devices.slice(0, 3).map((d: any) => `${d.device} (${d.application})`).join('; ')}` : '';
-
-      // Build user context example if audience type matches
-      const userExamples = (tech as any).userContextExamples;
-      let contextBlock = '';
-      if (userExamples) {
-        const audienceType = plan.messagingFramework.audienceType.toLowerCase();
-        const matchKey = Object.keys(userExamples).find(k => audienceType.includes(k));
-        if (matchKey && userExamples[matchKey]) {
-          const ex = userExamples[matchKey];
-          contextBlock = `
-  Archetype Example (${matchKey}): "${ex.scriptExcerpt?.substring(0, 150)}..."`;
-        }
-      }
-
-      // Creative inspirations
-      const inspirations = (tech as any).creativeInspirations;
-      const inspirationBlock = inspirations?.length ? `
-  Creative Inspiration: ${inspirations[0].source} — ${inspirations[0].insight?.substring(0, 80)}` : '';
-
-      return `- **${tech.name}** (${c.durationMinutes} min)
-  Rationale: ${c.rationale}
-  Evidence: ${tech.evidenceLevel} ${academicSource ? `(${Array.isArray(academicSource.authors) ? academicSource.authors[0] : academicSource.authors}, ${academicSource.year})` : ''}
-
-  Implementation Guidance:
-  ${tech.implementationProtocol?.setup || 'Use for performance enhancement'}
-  ${tech.implementationProtocol?.coreProcess || ''}
-
-  Proven Language Patterns:
-${patternsBlock}
-${selfSpeechBlock}${arcBlock}${devicesBlock}${voiceBlock}${inspirationBlock}${contextBlock}
-
-${scriptExcerpt ? `  Practitioner Example:\n  "${scriptExcerpt.length > 200 ? scriptExcerpt.substring(0, 200) + '...' : scriptExcerpt}"\n` : ''}`;
-    }));
-  const techniqueDetails = techniqueResults.join('\n\n');
-
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 170); // 170 words/min for energizing pace
-
+  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 170);
   const isUltraQuick = plan.sessionStructure.totalMinutes === 1;
 
-  return `Write a complete ENERGIZING, HIGH-ENERGY motivational script based on this plan.
+  // Build questionnaire context
+  const questionnaireBlock = questionnaire
+    ? buildQuestionnaireContext(questionnaire)
+    : `# User Context\n\n**Key Values**: ${plan.messagingFramework.keyValues.join(', ')}\n**Audience Type**: ${audienceType}\n**Overall Goal**: ${plan.overallRationale}`;
+
+  return `Write a complete SELF-RALLY speech based on this plan. This person listens ALONE.
 
 # Script Parameters
 
-**Total Duration**: ${plan.sessionStructure.totalMinutes} minutes (STRICT - do not exceed)
-**Target Word Count**: ${targetWords} words (STRICT RANGE: ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words maximum)
-**Speaking Pace**: 160-180 words/minute (FASTER than meditation)
-**Energy Level**: HIGH - This is activation, not relaxation
-**Style**: ${isUltraQuick ? 'Ultra-punchy smelling salts moment / Instant fire / Zero fluff' : 'Locker room speech / Rally cry / Pre-performance activation'}
+**Total Duration**: ${plan.sessionStructure.totalMinutes} minutes (STRICT)
+**Target Word Count**: ${targetWords} words (STRICT RANGE: ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words)
+**Energy Level**: HIGH — activation, not relaxation
+${isUltraQuick ? '**Style**: Ultra-punchy smelling salts / Instant fire / Zero fluff' : '**Style**: Mirror speech / Self-rally / The voice that refuses to let you lose'}
 
-CRITICAL: Your script MUST be between ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words to fit the ${plan.sessionStructure.totalMinutes}-minute duration.${isUltraQuick ? '\n\n⚡ ULTRA-SHORT FORMAT: This is a 1-minute activation. NO warm-up, NO gradual build. Hit them IMMEDIATELY with maximum intensity. Every single word must pack a punch. Think: explosive one-liners, rapid-fire declarations, instant activation. NO filler words, NO transitions, PURE ENERGY.' : ''}
+CRITICAL: Script MUST be ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words for the ${plan.sessionStructure.totalMinutes}-minute duration.${isUltraQuick ? '\n\nULTRA-SHORT: 1-minute activation. NO warm-up. Hit IMMEDIATELY with maximum intensity. Every word must punch. Compress all 5 beats into rapid-fire delivery.' : ''}
 
-# User Context
+${questionnaireBlock}
 
 **Key Values**: ${plan.messagingFramework.keyValues.join(', ')}
-**Audience Type**: ${plan.messagingFramework.audienceType}
 **Overall Goal**: ${plan.overallRationale}
-${questionnaire?.specificOutcome ? `**User's Specific Outcome**: "${questionnaire.specificOutcome}"` : ''}
 
-# Psychological Techniques to Implement (V2 Database)
+# Psychological Techniques to Implement
 
-${techniqueDetails}
-
+${techniqueBlocks.join('\n\n')}
+${flowMap}
 # Your Mission
 
-Write a ${plan.sessionStructure.totalMinutes}-minute energizing script (~${targetWords} words) that:
+Write a ${plan.sessionStructure.totalMinutes}-minute self-rally speech (~${targetWords} words) following the 5-beat Self-Rally Arc:
 
-1. **ACTIVATES, NOT CALMS** - This is high-energy motivation
-2. **Creates urgency** - "Right now", "This moment" language
-3. **Uses collective identity** - Heavy "we/us/together" framing
-4. **Builds dissonance** - Highlights gap between potential and current state
-5. **Paints vivid success** - Concrete, sensory imagery of achievement
-6. **Demands action** - Crystal clear next step
-7. **LEVERAGES PROVEN LANGUAGE PATTERNS** - Use the implementation protocols from each technique above
+${isUltraQuick ? `Compress all beats into ultra-concise statements:
+- The Spiral (~20 words): Name their darkness NOW
+- The Confrontation (~25 words): Break the lie, force the choice
+- The Reframe (~40 words): Rebuild identity with their own words
+- The Fuel (~45 words): Paint the win — vivid, inevitable
+- The Lock-In (~30 words): ONE physical action, zero ambiguity` : `- The Spiral (${Math.round(targetWords * 0.12)} words): Enter their darkness, name what they feel
+- The Confrontation (${Math.round(targetWords * 0.12)} words): Break the spiral, call out the lie
+- The Reframe (${Math.round(targetWords * 0.23)} words): Rebuild identity, stack evidence, weave their words
+- The Fuel (${Math.round(targetWords * 0.23)} words): Vivid sensory peak, goosebump moment, victory made real
+- The Lock-In (${Math.round(targetWords * 0.12)} words): Physical action, decision crystallized, GO`}
 
-${isUltraQuick ? `Focus on RAPID IMPACT - compress all 5 elements into ultra-concise statements:
-- Immediate Urgency (~20 words): Hit them NOW, establish this exact moment matters
-- Identity Trigger (~40 words): "You're the kind of person who..." - activate their identity
-- Gap Awareness (~40 words): Show the distance between who they are and where they're at
-- Victory Vision (~40 words): Paint the win in vivid detail, make it feel inevitable
-- Action Command (~30 words): ONE clear instruction, zero ambiguity, maximum force` : `Follow the 5-phase structure (adapt times proportionally):
-- Opening Urgency (${Math.round(plan.sessionStructure.totalMinutes * 0.12)} min / ~${Math.round(targetWords * 0.12)} words)
-- Identity Activation (${Math.round(plan.sessionStructure.totalMinutes * 0.23)} min / ~${Math.round(targetWords * 0.23)} words)
-- Dissonance Creation (${Math.round(plan.sessionStructure.totalMinutes * 0.23)} min / ~${Math.round(targetWords * 0.23)} words)
-- Vivid Future Imagery (${Math.round(plan.sessionStructure.totalMinutes * 0.23)} min / ~${Math.round(targetWords * 0.23)} words)
-- Call to Action (${Math.round(plan.sessionStructure.totalMinutes * 0.12)} min / ~${Math.round(targetWords * 0.12)} words)`}
+REMEMBER:
+- NEVER use "we/us/together" — this person is ALONE
+- Use their questionnaire data — it's deeply personal, honor it
+- Follow the pronoun arc: first-person adjacent → second-person → imperative
+- Use The Callback: reference Beat 1's fear in Beat 4-5, transformed
 
-Use ElevenLabs v3 audio tags sparingly (5-8 times max): [excited], [intense], [confident], [determined], [passionate]
-
-Use punctuation for pauses: commas and em-dashes (—) for brief pauses, periods and paragraph breaks for longer pauses.
-
-IMPORTANT: DO NOT use SSML <break> tags - eleven_v3 does NOT support them.
-
-## WORD COUNT REQUIREMENT
-
-You MUST deliver a script between ${Math.round(targetWords * 0.95)}-${Math.round(targetWords * 1.05)} words.
-This is critical for proper timing. If your script is too long, it will exceed the ${plan.sessionStructure.totalMinutes}-minute limit when spoken.
-
-${isUltraQuick ? `🔥 ULTRA-SHORT CHECKLIST:
-- Total word count: 161-178 words (STRICT)
-- NO warm-up, NO "let's begin" - START AT MAXIMUM INTENSITY
-- Every sentence = impact statement or action trigger
-- NO explanations, NO elaborations, NO filler
-- Think: punchy one-liners, declarations, commands
-- End with ONE crystal-clear action instruction
-
-` : ''}Write the complete energizing script now. Make it POWERFUL. Make it ACTIVATING. Make it impossible to ignore.${isUltraQuick ? ' Make every single word COUNT.' : ' Stay within the word count range.'}`;
+Write the complete self-rally speech now.${isUltraQuick ? ' Every word COUNTS.' : ''}`;
 }
+
+/**
+ * Detect which Self-Rally beat a section belongs to based on position
+ */
+function detectBeat(sectionText: string, fullScriptText: string): SelfRallyBeat {
+  const sectionStart = fullScriptText.indexOf(sectionText);
+  if (sectionStart === -1) return 'reframe'; // fallback to middle beat
+
+  const position = sectionStart / fullScriptText.length;
+
+  if (position < 0.15) return 'spiral';
+  if (position < 0.28) return 'confrontation';
+  if (position < 0.55) return 'reframe';
+  if (position < 0.85) return 'fuel';
+  return 'lock_in';
+}
+
+/** Beat-specific guidance for section regeneration */
+const BEAT_GUIDANCE: Record<SelfRallyBeat, { pronoun: string; function: string; devices: string }> = {
+  spiral: {
+    pronoun: 'First-person adjacent — "I know..." / "That voice..." / "Right now..."',
+    function: 'Enter their darkness. Name what they feel before they can. Make them feel SEEN.',
+    devices: 'Raw acknowledgment, naming the specific fear, pattern interruption through radical honesty',
+  },
+  confrontation: {
+    pronoun: 'Direct second-person — "You know better." / "Is that who you are?"',
+    function: 'Break the spiral. Call out the lie. Force a choice between comfort and identity.',
+    devices: 'Antithesis, rhetorical questions, uncomfortable truth delivered with love',
+  },
+  reframe: {
+    pronoun: 'Second-person intimate — "You are someone who..." / weave their identity statement',
+    function: 'Rebuild identity. Stack evidence from their past. Connect challenge to core values.',
+    devices: 'Identity reframing, evidence stacking, narrative rewriting, intrinsic motivation (autonomy/mastery/purpose)',
+  },
+  fuel: {
+    pronoun: 'Second-person + name — most intimate, most vivid',
+    function: 'Vivid sensory peak. Paint their victory so real they taste it. The goosebump moment.',
+    devices: 'Sensory visualization, obsessive repetition, memory fragments, future pacing in present tense, The Callback',
+  },
+  lock_in: {
+    pronoun: 'Imperative commands — direct, short, undeniable',
+    function: 'Crystallize decision into physical action. The body seals the deal.',
+    devices: 'Physical cue activation, countdown/trigger, promise to self, single clear action',
+  },
+};
 
 /**
  * Generate an energizing script from an approved plan
  */
 export async function generateEnergizingScript(
   plan: MeditationPlan,
-  questionnaire?: { specificOutcome?: string }
+  questionnaire?: MappedQuestionnaireData
 ): Promise<{ script: EnergizingScript; aiResponse: ClaudeResponse }> {
   const systemPrompt = buildEnergizingSystemPrompt();
   const userMessage = await buildEnergizingUserMessage(plan, questionnaire);
 
-  // Calculate max tokens based on higher word count for energizing pace
   const targetWords = Math.round(plan.sessionStructure.totalMinutes * 170);
   const maxTokens = Math.min(Math.round(targetWords * 1.5), 8000);
 
   const aiResponse = await generateText(userMessage, {
     systemPrompt,
     maxTokens,
-    temperature: 0.8, // Higher creativity for powerful, varied language
+    temperature: 0.8,
   });
 
-  // Calculate actual word count and duration
   const scriptText = aiResponse.content.trim();
   const wordCount = scriptText.split(/\s+/).length;
   const estimatedDurationSeconds = Math.round((wordCount / 170) * 60);
 
   const script: EnergizingScript = {
-    meditationPlanId: '', // Will be set when saving to database
+    meditationPlanId: '',
     userId: plan.userId,
     scriptText,
     wordCount,
@@ -459,16 +525,16 @@ export async function generateEnergizingScript(
     version: 1,
     elevenLabsGuidance: {
       style: 'energizing_motivational',
-      stability: 0.4, // Lower stability for more dynamic, intense delivery
-      similarityBoost: 0.75, // Maintain voice character but allow intensity
-      speakingRate: '1.1x', // 10% faster than normal for urgency
+      stability: 0.4,
+      similarityBoost: 0.75,
+      speakingRate: '1.1x',
       emphasis: [
-        'Build intensity on repetitive phrases',
-        'Strong emphasis on action words and present-tense commands',
-        'Confident, unwavering tone throughout',
-        'Rising energy during anaphora sequences',
-        'Powerful conviction on declarative statements',
-        'Brief pauses only - maintain momentum',
+        'Build intensity through the 5-beat arc',
+        'Intimate conviction — speaking to ONE person, not a crowd',
+        'Sharp tonal shift at The Confrontation',
+        'Emotional crescendo through The Fuel',
+        'Commanding authority in The Lock-In',
+        'Brief pauses only — maintain momentum',
       ],
     },
     metadata: {
@@ -490,7 +556,7 @@ export async function regenerateEnergizingScript(
   originalScript: EnergizingScript,
   plan: MeditationPlan,
   feedback: string,
-  questionnaire?: { specificOutcome?: string }
+  questionnaire?: MappedQuestionnaireData
 ): Promise<{ script: EnergizingScript; aiResponse: ClaudeResponse }> {
   const systemPrompt = buildEnergizingSystemPrompt();
 
@@ -507,8 +573,7 @@ ${feedback}
 
 # Instructions
 
-Create a NEW energizing script that addresses the admin feedback while maintaining HIGH ENERGY and following all the psychological principles.
-Make it MORE powerful, MORE activating, MORE impossible to ignore.
+Create a NEW self-rally speech that addresses the admin feedback while following the Self-Rally Arc. Make it MORE personal, MORE visceral, MORE impossible to ignore. Use the listener's questionnaire data deeply.
 
 Write the complete script now.`;
 
@@ -518,7 +583,7 @@ Write the complete script now.`;
   const aiResponse = await generateText(userMessage, {
     systemPrompt,
     maxTokens,
-    temperature: 0.85, // Even higher for variation while maintaining intensity
+    temperature: 0.85,
   });
 
   const scriptText = aiResponse.content.trim();
@@ -548,30 +613,43 @@ Write the complete script now.`;
 
 /**
  * Regenerate a specific section of an energizing script (for remix feature)
+ * Now with beat-awareness and questionnaire context
  */
 export async function regenerateEnergizingSection(
   originalScript: EnergizingScript,
   plan: MeditationPlan,
   sectionText: string,
-  userFeedback: string
+  userFeedback: string,
+  questionnaire?: MappedQuestionnaireData
 ): Promise<string> {
-  const systemPrompt = `You are rewriting a section of a HIGH-ENERGY motivational script based on user feedback.
+  // Detect which beat this section belongs to
+  const beat = detectBeat(sectionText, originalScript.scriptText);
+  const beatGuide = BEAT_GUIDANCE[beat];
 
-# Guidelines
+  // Get relevant technique data for context
+  const techniqueNames = plan.components.map(c => c.componentName).join(', ');
 
-- Maintain INTENSE, ACTIVATING tone
+  const systemPrompt = `You are rewriting a section of a self-rally speech based on user feedback. This section falls in the "${beat.replace('_', ' ').toUpperCase()}" beat.
+
+# Beat Context
+**Function**: ${beatGuide.function}
+**Pronoun Approach**: ${beatGuide.pronoun}
+**Devices to Use**: ${beatGuide.devices}
+
+# Rules
+- Maintain the Self-Rally Arc tone — intimate, fierce, personal
+- NEVER use "we/us/together" — this person listens ALONE
 - Keep the section roughly the same length
 - Address the user's specific feedback
-- Use powerful, declarative language
-- Include concrete imagery and urgency
-- Match the energizing style of the surrounding script
-- Include appropriate ElevenLabs markers for intensity
+- Match the pronoun architecture for this beat
+- Include appropriate ElevenLabs tags sparingly: [intense], [confident], [determined], [passionate], [excited]
+- Use punctuation for pauses (commas, em-dashes, periods, paragraph breaks)
 
 Output ONLY the rewritten section text, nothing else.`;
 
-  const userMessage = `Rewrite this section of the energizing script based on user feedback.
+  let userMessage = `Rewrite this section of the self-rally speech based on user feedback.
 
-# Original Section
+# Original Section (Beat: ${beat.replace('_', ' ')})
 
 ${sectionText}
 
@@ -581,12 +659,36 @@ ${userFeedback}
 
 # Context
 
-This is part of a ${plan.sessionStructure.totalMinutes}-minute HIGH-ENERGY motivational session for a ${plan.messagingFramework.audienceType}.
+${plan.sessionStructure.totalMinutes}-minute self-rally speech for a ${plan.messagingFramework.audienceType}.
 Overall goal: ${plan.overallRationale}
+Techniques used: ${techniqueNames}`;
 
-Make it MORE powerful. Make it MORE activating. Keep the high energy.
+  // Add questionnaire context if available
+  if (questionnaire) {
+    const relevantContext: string[] = [];
+    if (beat === 'spiral' || beat === 'confrontation') {
+      if (questionnaire.innerCritic) relevantContext.push(`Inner Critic Voice: "${questionnaire.innerCritic}"`);
+      if (questionnaire.mentalState) relevantContext.push(`Mental State: ${questionnaire.mentalState}`);
+    }
+    if (beat === 'reframe') {
+      if (questionnaire.identityStatement) relevantContext.push(`Identity: "I am someone who ${questionnaire.identityStatement}"`);
+      if (questionnaire.pastSuccess) relevantContext.push(`Past Win: ${questionnaire.pastSuccess}`);
+    }
+    if (beat === 'fuel') {
+      if (questionnaire.victoryVision) relevantContext.push(`Victory Vision: ${questionnaire.victoryVision}`);
+      if (questionnaire.pastSuccess) relevantContext.push(`Past Win: ${questionnaire.pastSuccess}`);
+      if (questionnaire.visualizationStyle) relevantContext.push(`Viz Style: ${questionnaire.visualizationStyle}`);
+    }
+    if (beat === 'lock_in') {
+      if (questionnaire.physicalCue) relevantContext.push(`Physical Cue: ${questionnaire.physicalCue}`);
+      if (questionnaire.accountability) relevantContext.push(`Promise: ${questionnaire.accountability}`);
+    }
+    if (relevantContext.length) {
+      userMessage += `\n\nUser's Personal Data (use this):\n${relevantContext.join('\n')}`;
+    }
+  }
 
-Rewrite the section now:`;
+  userMessage += `\n\nRewrite the section now:`;
 
   const aiResponse = await generateText(userMessage, {
     systemPrompt,

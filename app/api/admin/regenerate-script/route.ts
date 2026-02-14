@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { regenerateScript } from '@/lib/ai/script-generator';
 import { logAPIUsage } from '@/lib/ai/cost-tracking';
+import { mapQuestionnaireResponses } from '@/lib/questionnaire/response-mapper';
 
 export async function POST(request: NextRequest) {
   try {
@@ -87,15 +88,18 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    // Regenerate script
+    // Map full questionnaire data for the script generator
     const questionnaireResponses = questionnaire?.responses as Record<string, any>;
+    const mappedQuestionnaire = questionnaireResponses
+      ? mapQuestionnaireResponses(questionnaireResponses)
+      : undefined;
+
+    // Regenerate script with full questionnaire context
     const { script: newScript, aiResponse } = await regenerateScript(
       originalScript,
       meditationPlan,
       feedback,
-      questionnaireResponses?.specificOutcome
-        ? { specificOutcome: questionnaireResponses.specificOutcome }
-        : undefined
+      mappedQuestionnaire
     );
 
     // Update script in database

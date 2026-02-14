@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
     console.log('Generating energizing script...');
     const { script: energizingScript, aiResponse: scriptAiResponse } = await generateEnergizingScript(
       planResult.plan,
-      { specificOutcome: mappedData.specificOutcome }
+      mappedData
     );
 
     const scriptText = energizingScript.scriptText;
