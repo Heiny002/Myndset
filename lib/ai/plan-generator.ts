@@ -8,7 +8,7 @@
  * UPDATED: Now uses V2 psychological techniques database with enhanced academic backing
  */
 
-import { generateText, ClaudeResponse } from './claude';
+import { generateText, ClaudeResponse, ORCHESTRATOR_MODEL } from './claude';
 import {
   generateMeditationPlan,
   UserProfile,
@@ -227,6 +227,7 @@ export async function generateMeditationPlanFromQuestionnaire(
 
   const aiResponse = await generateText(userMessage, {
     systemPrompt,
+    model: ORCHESTRATOR_MODEL, // Opus 4.6 for orchestration/planning
     maxTokens: 2000,
     temperature: 0.3, // Low temperature for consistent, structured output
   });
@@ -315,6 +316,7 @@ Generate the meditation plan JSON now.`;
 
   const aiResponse = await generateText(userMessage, {
     systemPrompt,
+    model: ORCHESTRATOR_MODEL, // Opus 4.6 for orchestration/planning
     maxTokens: 2000,
     temperature: 0.4, // Slightly higher for variation
   });

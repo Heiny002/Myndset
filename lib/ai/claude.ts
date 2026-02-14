@@ -23,20 +23,35 @@ if (!process.env.ANTHROPIC_API_KEY) {
 
 // Claude model configurations
 export const CLAUDE_MODELS = {
-  // Sonnet: Best balance of speed and capability for script generation
-  SONNET: 'claude-sonnet-4-20250514',
+  // Opus 4.6: Most capable — used for orchestration (plan generation)
+  OPUS: 'claude-opus-4-6',
+  // Sonnet 4.5: High capability + speed — used for script writing
+  SONNET_4_5: 'claude-sonnet-4-5-20250929',
+  // Sonnet 4: Previous generation (kept for reference)
+  SONNET_4: 'claude-sonnet-4-20250514',
   // Haiku: Fast and cost-effective for simple tasks
   HAIKU: 'claude-3-5-haiku-20241022',
 } as const;
 
 export type ClaudeModel = (typeof CLAUDE_MODELS)[keyof typeof CLAUDE_MODELS];
 
-// Default model for meditation script generation
-export const DEFAULT_MODEL: ClaudeModel = CLAUDE_MODELS.SONNET;
+// Default model for script generation (Sonnet 4.5)
+export const DEFAULT_MODEL: ClaudeModel = CLAUDE_MODELS.SONNET_4_5;
+
+// Orchestration model for plan generation (Opus 4.6)
+export const ORCHESTRATOR_MODEL: ClaudeModel = CLAUDE_MODELS.OPUS;
 
 // Cost per million tokens (approximate, check Anthropic pricing for updates)
-export const TOKEN_COSTS = {
-  [CLAUDE_MODELS.SONNET]: {
+export const TOKEN_COSTS: Record<string, { input: number; output: number }> = {
+  [CLAUDE_MODELS.OPUS]: {
+    input: 15.0, // $15 per million input tokens
+    output: 75.0, // $75 per million output tokens
+  },
+  [CLAUDE_MODELS.SONNET_4_5]: {
+    input: 3.0, // $3 per million input tokens
+    output: 15.0, // $15 per million output tokens
+  },
+  [CLAUDE_MODELS.SONNET_4]: {
     input: 3.0, // $3 per million input tokens
     output: 15.0, // $15 per million output tokens
   },
@@ -44,7 +59,7 @@ export const TOKEN_COSTS = {
     input: 0.25, // $0.25 per million input tokens
     output: 1.25, // $1.25 per million output tokens
   },
-} as const;
+};
 
 // Create Anthropic client (singleton pattern)
 let anthropicClient: Anthropic | null = null;
