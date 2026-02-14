@@ -242,6 +242,18 @@ export interface SessionStructure {
 }
 
 export const SESSION_STRUCTURES: Record<string, SessionStructure> = {
+  ultra_quick: {
+    name: 'Ultra-Quick Activation',
+    totalMinutes: 1,
+    phases: [
+      {
+        name: 'Instant Activation',
+        durationMinutes: 1,
+        purpose: 'Single-beat rapid-fire self-rally — name the darkness, confront it, lock in with one physical action',
+        components: ['breath_awareness', 'energy_activation']
+      }
+    ]
+  },
   quick: {
     name: 'Quick Power Session',
     totalMinutes: 3,
@@ -320,6 +332,7 @@ export const SESSION_STRUCTURES: Record<string, SessionStructure> = {
  * Get appropriate session structure template based on duration
  */
 export function getSessionStructure(minutes: number): SessionStructure {
+  if (minutes <= 1) return SESSION_STRUCTURES.ultra_quick;
   if (minutes <= 5) return SESSION_STRUCTURES.quick;
   if (minutes <= 12) return SESSION_STRUCTURES.standard;
   return SESSION_STRUCTURES.deep;

@@ -86,7 +86,7 @@ function mapToRow(t: JsonTechnique) {
     duration_minutes: t.durationMinutes,
     intensity_level: t.intensityLevel,
     implementation_protocol: t.implementationProtocol,
-    script_example: t.scriptExample,
+    script_example: t.scriptExample || {},
     combines_well_with: t.combinesWellWith,
     contradicts_without: t.contradictsWithout,
     target_audience: t.targetAudience,

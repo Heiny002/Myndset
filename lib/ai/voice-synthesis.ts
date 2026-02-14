@@ -245,9 +245,9 @@ export function validateScriptForSynthesis(scriptText: string): {
     errors.push('Script is too short (minimum 100 characters)');
   }
 
-  // Check maximum length (ElevenLabs limit: 5000 characters for single request)
-  if (scriptText.length > 5000) {
-    errors.push('Script is too long (maximum 5000 characters)');
+  // Check maximum length (ElevenLabs v3 supports up to ~40K characters)
+  if (scriptText.length > 40000) {
+    errors.push('Script is too long (maximum 40,000 characters)');
   }
 
   // Check for empty content

@@ -514,7 +514,14 @@ export async function generateEnergizingScript(
   const systemPrompt = buildEnergizingSystemPrompt();
   const userMessage = await buildEnergizingUserMessage(plan, questionnaire);
 
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 170);
+  // Use questionnaire sessionLength as authoritative duration source
+  const sessionLengthMinutes: Record<string, number> = {
+    ultra_quick: 1, quick: 3, standard: 6, deep: 12,
+  };
+  const effectiveMinutes = questionnaire?.sessionLength
+    ? sessionLengthMinutes[questionnaire.sessionLength] ?? plan.sessionStructure.totalMinutes
+    : plan.sessionStructure.totalMinutes;
+  const targetWords = Math.round(effectiveMinutes * 170);
   const maxTokens = Math.min(Math.round(targetWords * 1.5), 8000);
 
   const aiResponse = await generateText(userMessage, {

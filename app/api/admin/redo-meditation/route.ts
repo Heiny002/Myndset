@@ -6,6 +6,7 @@ import {
   regenerateScript,
   ScriptStyle,
 } from '@/lib/ai/script-generator';
+import { mapQuestionnaireResponses } from '@/lib/questionnaire/response-mapper';
 
 /**
  * POST /api/admin/redo-meditation
@@ -94,13 +95,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Fetch questionnaire data for proper duration and context
+    let mappedQuestionnaire;
+    try {
+      const { data: questionnaireData } = await adminClient
+        .from('questionnaire_responses')
+        .select('*')
+        .eq('id', plan.questionnaire_response_id)
+        .single();
+
+      if (questionnaireData) {
+        const responses = questionnaireData.responses as Record<string, any>;
+        if (responses) {
+          mappedQuestionnaire = mapQuestionnaireResponses(responses);
+        }
+      }
+    } catch (e) {
+      console.warn('[redo-meditation] Could not fetch questionnaire data:', e);
+    }
+
     let newScript;
 
     try {
       // Always generate a fresh script with the new mode
       const scriptResult = await generateMeditationScript(
         plan.plan_data as any,
-        undefined, // No questionnaire data needed
+        mappedQuestionnaire,
         mode as ScriptStyle
       );
 
