@@ -41,6 +41,30 @@ export interface EnergizingScript {
   };
 }
 
+/** Voice persona definitions for script generation */
+export const VOICE_PERSONAS: Record<string, { name: string; writingStyle: string }> = {
+  default: {
+    name: 'Coach',
+    writingStyle: 'Confident and direct. Like a personal coach who knows you deeply. Balanced intensity — firm but warm. Uses short punchy sentences mixed with longer flowing ones.',
+  },
+  sarge: {
+    name: 'Sarge',
+    writingStyle: 'Maximum intensity. Drill-sergeant energy meets locker-room speech. Short, punching sentences. Commands. No softness. Raw, aggressive, unfiltered conviction. This voice YELLS with words even when speaking normally.',
+  },
+  professional: {
+    name: 'Adam',
+    writingStyle: 'Polished authority. Think executive coach or sports psychologist. Measured, precise language. Strategic framing. Less raw emotion, more calculated conviction.',
+  },
+  calm: {
+    name: 'Sarah',
+    writingStyle: 'Warm intensity. Fierce belief wrapped in gentle delivery. Longer sentences, softer transitions. The power is in the quiet certainty, not volume. Pauses carry more weight.',
+  },
+  energizing: {
+    name: 'Antoni',
+    writingStyle: 'High-energy enthusiasm. Infectious momentum. Builds excitement through rhythm and repetition. Upbeat, forward-moving, like a hype-man who actually knows your story.',
+  },
+};
+
 /** Self-Rally beat names, mapped to script position */
 type SelfRallyBeat = 'spiral' | 'confrontation' | 'reframe' | 'fuel' | 'lock_in';
 
@@ -131,10 +155,14 @@ Audio tags in SQUARE BRACKETS — not spoken aloud, they direct the AI voice:
 Rules:
 - Use 5-8 tags per script maximum, at KEY psychological shift moments only
 - NEVER use parentheses or asterisks — they will be spoken aloud
-- Pauses: commas and em-dashes (—) for brief, periods for short, paragraph breaks for medium
+- Pauses: commas and em-dashes (—) for brief pauses, periods for short pauses
+- **Paragraph break** = medium pause (~1-2 seconds)
+- **Double paragraph break** (blank line between paragraphs) = long dramatic pause (~3-4 seconds)
+- **Triple paragraph break** = extended silence for deep impact (~5-6 seconds) — use 1-2 per script MAX at peak emotional moments
+- Use double/triple breaks at: end of Spiral (let darkness land), peak of Confrontation (let the question hang), climax of Fuel (let the vision settle)
 - DO NOT use SSML break tags — eleven_v3 does NOT support them
 - DO NOT use ellipses ("..." or ".....") — inconsistent pauses
-- Speaking pace: 160-180 words/minute (activation pace, not meditation pace)
+- Speaking pace: 120-140 words/minute (deliberate, impactful delivery — NOT conversational speed)
 
 # Output Format
 
@@ -375,7 +403,8 @@ function buildQuestionnaireContext(q: MappedQuestionnaireData): string {
  */
 async function buildEnergizingUserMessage(
   plan: MeditationPlan,
-  questionnaire?: MappedQuestionnaireData
+  questionnaire?: MappedQuestionnaireData,
+  voiceType?: string
 ): Promise<string> {
   // Build enriched technique blocks
   const audienceType = plan.messagingFramework.audienceType;
@@ -398,8 +427,8 @@ async function buildEnergizingUserMessage(
   // Use questionnaire sessionLength as authoritative duration when available
   // (plan AI sometimes ignores the duration constraint)
   const sessionLengthMinutes: Record<string, number> = {
-    ultra_quick: 1,
-    quick: 3,
+    ultra_quick: 2,
+    quick: 4,
     standard: 6,
     deep: 12,
   };
@@ -407,8 +436,8 @@ async function buildEnergizingUserMessage(
     ? sessionLengthMinutes[questionnaire.sessionLength] ?? plan.sessionStructure.totalMinutes
     : plan.sessionStructure.totalMinutes;
 
-  const targetWords = Math.round(effectiveMinutes * 170);
-  const isUltraQuick = effectiveMinutes <= 1;
+  const targetWords = Math.round(effectiveMinutes * 130);
+  const isUltraQuick = effectiveMinutes <= 2;
 
   // Build questionnaire context
   const questionnaireBlock = questionnaire
@@ -455,7 +484,11 @@ REMEMBER:
 - Use their questionnaire data — it's deeply personal, honor it
 - Follow the pronoun arc: first-person adjacent → second-person → imperative
 - Use The Callback: reference Beat 1's fear in Beat 4-5, transformed
-
+${voiceType && voiceType !== 'default' && VOICE_PERSONAS[voiceType] ? `
+## Voice Persona: ${VOICE_PERSONAS[voiceType].name}
+${VOICE_PERSONAS[voiceType].writingStyle}
+Write the script to match this voice's character. The language intensity, sentence length, and emotional register should fit how ${VOICE_PERSONAS[voiceType].name} speaks.
+` : ''}
 Write the complete self-rally speech now.${isUltraQuick ? ' Every word COUNTS.' : ''}`;
 }
 
@@ -509,19 +542,20 @@ const BEAT_GUIDANCE: Record<SelfRallyBeat, { pronoun: string; function: string; 
  */
 export async function generateEnergizingScript(
   plan: MeditationPlan,
-  questionnaire?: MappedQuestionnaireData
+  questionnaire?: MappedQuestionnaireData,
+  voiceType?: string
 ): Promise<{ script: EnergizingScript; aiResponse: ClaudeResponse }> {
   const systemPrompt = buildEnergizingSystemPrompt();
-  const userMessage = await buildEnergizingUserMessage(plan, questionnaire);
+  const userMessage = await buildEnergizingUserMessage(plan, questionnaire, voiceType);
 
   // Use questionnaire sessionLength as authoritative duration source
   const sessionLengthMinutes: Record<string, number> = {
-    ultra_quick: 1, quick: 3, standard: 6, deep: 12,
+    ultra_quick: 2, quick: 4, standard: 6, deep: 12,
   };
   const effectiveMinutes = questionnaire?.sessionLength
     ? sessionLengthMinutes[questionnaire.sessionLength] ?? plan.sessionStructure.totalMinutes
     : plan.sessionStructure.totalMinutes;
-  const targetWords = Math.round(effectiveMinutes * 170);
+  const targetWords = Math.round(effectiveMinutes * 130);
   const maxTokens = Math.min(Math.round(targetWords * 1.5), 8000);
 
   const aiResponse = await generateText(userMessage, {
@@ -532,7 +566,7 @@ export async function generateEnergizingScript(
 
   const scriptText = aiResponse.content.trim();
   const wordCount = scriptText.split(/\s+/).length;
-  const estimatedDurationSeconds = Math.round((wordCount / 170) * 60);
+  const estimatedDurationSeconds = Math.round((wordCount / 130) * 60);
 
   const script: EnergizingScript = {
     meditationPlanId: '',
@@ -575,11 +609,12 @@ export async function regenerateEnergizingScript(
   originalScript: EnergizingScript,
   plan: MeditationPlan,
   feedback: string,
-  questionnaire?: MappedQuestionnaireData
+  questionnaire?: MappedQuestionnaireData,
+  voiceType?: string
 ): Promise<{ script: EnergizingScript; aiResponse: ClaudeResponse }> {
   const systemPrompt = buildEnergizingSystemPrompt();
 
-  const userMessage = `${await buildEnergizingUserMessage(plan, questionnaire)}
+  const userMessage = `${await buildEnergizingUserMessage(plan, questionnaire, voiceType)}
 
 # Previous Script (REJECTED)
 
@@ -596,7 +631,7 @@ Create a NEW self-rally speech that addresses the admin feedback while following
 
 Write the complete script now.`;
 
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 170);
+  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 130);
   const maxTokens = Math.min(Math.round(targetWords * 1.5), 8000);
 
   const aiResponse = await generateText(userMessage, {
@@ -607,7 +642,7 @@ Write the complete script now.`;
 
   const scriptText = aiResponse.content.trim();
   const wordCount = scriptText.split(/\s+/).length;
-  const estimatedDurationSeconds = Math.round((wordCount / 170) * 60);
+  const estimatedDurationSeconds = Math.round((wordCount / 130) * 60);
 
   const script: EnergizingScript = {
     meditationPlanId: originalScript.meditationPlanId,
@@ -639,7 +674,8 @@ export async function regenerateEnergizingSection(
   plan: MeditationPlan,
   sectionText: string,
   userFeedback: string,
-  questionnaire?: MappedQuestionnaireData
+  questionnaire?: MappedQuestionnaireData,
+  voiceType?: string
 ): Promise<string> {
   // Detect which beat this section belongs to
   const beat = detectBeat(sectionText, originalScript.scriptText);

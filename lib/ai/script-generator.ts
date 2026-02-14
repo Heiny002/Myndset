@@ -94,9 +94,11 @@ Write a complete, word-for-word meditation script that will be narrated by a pro
 
 # Pacing Guidelines
 
-- Average speaking pace: 140-160 words per minute
-- Use punctuation for pauses: periods, commas, em-dashes (—), and paragraph breaks
-- Use paragraph breaks for natural breath points and longer pauses
+- Average speaking pace: 110-130 words per minute (slow, contemplative delivery)
+- Pauses: commas and em-dashes (—) for brief pauses, periods for short pauses
+- **Paragraph break** = medium pause (~1-2 seconds)
+- **Double paragraph break** (blank line between paragraphs) = long pause (~3-4 seconds) for contemplation
+- **Triple paragraph break** = extended silence (~5-6 seconds) — use 1-2 per script MAX at deepest moments
 - DO NOT use SSML break tags like <break time="X.Xs" /> - eleven_v3 does NOT support them
 - DO NOT use ellipses ("..." or ".....") - they create inconsistent pauses
 
@@ -129,14 +131,14 @@ function buildScriptUserMessage(plan: MeditationPlan, questionnaire?: { specific
     )
     .join('\n');
 
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 145); // 145 words/min average
+  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 120); // 120 words/min average
 
   return `Write a complete meditation script based on this approved plan.
 
 # Meditation Plan
 
 **Total Duration**: ${plan.sessionStructure.totalMinutes} minutes
-**Target Word Count**: ~${targetWords} words (140-160 words/minute)
+**Target Word Count**: ~${targetWords} words (110-130 words/minute)
 
 **Components**:
 ${components}
@@ -187,7 +189,8 @@ Write the complete meditation script now. Start with the first words the user wi
 export async function generateMeditationScript(
   plan: MeditationPlan,
   questionnaire?: MappedQuestionnaireData | { specificOutcome?: string; scriptStyle?: ScriptStyle },
-  scriptStyle: ScriptStyle = 'energizing' // DEFAULT to energizing
+  scriptStyle: ScriptStyle = 'energizing', // DEFAULT to energizing
+  voiceType?: string
 ): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
   // Determine style from parameter or questionnaire, default to energizing
   const resolvedStyle = scriptStyle || (questionnaire as any)?.scriptStyle || 'energizing';
@@ -196,7 +199,7 @@ export async function generateMeditationScript(
   if (resolvedStyle === 'energizing') {
     // Pass full MappedQuestionnaireData if available, otherwise pass as-is
     const { script: energizingScript, aiResponse } =
-      await generateEnergizingScript(plan, questionnaire as MappedQuestionnaireData | undefined);
+      await generateEnergizingScript(plan, questionnaire as MappedQuestionnaireData | undefined, voiceType);
 
     // Convert EnergizingScript to MeditationScript format
     const script: MeditationScript = {
@@ -222,7 +225,7 @@ async function generateCalmingScript(
   const userMessage = buildScriptUserMessage(plan, questionnaire);
 
   // Calculate max tokens based on target word count (roughly 1.3 tokens per word)
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 145);
+  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 120);
   const maxTokens = Math.min(Math.round(targetWords * 1.5), 8000);
 
   const aiResponse = await generateText(userMessage, {
@@ -234,7 +237,7 @@ async function generateCalmingScript(
   // Calculate actual word count and duration
   const scriptText = aiResponse.content.trim();
   const wordCount = scriptText.split(/\s+/).length;
-  const estimatedDurationSeconds = Math.round((wordCount / 145) * 60);
+  const estimatedDurationSeconds = Math.round((wordCount / 120) * 60);
 
   const script: MeditationScript = {
     meditationPlanId: '', // Will be set when saving to database
@@ -277,7 +280,8 @@ export async function regenerateScript(
   originalScript: MeditationScript,
   plan: MeditationPlan,
   feedback: string,
-  questionnaire?: MappedQuestionnaireData | { specificOutcome?: string }
+  questionnaire?: MappedQuestionnaireData | { specificOutcome?: string },
+  voiceType?: string
 ): Promise<{ script: MeditationScript; aiResponse: ClaudeResponse }> {
   const scriptStyle = originalScript.scriptStyle || 'energizing';
 
@@ -298,7 +302,8 @@ export async function regenerateScript(
       energizingScript,
       plan,
       feedback,
-      questionnaire as MappedQuestionnaireData | undefined
+      questionnaire as MappedQuestionnaireData | undefined,
+      voiceType
     );
 
     return {
@@ -338,7 +343,7 @@ ${feedback}
 Create a NEW meditation script that addresses the admin feedback while following all the original requirements.
 Write the complete meditation script now.`;
 
-  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 145);
+  const targetWords = Math.round(plan.sessionStructure.totalMinutes * 120);
   const maxTokens = Math.min(Math.round(targetWords * 1.5), 8000);
 
   const aiResponse = await generateText(userMessage, {
@@ -349,7 +354,7 @@ Write the complete meditation script now.`;
 
   const scriptText = aiResponse.content.trim();
   const wordCount = scriptText.split(/\s+/).length;
-  const estimatedDurationSeconds = Math.round((wordCount / 145) * 60);
+  const estimatedDurationSeconds = Math.round((wordCount / 120) * 60);
 
   const script: MeditationScript = {
     meditationPlanId: originalScript.meditationPlanId,

@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     // Verify admin access
     await requireAdmin();
 
-    const { planId } = await request.json();
+    const { planId, voiceType } = await request.json();
 
     if (!planId) {
       return NextResponse.json({ error: 'planId is required' }, { status: 400 });
@@ -86,10 +86,12 @@ export async function POST(request: NextRequest) {
       ? mapQuestionnaireResponses(questionnaireResponses)
       : undefined;
 
-    // Generate script with full questionnaire context
+    // Generate script with full questionnaire context and voice type
     const { script, aiResponse } = await generateMeditationScript(
       meditationPlan,
-      mappedQuestionnaire
+      mappedQuestionnaire,
+      undefined,
+      voiceType || 'default'
     );
 
     // Use questionnaire title if available, otherwise generate default title
@@ -114,6 +116,7 @@ export async function POST(request: NextRequest) {
             estimated_duration_seconds: script.estimatedDurationSeconds,
             version: script.version,
             script_style: script.scriptStyle || 'energizing',
+            voice_type: voiceType || 'default',
             eleven_labs_guidance: script.elevenLabsGuidance,
             input_tokens: aiResponse.inputTokens,
             output_tokens: aiResponse.outputTokens,

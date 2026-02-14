@@ -82,6 +82,7 @@ export default async function ScriptReviewPage({
               scriptId={id}
               currentStatus={scriptMetadata?.status || 'pending_approval'}
               hasAudio={!!script.audio_url}
+              initialVoiceType={scriptMetadata?.voice_type}
             />
           </div>
         </div>

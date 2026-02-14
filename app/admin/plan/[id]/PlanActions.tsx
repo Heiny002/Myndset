@@ -17,6 +17,7 @@ export default function PlanActions({
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [voiceType, setVoiceType] = useState<string>('default');
   const router = useRouter();
 
   async function handleApprove() {
@@ -96,7 +97,7 @@ export default function PlanActions({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ planId, voiceType }),
       });
 
       const data = await response.json();
@@ -170,13 +171,26 @@ export default function PlanActions({
 
     return (
       <div className="flex flex-col items-end gap-2">
-        <button
-          onClick={handleGenerateScript}
-          disabled={isProcessing}
-          className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {isProcessing ? 'Generating Script...' : 'Generate Meditation Script'}
-        </button>
+        <div className="flex items-center gap-2">
+          <select
+            value={voiceType}
+            onChange={(e) => setVoiceType(e.target.value)}
+            className="rounded-lg border border-neutral-700 bg-neutral-800 px-3 py-2 text-sm text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          >
+            <option value="default">Coach (Default)</option>
+            <option value="sarge">Sarge</option>
+            <option value="professional">Professional (Adam)</option>
+            <option value="calm">Calm (Sarah)</option>
+            <option value="energizing">Energizing (Antoni)</option>
+          </select>
+          <button
+            onClick={handleGenerateScript}
+            disabled={isProcessing}
+            className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-neutral-950 hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isProcessing ? 'Generating Script...' : 'Generate Meditation Script'}
+          </button>
+        </div>
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
     );

@@ -94,12 +94,16 @@ export async function POST(request: NextRequest) {
       ? mapQuestionnaireResponses(questionnaireResponses)
       : undefined;
 
-    // Regenerate script with full questionnaire context
+    // Read stored voice type from meditation metadata
+    const storedVoiceType = scriptMetadata?.voice_type || 'default';
+
+    // Regenerate script with full questionnaire context and preserved voice type
     const { script: newScript, aiResponse } = await regenerateScript(
       originalScript,
       meditationPlan,
       feedback,
-      mappedQuestionnaire
+      mappedQuestionnaire,
+      storedVoiceType
     );
 
     // Delete old audio file if it existed
@@ -124,6 +128,7 @@ export async function POST(request: NextRequest) {
           word_count: newScript.wordCount,
           estimated_duration_seconds: newScript.estimatedDurationSeconds,
           version: newScript.version,
+          voice_type: storedVoiceType,
           input_tokens: aiResponse.inputTokens,
           output_tokens: aiResponse.outputTokens,
           cost_cents: aiResponse.costCents,

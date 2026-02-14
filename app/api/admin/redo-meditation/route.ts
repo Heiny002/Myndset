@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     // Verify admin access
     await requireAdmin();
 
-    const { meditationId, mode, feedback } = await request.json();
+    const { meditationId, mode, feedback, voiceType: requestVoiceType } = await request.json();
 
     if (!meditationId) {
       return NextResponse.json(
@@ -116,12 +116,16 @@ export async function POST(request: NextRequest) {
 
     let newScript;
 
+    // Use provided voiceType, fall back to stored voice type, then default
+    const effectiveVoiceType = requestVoiceType || (meditation.techniques as any)?.voice_type || 'default';
+
     try {
       // Always generate a fresh script with the new mode
       const scriptResult = await generateMeditationScript(
         plan.plan_data as any,
         mappedQuestionnaire,
-        mode as ScriptStyle
+        mode as ScriptStyle,
+        effectiveVoiceType
       );
 
       newScript = scriptResult.script;
@@ -150,6 +154,7 @@ export async function POST(request: NextRequest) {
       status: 'pending_approval',
       version: ((meditation.techniques as any)?.version || 1) + 1,
       scriptStyle: mode,
+      voice_type: effectiveVoiceType,
       model: newScript.metadata.model,
       inputTokens: newScript.metadata.inputTokens,
       outputTokens: newScript.metadata.outputTokens,

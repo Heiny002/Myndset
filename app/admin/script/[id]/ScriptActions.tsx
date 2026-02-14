@@ -7,16 +7,18 @@ export default function ScriptActions({
   scriptId,
   currentStatus,
   hasAudio,
+  initialVoiceType,
 }: {
   scriptId: string;
   currentStatus: string;
   hasAudio: boolean;
+  initialVoiceType?: string;
 }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [voiceType, setVoiceType] = useState<string>('default');
+  const [voiceType, setVoiceType] = useState<string>(initialVoiceType || 'default');
   const [success, setSuccess] = useState<string | null>(null);
   const router = useRouter();
 
