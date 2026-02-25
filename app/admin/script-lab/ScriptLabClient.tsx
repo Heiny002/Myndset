@@ -354,7 +354,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
         body: JSON.stringify({ seed, previousPersonas }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to generate questionnaire');
+      if (!res.ok) throw new Error(data.details || data.error || 'Failed to generate questionnaire');
 
       const q: LabQuestionnaire = data.questionnaire;
       setQuestionnaire(q);
@@ -388,7 +388,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Generation failed');
+      if (!res.ok) throw new Error(data.details || data.error || 'Generation failed');
 
       const newScript: CurrentScript = {
         text: data.scriptText,
