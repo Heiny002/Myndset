@@ -169,7 +169,7 @@ function LoginForm() {
       {/* Magic Link Alternative */}
       <div className="text-center">
         <Link
-          href="/auth/signup"
+          href={`/auth/signup?redirect=${encodeURIComponent(redirect)}`}
           className="text-[#00ff88] hover:underline text-sm font-medium"
         >
           Use magic link instead
