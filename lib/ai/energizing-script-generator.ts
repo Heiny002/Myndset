@@ -543,9 +543,10 @@ const BEAT_GUIDANCE: Record<SelfRallyBeat, { pronoun: string; function: string; 
 export async function generateEnergizingScript(
   plan: MeditationPlan,
   questionnaire?: MappedQuestionnaireData,
-  voiceType?: string
+  voiceType?: string,
+  customSystemPrompt?: string
 ): Promise<{ script: EnergizingScript; aiResponse: ClaudeResponse }> {
-  const systemPrompt = buildEnergizingSystemPrompt();
+  const systemPrompt = customSystemPrompt ?? buildEnergizingSystemPrompt();
   const userMessage = await buildEnergizingUserMessage(plan, questionnaire, voiceType);
 
   // Use questionnaire sessionLength as authoritative duration source

@@ -3,27 +3,44 @@ import { requireAdmin } from '@/lib/auth/admin';
 import { createAdminClient } from '@/lib/supabase/server';
 import { generateEnergizingScript } from '@/lib/ai/energizing-script-generator';
 import { logAPIUsage } from '@/lib/ai/cost-tracking';
-import { buildLabMeditationPlan, buildLabQuestionnaireData } from '@/lib/ai/script-lab-chat';
+import {
+  buildPlanFromQuestionnaire,
+  buildMappedDataFromQuestionnaire,
+  type LabQuestionnaire,
+} from '@/lib/ai/script-lab-chat';
 
 export async function POST(request: NextRequest) {
   try {
     await requireAdmin();
 
     const body = await request.json();
-    const { contextString, sessionLength, voiceType = 'default', approach, userId } = body;
+    const {
+      labQuestionnaire,
+      voiceType = 'default',
+      scriptMethod,
+      customSystemPrompt,
+      userId,
+    } = body as {
+      labQuestionnaire: LabQuestionnaire;
+      voiceType?: string;
+      scriptMethod?: string;
+      customSystemPrompt?: string;
+      userId: string;
+    };
 
-    if (!contextString || !sessionLength || !userId) {
-      return NextResponse.json({ error: 'Missing required fields: contextString, sessionLength, userId' }, { status: 400 });
+    if (!labQuestionnaire || !userId) {
+      return NextResponse.json({ error: 'Missing required fields: labQuestionnaire, userId' }, { status: 400 });
     }
 
+    const sessionLength = labQuestionnaire.sessionLength;
     if (!['ultra_quick', 'quick'].includes(sessionLength)) {
-      return NextResponse.json({ error: 'sessionLength must be ultra_quick or quick' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid sessionLength in questionnaire' }, { status: 400 });
     }
 
     const adminClient = createAdminClient();
 
-    // Step 1: Build plan + questionnaire data (no AI call)
-    const labQuestionnaire = buildLabQuestionnaireData(contextString, sessionLength, approach);
+    // Step 1: Build mapped questionnaire data (no AI)
+    const labQData = buildMappedDataFromQuestionnaire(labQuestionnaire, scriptMethod);
 
     // Step 2: Insert questionnaire_responses record
     const { data: questionnaireData, error: questionnaireError } = await adminClient
@@ -31,7 +48,12 @@ export async function POST(request: NextRequest) {
       .insert({
         user_id: userId,
         tier: 1,
-        responses: { ...labQuestionnaire.rawResponses, lab: true },
+        responses: {
+          ...labQuestionnaire,
+          lab: true,
+          script_method: scriptMethod || null,
+          has_custom_prompt: !!customSystemPrompt,
+        } as any,
         completed_at: new Date().toISOString(),
       })
       .select()
@@ -42,9 +64,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save questionnaire', details: questionnaireError.message }, { status: 500 });
     }
 
-    const labPlan = buildLabMeditationPlan(contextString, sessionLength, userId, questionnaireData.id);
+    // Step 3: Build plan (no AI)
+    const labPlan = buildPlanFromQuestionnaire(labQuestionnaire, userId, questionnaireData.id);
 
-    // Step 3: Insert meditation_plans record (pre-approved)
+    // Step 4: Insert meditation_plans record (pre-approved)
     const { data: planData, error: planError } = await adminClient
       .from('meditation_plans')
       .insert({
@@ -61,26 +84,35 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to save plan', details: planError.message }, { status: 500 });
     }
 
-    // Step 4: Generate script (single AI call)
-    console.log('[script-lab/generate] Generating script...');
+    // Step 5: Generate script (single AI call)
+    console.log('[script-lab/generate] Generating script...', {
+      persona: labQuestionnaire.persona.name,
+      archetype: labQuestionnaire.persona.archetype,
+      sessionLength,
+      voiceType,
+      hasScriptMethod: !!scriptMethod,
+      hasCustomPrompt: !!customSystemPrompt,
+    });
+
     const { script: energizingScript, aiResponse: scriptAiResponse } = await generateEnergizingScript(
       labPlan,
-      labQuestionnaire,
+      labQData,
       voiceType,
+      customSystemPrompt,
     );
 
     const scriptText = energizingScript.scriptText;
     const wordCount = energizingScript.wordCount;
     const durationSeconds = energizingScript.estimatedDurationSeconds;
 
-    // Step 5: Insert meditations record (status: approved so generate-audio works immediately)
+    // Step 6: Insert meditations record (status: approved — audio can be generated immediately)
     const { data: meditationData, error: meditationError } = await adminClient
       .from('meditations')
       .insert({
         user_id: userId,
         meditation_plan_id: planData.id,
-        title: `Lab: ${contextString.substring(0, 60)}`,
-        description: `Script Lab generation — ${sessionLength} — ${voiceType}`,
+        title: `Lab: ${labQuestionnaire.persona.name} — ${labQuestionnaire.persona.archetype}`,
+        description: labQuestionnaire.persona.background.substring(0, 200),
         script_text: scriptText,
         session_length: sessionLength,
         techniques: {
@@ -94,9 +126,10 @@ export async function POST(request: NextRequest) {
           model: scriptAiResponse.model || 'claude-sonnet-4-5',
           generated_at: new Date().toISOString(),
           script_type: 'energizing',
-          user_type: labQuestionnaire.userType,
-          context_string: contextString,
-          approach: approach || null,
+          user_type: labQuestionnaire.persona.archetype,
+          persona_name: labQuestionnaire.persona.name,
+          script_method: scriptMethod || null,
+          has_custom_prompt: !!customSystemPrompt,
           voice_type: voiceType,
           elevenlabs_guidance: energizingScript.elevenLabsGuidance,
         },

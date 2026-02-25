@@ -1,20 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/admin';
 import { streamMessage } from '@/lib/ai/claude';
-import { buildScriptLabSystemPrompt } from '@/lib/ai/script-lab-chat';
+import { buildScriptLabSystemPrompt, type LabQuestionnaire } from '@/lib/ai/script-lab-chat';
 
 export async function POST(request: NextRequest) {
   try {
     await requireAdmin();
 
     const body = await request.json();
-    const { messages, currentScript, contextString, sessionLength } = body;
+    const { messages, currentScript, questionnaire, sessionLength } = body as {
+      messages: { role: 'user' | 'assistant'; content: string }[];
+      currentScript?: string;
+      questionnaire?: LabQuestionnaire;
+      sessionLength: 'ultra_quick' | 'quick';
+    };
 
-    if (!messages || !contextString || !sessionLength) {
-      return NextResponse.json({ error: 'Missing required fields: messages, contextString, sessionLength' }, { status: 400 });
+    if (!messages || !sessionLength) {
+      return NextResponse.json({ error: 'Missing required fields: messages, sessionLength' }, { status: 400 });
     }
 
-    const systemPrompt = buildScriptLabSystemPrompt(currentScript || '', contextString, sessionLength);
+    const systemPrompt = buildScriptLabSystemPrompt(
+      currentScript || '',
+      questionnaire || null,
+      sessionLength,
+    );
 
     const stream = streamMessage(messages, {
       maxTokens: 4096,

@@ -1,95 +1,119 @@
 /**
- * Script Lab Chat — Builder helpers and system prompt
+ * Script Lab Chat — Builder helpers, questionnaire type, and system prompts
  *
- * Synthesizes plan + questionnaire data from a brief context string
- * (no AI call). Used by the Script Lab to bypass the full questionnaire pipeline.
+ * Supports AI-generated test questionnaires that feed into the script
+ * generator pipeline. The questionnaire format is intentionally flexible
+ * so we can test both input design and output quality simultaneously.
  */
 
 import type { MeditationPlan, MeditationPlanComponent } from './plan-generator';
 import type { MappedQuestionnaireData } from '../questionnaire/response-mapper';
 import type { UserType } from '../questionnaire/questions';
 
-// ─── Keyword inference helpers ────────────────────────────────────────────────
+// ─── Lab Questionnaire Types ──────────────────────────────────────────────────
 
-/** Infer the UserType from freeform context string keywords */
-function inferUserType(ctx: string): UserType {
-  const c = ctx.toLowerCase();
-  if (/\b(athlete|player|game|match|race|sport|coach|team|compete|tournament|bout|lift|gym)\b/.test(c)) return 'athlete';
-  if (/\b(sales|close|closing|quota|pipeline|prospect|crm|cold call|deal)\b/.test(c)) return 'sales';
-  if (/\b(executive|ceo|cto|vp|board|leadership|lead|manage|team lead|manager)\b/.test(c)) return 'executive';
-  if (/\b(creative|design|artist|writer|compose|music|direct|screenplay|film|art)\b/.test(c)) return 'creative';
-  if (/\b(engineer|developer|code|debug|technical|software|architect|data|ml|ai)\b/.test(c)) return 'technical';
-  if (/\b(student|exam|study|class|college|university|grade|test|thesis|dissertation)\b/.test(c)) return 'student';
-  // default: entrepreneur (founders, pitch, launch, investor, startup, etc.)
-  return 'entrepreneur';
+export type QuestionCategory =
+  | 'immediate_situation'
+  | 'mental_state'
+  | 'somatic'
+  | 'identity'
+  | 'fear'
+  | 'past_success'
+  | 'stakes'
+  | 'time_pressure'
+  | 'physical'
+  | 'commitment';
+
+export interface LabQuestion {
+  id: string;
+  question: string;
+  answer: string;
+  category: QuestionCategory;
 }
 
-/** Infer mental state from context string */
-function inferMentalState(ctx: string): string {
-  const c = ctx.toLowerCase();
-  if (/\b(scared|fear|terrif|panic)\b/.test(c)) return 'anxious';
-  if (/\b(nervous|anxious|anxiety|worry|worried)\b/.test(c)) return 'nervous';
-  if (/\b(doubt|imposter|not good enough|fraud)\b/.test(c)) return 'imposter';
-  if (/\b(overwhelm|too much|stress|drowning)\b/.test(c)) return 'overwhelmed';
-  if (/\b(tired|exhaust|burn.?out|drained|fatigue)\b/.test(c)) return 'burned_out';
-  if (/\b(lost|unclear|unfocus|distract|scatter)\b/.test(c)) return 'unfocused';
-  if (/\b(angry|frustrat|pissed|furious)\b/.test(c)) return 'frustrated';
-  if (/\b(determined|ready|fired up|amped|pump)\b/.test(c)) return 'determined';
-  return 'nervous';
-}
-
-/** Infer challenge type from context string */
-function inferChallengeType(ctx: string, userType: UserType): string {
-  const c = ctx.toLowerCase();
-  if (/\b(pitch|investor|vc|fund|funding|raise)\b/.test(c)) return 'pitch';
-  if (/\b(launch|release|go.?live|product|ship)\b/.test(c)) return 'launch';
-  if (/\b(present|presentation|speech|talk|keynote|demo)\b/.test(c)) return 'presentation';
-  if (/\b(negotiat|contract|deal)\b/.test(c)) return 'negotiation';
-  if (/\b(interview|job|hiring)\b/.test(c)) return 'interview';
-  if (/\b(game|match|compete|tournament|bout)\b/.test(c)) return 'game_match';
-  if (/\b(exam|test|quiz)\b/.test(c)) return 'exam';
-  if (/\b(close|closing|quota|pipeline)\b/.test(c)) return 'closing_call';
-  if (/\b(board|board meeting)\b/.test(c)) return 'board_presentation';
-  if (/\b(deadline|crunch|due)\b/.test(c)) return 'deadline';
-  if (/\b(crisis|fire|emergency|urgent)\b/.test(c)) return 'crisis';
-  // fallback by user type
-  const fallbacks: Record<UserType, string> = {
-    entrepreneur: 'pitch', sales: 'closing_call', athlete: 'game_match',
-    executive: 'board_presentation', creative: 'presentation',
-    technical: 'deep_work', student: 'exam',
+export interface LabQuestionnaire {
+  persona: {
+    name: string;
+    archetype: UserType;
+    background: string;
   };
-  return fallbacks[userType] || 'pitch';
+  sessionLength: 'ultra_quick' | 'quick';
+  questions: LabQuestion[];
+  generatedAt: string;
 }
 
-/** Infer what the user needs from context string + mental state */
-function inferCurrentNeed(ctx: string, mentalState: string): string {
-  const c = ctx.toLowerCase();
-  if (/\b(confident|confidence)\b/.test(c)) return 'confidence';
-  if (/\b(focus|clarity|clear)\b/.test(c)) return 'focus';
-  if (/\b(energy|energi|fired|pump)\b/.test(c)) return 'energy';
-  if (/\b(calm|ground|center|breath)\b/.test(c)) return 'calm';
-  if (/\b(courag|brave|bold)\b/.test(c)) return 'courage';
-  // derive from mental state
-  const stateNeedMap: Record<string, string> = {
-    anxious: 'confidence', nervous: 'confidence', imposter: 'confidence',
-    overwhelmed: 'focus', burned_out: 'energy', unfocused: 'focus',
-    frustrated: 'resilience', determined: 'energy',
-  };
-  return stateNeedMap[mentalState] || 'confidence';
+// ─── Questionnaire Generator Prompt ──────────────────────────────────────────
+
+/**
+ * Returns the system prompt for the questionnaire generator AI.
+ * Designed to produce varied, strategically useful test personas.
+ */
+export function buildQuestionnaireGeneratorPrompt(): string {
+  return `You are a test data generator for Myndset — a performance psychology audio platform.
+
+Your job: generate a realistic test persona and a strategic intake questionnaire to test script generation quality.
+
+# Goals
+
+This questionnaire serves two purposes simultaneously:
+1. **Test the script output** — does the generated script actually help this person?
+2. **Test the questionnaire design** — are these the RIGHT questions to ask for maximum script quality?
+
+Vary your approach across iterations. Sometimes prioritize emotional depth. Sometimes somatic detail. Sometimes identity-level work. Sometimes stark situational facts. Sometimes narrative arc.
+
+# Output Format
+
+Respond with ONLY valid JSON in this exact structure:
+
+{
+  "persona": {
+    "name": "First Last",
+    "archetype": "entrepreneur|athlete|sales|executive|creative|technical|student",
+    "background": "2-3 sentence specific background — include age, profession, specific current context"
+  },
+  "sessionLength": "ultra_quick|quick",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "...",
+      "answer": "...",
+      "category": "immediate_situation|mental_state|somatic|identity|fear|past_success|stakes|time_pressure|physical|commitment"
+    }
+  ]
 }
 
-/** Infer stakes from context string */
-function inferStakes(ctx: string): string {
-  const c = ctx.toLowerCase();
-  if (/\b(million|funding|raise|series|seed)\b/.test(c)) return 'major funding event';
-  if (/\b(career|job|fired|promotion|layoff)\b/.test(c)) return 'career-defining moment';
-  if (/\b(championship|finals|playoffs|gold)\b/.test(c)) return 'championship performance';
-  if (/\b(client|account|enterprise|contract)\b/.test(c)) return 'major client opportunity';
-  return 'high-stakes performance';
+# Rules
+
+- Exactly 10 questions
+- Cover at least 7 different categories across the 10 questions
+- Answers must be SPECIFIC and VIVID — not "I'm nervous" but "My hands are shaking and I keep running the worst-case slide deck in my head"
+- The persona must have a clear, high-stakes performance moment happening SOON (within the hour)
+- sessionLength: use "ultra_quick" when the moment is imminent (under 5 min away), "quick" otherwise
+- DO NOT repeat the same question structures across iterations — vary the framing radically
+
+# Category Definitions
+
+- immediate_situation: What is happening RIGHT NOW in the external world
+- mental_state: Current internal emotional/psychological experience
+- somatic: Where is the fear/pressure felt physically in the body
+- identity: Who do they need to BE — the identity they're reaching for
+- fear: The specific thought or voice that is blocking them
+- past_success: A real memory of performing well under similar pressure
+- stakes: What is ACTUALLY at risk — concrete consequences
+- time_pressure: Exactly how long until the moment of performance
+- physical: Current body state — energy, sleep, physical preparation
+- commitment: What they are willing to do differently, their promise to themselves
+
+Output ONLY valid JSON. No text before or after.`;
 }
 
-// ─── Hardcoded high-performance technique stack ───────────────────────────────
+// ─── Map AI questionnaire → MeditationPlan + MappedQuestionnaireData ─────────
 
+function getAnswerByCategory(questions: LabQuestion[], category: QuestionCategory): string {
+  return questions.find((q) => q.category === category)?.answer || '';
+}
+
+/** Build hardcoded high-performance component stack from session length */
 function buildLabComponents(sessionLength: 'ultra_quick' | 'quick'): MeditationPlanComponent[] {
   if (sessionLength === 'ultra_quick') {
     return [
@@ -109,7 +133,6 @@ function buildLabComponents(sessionLength: 'ultra_quick' | 'quick'): MeditationP
       },
     ];
   }
-  // quick (4 min)
   return [
     {
       componentId: 'cognitive_reappraisal',
@@ -155,29 +178,22 @@ function buildSessionStructure(sessionLength: 'ultra_quick' | 'quick') {
   };
 }
 
-// ─── Exported builders ────────────────────────────────────────────────────────
-
 /**
- * Build a MeditationPlan from a brief context string — no AI call.
- * Uses hardcoded high-performance technique stack.
+ * Build MeditationPlan from an AI-generated questionnaire — no AI call.
  */
-export function buildLabMeditationPlan(
-  contextString: string,
-  sessionLength: 'ultra_quick' | 'quick',
+export function buildPlanFromQuestionnaire(
+  q: LabQuestionnaire,
   userId: string,
   questionnaireId: string,
 ): MeditationPlan {
-  const userType = inferUserType(contextString);
-  const components = buildLabComponents(sessionLength);
-  const sessionStructure = buildSessionStructure(sessionLength);
+  const { archetype } = q.persona;
+  const components = buildLabComponents(q.sessionLength);
+  const sessionStructure = buildSessionStructure(q.sessionLength);
 
   const audienceMap: Record<UserType, string> = {
-    entrepreneur: 'Entrepreneur/Founder',
-    sales: 'Sales Professional',
-    athlete: 'Athlete/Competitor',
-    executive: 'Executive/Leader',
-    creative: 'Creative Professional',
-    technical: 'Technical/Analytical',
+    entrepreneur: 'Entrepreneur/Founder', sales: 'Sales Professional',
+    athlete: 'Athlete/Competitor', executive: 'Executive/Leader',
+    creative: 'Creative Professional', technical: 'Technical/Analytical',
     student: 'Student/Academic',
   };
 
@@ -191,17 +207,22 @@ export function buildLabMeditationPlan(
     student: ['persistence', 'confidence', 'clarity'],
   };
 
+  const situationAnswer = getAnswerByCategory(q.questions, 'immediate_situation');
+  const overallRationale = situationAnswer
+    ? `Activation for ${q.persona.name}: ${situationAnswer.substring(0, 120)}`
+    : `Activation script for ${audienceMap[archetype]} — ${q.sessionLength === 'ultra_quick' ? '2' : '4'} min`;
+
   return {
     userId,
     questionnaireId,
     components,
     sessionStructure,
     messagingFramework: {
-      audienceType: audienceMap[userType],
-      keyValues: keyValuesMap[userType],
-      approachDescription: `Direct confrontation arc for ${audienceMap[userType].toLowerCase()} — spiral to lock-in via identity-based self-speech`,
+      audienceType: audienceMap[archetype],
+      keyValues: keyValuesMap[archetype],
+      approachDescription: `Direct confrontation arc for ${audienceMap[archetype].toLowerCase()} — spiral to lock-in via identity-based self-speech`,
     },
-    overallRationale: `Rapid activation script for: ${contextString}. Bypasses passive coping to install peak-performance identity state in under ${sessionLength === 'ultra_quick' ? '2' : '4'} minutes.`,
+    overallRationale,
     status: 'approved',
     metadata: {
       generatedAt: new Date().toISOString(),
@@ -214,120 +235,174 @@ export function buildLabMeditationPlan(
 }
 
 /**
- * Build MappedQuestionnaireData from a brief context string — no AI call.
- * Keyword-infers all fields. If approach is provided, it's appended to immediateSituation.
+ * Build MappedQuestionnaireData from an AI-generated questionnaire.
+ * If scriptMethod is provided, it's appended to immediateSituation as an override instruction.
  */
-export function buildLabQuestionnaireData(
-  contextString: string,
-  sessionLength: 'ultra_quick' | 'quick',
-  approach?: string,
+export function buildMappedDataFromQuestionnaire(
+  q: LabQuestionnaire,
+  scriptMethod?: string,
 ): MappedQuestionnaireData {
-  const userType = inferUserType(contextString);
-  const mentalState = inferMentalState(contextString);
-  const challengeType = inferChallengeType(contextString, userType);
-  const currentNeed = inferCurrentNeed(contextString, mentalState);
-  const stakes = inferStakes(contextString);
+  const { archetype } = q.persona;
 
-  const timeUrgency: MappedQuestionnaireData['timeUrgency'] = 'minutes';
+  // Serialize all Q&A into a rich context block for immediateSituation
+  const qaContext = q.questions
+    .map((item) => `Q: ${item.question}\nA: ${item.answer}`)
+    .join('\n\n');
 
-  const immediateSituation = approach
-    ? `${contextString}\n\n[APPROACH OVERRIDE]: ${approach}`
-    : contextString;
+  const personaHeader = `Persona: ${q.persona.name} — ${q.persona.background}`;
+  const immediateSituation = scriptMethod
+    ? `${personaHeader}\n\n${qaContext}\n\n[SCRIPT METHOD OVERRIDE]: ${scriptMethod}`
+    : `${personaHeader}\n\n${qaContext}`;
+
+  // Extract specific fields from categorized answers
+  const mentalStateAnswer = getAnswerByCategory(q.questions, 'mental_state');
+  const stakesAnswer = getAnswerByCategory(q.questions, 'stakes');
+  const fearAnswer = getAnswerByCategory(q.questions, 'fear');
+  const pastSuccessAnswer = getAnswerByCategory(q.questions, 'past_success');
+  const identityAnswer = getAnswerByCategory(q.questions, 'identity');
+  const physicalAnswer = getAnswerByCategory(q.questions, 'physical');
+  const somaticAnswer = getAnswerByCategory(q.questions, 'somatic');
+  const commitmentAnswer = getAnswerByCategory(q.questions, 'commitment');
 
   const performanceContextMap: Record<UserType, string> = {
     entrepreneur: 'entrepreneur', sales: 'sales', athlete: 'athlete',
     executive: 'executive', creative: 'creative', technical: 'technical', student: 'student',
   };
 
-  const needToPrimaryGoal: Record<string, string> = {
-    confidence: 'Unshakeable confidence', focus: 'Laser focus',
-    energy: 'High energy activation', calm: 'Calm under pressure',
-    courage: 'Creative courage', resilience: 'Mental resilience',
+  const needMap: Record<UserType, string> = {
+    entrepreneur: 'confidence', sales: 'confidence', athlete: 'energy',
+    executive: 'clarity', creative: 'courage', technical: 'focus', student: 'confidence',
   };
 
+  const situationAnswer = getAnswerByCategory(q.questions, 'immediate_situation');
+
   return {
-    userType,
+    userType: archetype,
     immediateSituation,
-    timeUrgency,
-    sessionLength,
-    primaryGoal: needToPrimaryGoal[currentNeed] || 'Peak performance activation',
-    currentChallenge: `${mentalState} — ${contextString}`,
+    timeUrgency: 'minutes',
+    sessionLength: q.sessionLength,
+    primaryGoal: 'Peak performance activation',
+    currentChallenge: mentalStateAnswer || situationAnswer || 'High-stakes performance moment',
     experienceLevel: 'experienced',
     skepticismLevel: 2,
-    performanceContext: performanceContextMap[userType],
+    performanceContext: performanceContextMap[archetype],
     preferredTime: 'morning',
-    specificOutcome: contextString,
-    challengeType,
-    stakes,
-    mentalState,
-    currentNeed,
+    specificOutcome: situationAnswer || immediateSituation.substring(0, 200),
+    challengeType: 'pitch',
+    stakes: stakesAnswer || 'High-stakes performance',
+    mentalState: mentalStateAnswer || 'nervous',
+    physicalState: physicalAnswer || somaticAnswer || undefined,
+    currentNeed: needMap[archetype] || 'confidence',
+
+    // Tier 2 deep personalization — populated from categorized Q&A
+    pastSuccess: pastSuccessAnswer || undefined,
+    innerCritic: fearAnswer || undefined,
+    identityStatement: identityAnswer || undefined,
+    accountability: commitmentAnswer || undefined,
+
     rawResponses: {
-      performance_arena: userType,
-      session_length: sessionLength,
+      performance_arena: archetype,
+      session_length: q.sessionLength,
       immediate_situation: immediateSituation,
-      time_urgency: timeUrgency,
+      time_urgency: 'minutes',
       lab: 'true',
     },
   };
 }
 
+// ─── Chat System Prompt ───────────────────────────────────────────────────────
+
 /**
- * Build the system prompt for the Script Lab AI consultant.
- * Receives the current script + context so it can discuss, critique, and generate variants.
+ * Build the AI consultant system prompt for the Script Lab chat.
+ * Receives the current questionnaire and script so the AI has full context.
  */
 export function buildScriptLabSystemPrompt(
   currentScript: string,
-  contextString: string,
+  questionnaire: LabQuestionnaire | null,
   sessionLength: 'ultra_quick' | 'quick',
 ): string {
   const durationLabel = sessionLength === 'ultra_quick' ? '~2 minutes (ultra-quick)' : '~4 minutes (quick)';
+
+  const questionnaireBlock = questionnaire
+    ? `# Current Test Persona
+
+**Name:** ${questionnaire.persona.name}
+**Archetype:** ${questionnaire.persona.archetype}
+**Background:** ${questionnaire.persona.background}
+
+**Questionnaire Responses:**
+${questionnaire.questions.map((q) => `**${q.category}:** ${q.question}\n→ ${q.answer}`).join('\n\n')}`
+    : '(No questionnaire generated yet)';
 
   return `You are an elite script consultant for Myndset — a performance-psychology audio platform that writes self-rally speeches for solo listeners.
 
 # Your Role
 
-You are Jim's creative partner for iterating on activation scripts. You:
+You are Jim's creative partner for iterating on activation scripts AND the intake questionnaire design. You:
 - Analyze script structure, rhetoric, and psychological mechanics at a craft level
 - Identify what's working, what's landing flat, and why
-- Propose alternatives — line-by-line edits OR complete structural rethinks
-- Understand the Self-Rally Arc (Spiral → Confrontation → Reframe → Fuel → Lock-In)
-- Know when to suggest a radical structural departure from the arc
+- Propose new script variants, new structural approaches, OR entirely new questionnaire designs
+- Think about both inputs (questionnaire quality) and outputs (script quality)
+- Know when to suggest a radical structural departure from the current approach
 
 # Current Context
 
-**Situation:** ${contextString}
 **Target Duration:** ${durationLabel}
+
+${questionnaireBlock}
 
 # Current Script
 
-${currentScript ? `\`\`\`\n${currentScript}\n\`\`\`` : '(No script generated yet — help Jim think through approach before generating)'}
+${currentScript ? `\`\`\`\n${currentScript}\n\`\`\`` : '(No script generated yet)'}
+
+---
 
 # Output Formats
 
-## When proposing a new full script variant:
-Wrap it in [SCRIPT] tags so Jim can load it with one click:
+## New script variant:
 \`\`\`
 [SCRIPT]
 <full script text here>
 [/SCRIPT]
 \`\`\`
 
-## When proposing a structural approach change:
-Wrap it in [APPROACH] tags so Jim can inject it as a generation override:
+## Structural approach override (injected as context into the next generation):
 \`\`\`
 [APPROACH]
-<description of the new approach — be specific: what structure, what arc, what technique stack, what tone>
+<specific instruction — what structure, arc, technique stack, tone to use>
 [/APPROACH]
 \`\`\`
 
-Use [APPROACH] when you want to propose a fundamentally different generation strategy (e.g., ignore the Self-Rally Arc and write as a theatrical mirror scene, base it on Hemingway dialogue patterns, open with body before mind, try whisper-to-roar arc, etc.).
+## Full system prompt replacement (replaces the Self-Rally Arc instructions entirely):
+\`\`\`
+[PROMPT]
+<complete replacement system prompt for the script generator>
+[/PROMPT]
+\`\`\`
+
+## New questionnaire variant (generates a fresh test persona + Q&A):
+\`\`\`
+[QUESTIONNAIRE]
+{
+  "persona": { "name": "...", "archetype": "...", "background": "..." },
+  "sessionLength": "ultra_quick|quick",
+  "questions": [
+    { "id": "q1", "question": "...", "answer": "...", "category": "..." }
+  ]
+}
+[/QUESTIONNAIRE]
+\`\`\`
+
+Use [QUESTIONNAIRE] when you want to propose a different persona or a different questionnaire design strategy. Include exactly 10 questions.
+
+---
 
 # Consulting Principles
 
-- Be direct. This is not a brainstorming session — Jim needs clear, decisive craft opinions.
-- When you critique, be specific about the mechanism: what is the line doing psychologically and why is it failing?
-- When you write script variants, match the target duration precisely. Ultra-quick = ~120 words. Quick = ~280 words.
-- Second-person ("you", "your") is the dominant pronoun architecture for self-rally speeches.
-- Never soften feedback. Jim is here to make the script better, not to feel good about a mediocre draft.
-- If asked about a highlighted selection, focus your analysis on that specific section before widening.`;
+- Be direct and specific — Jim needs decisive craft opinions, not brainstorming.
+- When critiquing: name the psychological mechanism that's failing and why.
+- When writing scripts: match duration precisely. Ultra-quick = ~120 words. Quick = ~280 words.
+- When proposing questionnaire variants: explain WHY the new question design will produce better scripts.
+- Never soften feedback.
+- [APPROACH] = same pipeline, different instruction injected. [PROMPT] = new pipeline entirely. Use [PROMPT] for radical structural experiments.`;
 }
