@@ -279,6 +279,9 @@ function QuestionnaireCard({
 // ─── Main Client Component ──────────────────────────────────────────────────
 
 export default function ScriptLabClient({ userId }: { userId: string }) {
+  // Chat session logging
+  const [chatSessionId, setChatSessionId] = useState<string | null>(null);
+
   // Questionnaire state
   const [questionnaire, setQuestionnaire] = useState<LabQuestionnaire | null>(null);
   const [isGeneratingQ, setIsGeneratingQ] = useState(false);
@@ -464,6 +467,10 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
         createdAt: new Date().toISOString(),
       };
       setSessions((prev) => [session, ...prev]);
+      // Update chat log to link to the new meditation
+      if (chatMessages.length > 0) {
+        await saveChat(chatMessages, data.meditationId);
+      }
     } catch (err) {
       setGenerateError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
@@ -562,6 +569,37 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
     }
   };
 
+  // ─── Chat logging ─────────────────────────────────────────────────────────
+
+  const saveChat = async (messages: ChatMessage[], meditationId: string | null) => {
+    try {
+      const res = await fetch('/api/admin/script-lab/save-chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: chatSessionId,
+          userId,
+          messages: messages.map(({ role, content }) => ({
+            role,
+            content,
+            timestamp: new Date().toISOString(),
+          })),
+          meditationId,
+          questionnaire,
+          sessionLength: questionnaire?.sessionLength,
+          scriptMethod,
+          customPromptUsed: !!customSystemPrompt,
+        }),
+      });
+      const data = await res.json();
+      if (data.sessionId && !chatSessionId) {
+        setChatSessionId(data.sessionId);
+      }
+    } catch {
+      // Non-blocking — logging failure should never interrupt the user
+    }
+  };
+
   // ─── Chat ─────────────────────────────────────────────────────────────────
 
   const handleSendChat = async () => {
@@ -617,7 +655,9 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
         }
       }
 
+      const finalMessages = [...updated, { role: 'assistant' as const, content: accumulated }];
       setChatMessages((prev) => [...prev.slice(0, -1), { role: 'assistant', content: accumulated }]);
+      await saveChat(finalMessages, currentScript?.meditationId ?? null);
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
       setChatMessages((prev) => [...prev.slice(0, -1), { role: 'assistant', content: `Error: ${msg}` }]);

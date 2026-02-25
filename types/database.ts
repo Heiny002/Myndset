@@ -230,6 +230,44 @@ export type Database = {
           },
         ];
       };
+      lab_chat_sessions: {
+        Row: {
+          id: string;
+          user_id: string;
+          meditation_id: string | null;
+          messages: Json;
+          questionnaire: Json | null;
+          session_length: string | null;
+          script_method: string | null;
+          custom_prompt_used: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          meditation_id?: string | null;
+          messages?: Json;
+          questionnaire?: Json | null;
+          session_length?: string | null;
+          script_method?: string | null;
+          custom_prompt_used?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          meditation_id?: string | null;
+          messages?: Json;
+          questionnaire?: Json | null;
+          session_length?: string | null;
+          script_method?: string | null;
+          custom_prompt_used?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       meditation_remixes: {
         Row: {
           id: string;
