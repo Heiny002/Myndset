@@ -779,7 +779,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
   // ─── Render ───────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-950 text-white">
+    <div className="flex h-screen flex-col bg-neutral-950 text-white">
       {/* Nav */}
       <nav className="border-b border-neutral-800 bg-neutral-900 px-6 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
