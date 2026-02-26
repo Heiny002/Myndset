@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import type { LabQuestionnaire } from '@/lib/ai/script-lab-chat';
+import type { MeditationPlan } from '@/lib/ai/plan-generator';
+import type { MappedQuestionnaireData } from '@/lib/questionnaire/response-mapper';
 
 // ─── Types ─────────────────────────────────────────────────────────────────
 
@@ -276,6 +278,83 @@ function QuestionnaireCard({
   );
 }
 
+// ─── Plan Preview ────────────────────────────────────────────────────────────
+
+function PlanPreview({ plan, mapped }: { plan: MeditationPlan; mapped: MappedQuestionnaireData }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="mt-3">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="text-xs text-neutral-500 hover:text-neutral-300 transition-colors"
+      >
+        {expanded ? '▲ Hide generation plan' : '▼ View generation plan'}
+      </button>
+
+      {expanded && (
+        <div className="mt-2 space-y-3 rounded-lg border border-neutral-700 bg-neutral-800/50 p-3">
+          {/* Audience + approach */}
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Messaging Framework</p>
+            <p className="text-xs text-white">
+              {plan.messagingFramework.audienceType}
+              <span className="text-neutral-500"> · {plan.messagingFramework.keyValues.join(', ')}</span>
+            </p>
+            <p className="text-xs text-neutral-400 mt-0.5 leading-relaxed">{plan.messagingFramework.approachDescription}</p>
+          </div>
+
+          {/* Session structure */}
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">
+              Session Structure · {plan.sessionStructure.totalMinutes} min
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {plan.sessionStructure.phases.map((phase, i) => (
+                <span key={i} className="text-xs bg-neutral-700 text-neutral-300 px-2 py-0.5 rounded">
+                  {phase.name} ({phase.durationMinutes}m)
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Technique components */}
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Technique Stack</p>
+            <div className="space-y-1.5">
+              {plan.components.map((c, i) => (
+                <div key={i} className="rounded bg-neutral-700/50 px-2 py-1.5">
+                  <p className="text-xs font-medium text-emerald-400">{c.componentName}</p>
+                  <p className="text-xs text-neutral-400 leading-relaxed mt-0.5">{c.rationale}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Key context fed to the generator */}
+          <div>
+            <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-1">Context fed to generator</p>
+            <div className="space-y-0.5">
+              {mapped.innerCritic && (
+                <p className="text-xs text-neutral-400"><span className="text-neutral-600">Inner critic:</span> {mapped.innerCritic.substring(0, 100)}</p>
+              )}
+              {mapped.pastSuccess && (
+                <p className="text-xs text-neutral-400"><span className="text-neutral-600">Past success:</span> {mapped.pastSuccess.substring(0, 100)}</p>
+              )}
+              {mapped.identityStatement && (
+                <p className="text-xs text-neutral-400"><span className="text-neutral-600">Identity:</span> {mapped.identityStatement.substring(0, 100)}</p>
+              )}
+              {mapped.stakes && (
+                <p className="text-xs text-neutral-400"><span className="text-neutral-600">Stakes:</span> {mapped.stakes.substring(0, 100)}</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Client Component ──────────────────────────────────────────────────
 
 export default function ScriptLabClient({ userId }: { userId: string }) {
@@ -287,6 +366,9 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
   const [isGeneratingQ, setIsGeneratingQ] = useState(false);
   const [qError, setQError] = useState<string | null>(null);
   const [previousPersonas, setPreviousPersonas] = useState<string[]>([]);
+
+  // Plan preview
+  const [planPreview, setPlanPreview] = useState<{ plan: MeditationPlan; mapped: MappedQuestionnaireData } | null>(null);
 
   // Script method controls
   const [voiceType, setVoiceType] = useState('default');
@@ -339,6 +421,20 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  // Fetch plan preview when questionnaire or scriptMethod changes
+  useEffect(() => {
+    if (!questionnaire) return;
+    setPlanPreview(null);
+    fetch('/api/admin/script-lab/preview-plan', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ labQuestionnaire: questionnaire, scriptMethod: scriptMethod || undefined }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d.plan && d.mapped) setPlanPreview({ plan: d.plan, mapped: d.mapped }); })
+      .catch(() => {});
+  }, [questionnaire, scriptMethod]);
 
   // Scroll chat to bottom
   useEffect(() => {
@@ -713,11 +809,14 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
                 <button onClick={() => handleGenerateQuestionnaire()} className="text-xs text-primary hover:underline">Retry</button>
               </div>
             ) : questionnaire ? (
-              <QuestionnaireCard
-                questionnaire={questionnaire}
-                onNewQuestionnaire={() => handleGenerateQuestionnaire()}
-                isGeneratingQ={isGeneratingQ}
-              />
+              <>
+                <QuestionnaireCard
+                  questionnaire={questionnaire}
+                  onNewQuestionnaire={() => handleGenerateQuestionnaire()}
+                  isGeneratingQ={isGeneratingQ}
+                />
+                {planPreview && <PlanPreview plan={planPreview.plan} mapped={planPreview.mapped} />}
+              </>
             ) : null}
 
             {/* Script method indicator */}
@@ -844,7 +943,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
         </div>
 
         {/* ── RIGHT PANEL (45%) ── */}
-        <div className="flex w-[45%] flex-col">
+        <div className="flex w-[45%] flex-col overflow-hidden">
 
           {/* Chat */}
           <div className="flex flex-1 flex-col min-h-0">
