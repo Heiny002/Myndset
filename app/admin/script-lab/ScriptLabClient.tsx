@@ -794,7 +794,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
       <div className="flex flex-1 overflow-hidden">
 
         {/* ── LEFT PANEL (55%) ── */}
-        <div className="flex w-[55%] flex-col border-r border-neutral-800 overflow-y-auto">
+        <div className="flex w-[55%] flex-col border-r border-neutral-800 overflow-hidden">
 
           {/* Questionnaire Card */}
           <div className="border-b border-neutral-800 bg-neutral-900 p-5">
@@ -875,7 +875,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
 
           {/* Script Display */}
           {currentScript ? (
-            <div className="flex-1 p-5 relative">
+            <div className="flex-1 overflow-y-auto min-h-0 p-5 relative">
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <span className="text-xs text-neutral-500">{currentScript.wordCount} words</span>
@@ -908,7 +908,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
               )}
             </div>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-neutral-600 text-sm p-8 text-center">
+            <div className="flex-1 min-h-0 flex items-center justify-center text-neutral-600 text-sm p-8 text-center">
               {isGenerating ? (
                 <div className="space-y-2">
                   <div className="animate-pulse text-primary text-base font-medium">Generating script…</div>
