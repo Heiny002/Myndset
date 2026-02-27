@@ -96,6 +96,12 @@ export default async function AdminDashboard() {
             <h1 className="text-xl font-bold text-white">Myndset Admin</h1>
             <div className="flex items-center gap-4">
               <Link
+                href="/admin/script-lab"
+                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 transition-colors"
+              >
+                Script Lab
+              </Link>
+              <Link
                 href="/admin/test-meditation"
                 className="rounded-lg bg-purple-500 px-4 py-2 text-sm font-medium text-white hover:bg-purple-600 transition-colors"
               >

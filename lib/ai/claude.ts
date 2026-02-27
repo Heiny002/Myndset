@@ -238,6 +238,57 @@ export function checkRateLimit(): { allowed: boolean; waitMs: number } {
   return { allowed: true, waitMs: 0 };
 }
 
+// Streaming message helper — returns a ReadableStream of SSE events
+export function streamMessage(
+  messages: ClaudeMessage[],
+  options: ClaudeRequestOptions = {}
+): ReadableStream<Uint8Array> {
+  const client = getAnthropicClient();
+  const {
+    model = ORCHESTRATOR_MODEL,
+    maxTokens = 4096,
+    temperature = 0.7,
+    systemPrompt,
+  } = options;
+
+  const encoder = new TextEncoder();
+
+  return new ReadableStream<Uint8Array>({
+    async start(controller) {
+      try {
+        const stream = await client.messages.stream({
+          model,
+          max_tokens: maxTokens,
+          temperature,
+          system: systemPrompt,
+          messages: messages.map((m) => ({ role: m.role, content: m.content })),
+        });
+
+        for await (const event of stream) {
+          if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
+            const data = JSON.stringify({ type: 'text', delta: event.delta.text });
+            controller.enqueue(encoder.encode(`data: ${data}\n\n`));
+          }
+        }
+
+        const finalMessage = await stream.finalMessage();
+        const inputTokens = finalMessage.usage.input_tokens;
+        const outputTokens = finalMessage.usage.output_tokens;
+        const costCents = calculateCostCents(model, inputTokens, outputTokens);
+
+        const doneData = JSON.stringify({ type: 'done', inputTokens, outputTokens, costCents });
+        controller.enqueue(encoder.encode(`data: ${doneData}\n\n`));
+        controller.close();
+      } catch (error) {
+        const msg = error instanceof Error ? error.message : 'Stream error';
+        const errData = JSON.stringify({ type: 'error', message: msg });
+        controller.enqueue(encoder.encode(`data: ${errData}\n\n`));
+        controller.close();
+      }
+    },
+  });
+}
+
 // Retry helper with exponential backoff
 export async function withRetry<T>(
   fn: () => Promise<T>,

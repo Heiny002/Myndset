@@ -230,6 +230,83 @@ export type Database = {
           },
         ];
       };
+      lab_mix_log: {
+        Row: {
+          id: string;
+          changes_id: string;
+          description: string;
+          rationale: string | null;
+          intensity: string;
+          changed_stages: string[];
+          changes: Json;
+          meditation_ids: string[];
+          starred: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          changes_id: string;
+          description: string;
+          rationale?: string | null;
+          intensity: string;
+          changed_stages: string[];
+          changes: Json;
+          meditation_ids?: string[];
+          starred?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          changes_id?: string;
+          description?: string;
+          rationale?: string | null;
+          intensity?: string;
+          changed_stages?: string[];
+          changes?: Json;
+          meditation_ids?: string[];
+          starred?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      lab_chat_sessions: {
+        Row: {
+          id: string;
+          user_id: string;
+          meditation_id: string | null;
+          messages: Json;
+          questionnaire: Json | null;
+          session_length: string | null;
+          script_method: string | null;
+          custom_prompt_used: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          meditation_id?: string | null;
+          messages?: Json;
+          questionnaire?: Json | null;
+          session_length?: string | null;
+          script_method?: string | null;
+          custom_prompt_used?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          meditation_id?: string | null;
+          messages?: Json;
+          questionnaire?: Json | null;
+          session_length?: string | null;
+          script_method?: string | null;
+          custom_prompt_used?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       meditation_remixes: {
         Row: {
           id: string;
