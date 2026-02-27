@@ -34,12 +34,31 @@ export interface LabQuestion {
 export interface LabQuestionnaire {
   persona: {
     name: string;
-    archetype: UserType;
+    archetype: string;  // Free-form — any profession/role (not limited to UserType)
     background: string;
   };
   sessionLength: 'ultra_quick' | 'quick';
   questions: LabQuestion[];
   generatedAt: string;
+}
+
+/** Map any free-form archetype string to the nearest UserType for plan generation */
+function mapArchetypeToUserType(archetype: string): UserType {
+  const a = archetype.toLowerCase();
+  if (/athlete|sport|runner|swimmer|fighter|cyclist|player|competitor|coach|wrestler|gymnast|climber/.test(a)) return 'athlete';
+  if (/student|grad|school|university|undergrad|phd|intern|trainee/.test(a)) return 'student';
+  if (/sales|retail|cashier|ticket|door.to.door|real estate|insurance|broker/.test(a)) return 'sales';
+  if (/entrepreneur|founder|startup|owner|freelance/.test(a)) return 'entrepreneur';
+  if (/execut|director|ceo|cfo|cto|manager|principal|administrator|dean/.test(a)) return 'executive';
+  if (/engineer|developer|programmer|technical|analyst|data|scientist|researcher/.test(a)) return 'technical';
+  if (/doctor|nurse|surgeon|medical|therapist|dentist|vet|paramedic|emt/.test(a)) return 'executive';
+  if (/lawyer|attorney|legal|judge|paralegal/.test(a)) return 'executive';
+  if (/teacher|professor|instructor|tutor|educator/.test(a)) return 'creative';
+  if (/chef|cook|restaurant|server|waiter|bartender|kitchen/.test(a)) return 'sales';
+  if (/labor|worker|construct|carpenter|electrician|plumber|mechanic|driver|warehouse/.test(a)) return 'sales';
+  if (/creative|artist|writer|designer|musician|actor|performer|dancer/.test(a)) return 'creative';
+  if (/mother|father|parent|caregiver/.test(a)) return 'executive';
+  return 'entrepreneur'; // default
 }
 
 // ─── Questionnaire Generator Prompt ──────────────────────────────────────────
@@ -49,17 +68,38 @@ export interface LabQuestionnaire {
  * Designed to produce varied, strategically useful test personas.
  */
 export function buildQuestionnaireGeneratorPrompt(): string {
-  return `You are a test data generator for Myndset — a performance psychology audio platform.
+  return `You are a test data generator for Myndset — a performance motivation audio app for ANYONE facing a high-pressure moment.
 
-Your job: generate a realistic test persona and a strategic intake questionnaire to test script generation quality.
+Myndset is NOT just for executives and entrepreneurs. It's for any person who needs activation before a stressful situation:
 
-# Goals
+EXAMPLE PERSONAS (use these as inspiration — generate NEW ones each time):
+- A 42-year-old ER nurse, first shift back after a traumatic case
+- A 19-year-old collegiate wrestler, 8 minutes before his quarterfinal match
+- A 55-year-old restaurant owner/head chef, 45 minutes before Saturday dinner rush with a full reservation list
+- A 28-year-old door-to-door solar sales rep, just hit a 3-day cold streak, about to knock on the next door
+- A 16-year-old girl preparing for her first solo piano recital
+- A 34-year-old public school teacher, first day back after a rough parent complaint incident
+- A 47-year-old construction foreman, crew is watching him resolve a major structural error
+- A 23-year-old rookie firefighter, first real structure fire call
+- A 31-year-old mother of three, going back to work for the first time in 5 years, job interview in 20 min
+- A 26-year-old high school basketball coach, his team is down 14 points at halftime
+- A 38-year-old defense attorney, cross-examination starting in 10 minutes
+- A 52-year-old trauma surgeon, just scrubbed in on a multi-vehicle accident case
+- A 22-year-old Amazon warehouse worker, hitting the floor for Prime Day with a new rate quota
+- A 41-year-old real estate agent, biggest listing presentation of his career in 30 minutes
+- A 29-year-old competitive CrossFit athlete, warm-up area before the Open qualifier
+- A 61-year-old high school principal, about to address the student body after a school fight went viral
+- A 35-year-old stand-up comedian, first paid headliner gig
+- A 17-year-old running back, pre-game with college scouts in the stands
+- A ticket agent at a theme park, 7:45am before a holiday weekend opens with 40,000 guests expected
+- A 44-year-old divorce attorney, day one of a bitter custody trial
 
-This questionnaire serves two purposes simultaneously:
-1. **Test the script output** — does the generated script actually help this person?
-2. **Test the questionnaire design** — are these the RIGHT questions to ask for maximum script quality?
-
-Vary your approach across iterations. Sometimes prioritize emotional depth. Sometimes somatic detail. Sometimes identity-level work. Sometimes stark situational facts. Sometimes narrative arc.
+CRITICAL DIVERSITY REQUIREMENTS — ROTATE THESE ON EVERY GENERATION:
+- **Gender:** Alternate between male/female/non-binary. Never generate the same gender twice in a row.
+- **Age:** Use the full range 16–65. Vary widely.
+- **Name:** Use diverse names from many ethnic backgrounds — Latino, East Asian, South Asian, Black American, Middle Eastern, Scandinavian, Eastern European, West African, Irish, etc. NEVER default to generic American names. NEVER name a persona "Marcus Chen" or any similar default.
+- **Profession:** Pick from the widest possible range — physical labor, service industry, healthcare, education, law, athletics, arts, military, first responder, retail, skilled trades. NOT just tech/business.
+- **Stakes:** Vary from professional (career consequences) to personal (family watching) to team (others depending on you) to intrinsic (your own standard).
 
 # Output Format
 
@@ -68,8 +108,8 @@ Respond with ONLY valid JSON in this exact structure:
 {
   "persona": {
     "name": "First Last",
-    "archetype": "entrepreneur|athlete|sales|executive|creative|technical|student",
-    "background": "2-3 sentence specific background — include age, profession, specific current context"
+    "archetype": "a specific job title or role description (e.g. 'ER Nurse', 'High School Wrestling Coach', 'Door-to-Door Salesperson', 'Restaurant Chef')",
+    "background": "2-3 sentences. Include age, specific job, and exactly what high-pressure situation is about to happen. Be concrete — name the sport, the venue, the specific task."
   },
   "sessionLength": "ultra_quick|quick",
   "questions": [
@@ -85,24 +125,25 @@ Respond with ONLY valid JSON in this exact structure:
 # Rules
 
 - Exactly 10 questions
-- Cover at least 7 different categories across the 10 questions
-- Answers must be SPECIFIC and VIVID — not "I'm nervous" but "My hands are shaking and I keep running the worst-case slide deck in my head"
-- The persona must have a clear, high-stakes performance moment happening SOON (within the hour)
-- sessionLength: use "ultra_quick" when the moment is imminent (under 5 min away), "quick" otherwise
-- DO NOT repeat the same question structures across iterations — vary the framing radically
+- Cover at least 7 different categories
+- Answers must be SPECIFIC and VISCERAL — not "I'm nervous" but "My stomach is in knots and I haven't been able to eat since this morning"
+- The persona must have a CONCRETE performance moment happening SOON (within the next hour)
+- sessionLength: "ultra_quick" when the moment is under 5 minutes away, "quick" otherwise
+- Questions must match the profession — a chef's questions sound different from a wrestler's
+- Do NOT use corporate jargon for blue-collar personas. Do NOT use gym-bro language for professionals.
 
 # Category Definitions
 
 - immediate_situation: What is happening RIGHT NOW in the external world
-- mental_state: Current internal emotional/psychological experience
-- somatic: Where is the fear/pressure felt physically in the body
-- identity: Who do they need to BE — the identity they're reaching for
-- fear: The specific thought or voice that is blocking them
-- past_success: A real memory of performing well under similar pressure
-- stakes: What is ACTUALLY at risk — concrete consequences
+- mental_state: Current internal emotional/psychological state
+- somatic: Where fear/pressure is felt physically in the body
+- identity: Who they need to BE — the role they're stepping into
+- fear: The specific thought or internal voice that is blocking them
+- past_success: A specific memory of performing well under similar pressure
+- stakes: What is concretely at risk — job, relationship, team, self-respect
 - time_pressure: Exactly how long until the moment of performance
-- physical: Current body state — energy, sleep, physical preparation
-- commitment: What they are willing to do differently, their promise to themselves
+- physical: Current body state — energy, sleep, whether they've eaten, adrenaline level
+- commitment: What they promise to do differently, their declaration to themselves
 
 Output ONLY valid JSON. No text before or after.`;
 }
@@ -321,7 +362,7 @@ export function buildPlanFromQuestionnaire(
   questionnaireId: string,
   planOverride?: MixPlanOverride,
 ): MeditationPlan {
-  const { archetype } = q.persona;
+  const archetype = mapArchetypeToUserType(q.persona.archetype);
 
   const components: MeditationPlanComponent[] = planOverride
     ? planOverride.components.map((c) => ({
@@ -401,7 +442,7 @@ export function buildMappedDataFromQuestionnaire(
   scriptMethod?: string,
   stage1Override?: string,
 ): MappedQuestionnaireData {
-  const { archetype } = q.persona;
+  const archetype = mapArchetypeToUserType(q.persona.archetype);
 
   // Serialize all Q&A into a rich context block for immediateSituation
   const qaContext = q.questions

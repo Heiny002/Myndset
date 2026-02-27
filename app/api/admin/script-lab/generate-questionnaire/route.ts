@@ -15,14 +15,39 @@ export async function POST(request: NextRequest) {
 
     const systemPrompt = buildQuestionnaireGeneratorPrompt();
 
+    // Large pool of varied scenario seeds — one is picked randomly on every call
+    // to break the model out of default patterns
+    const SCENARIO_SEEDS = [
+      'A female athlete in a combat or strength sport (wrestling, boxing, powerlifting, judo)',
+      'A healthcare worker (nurse, paramedic, ER tech, surgical tech) before an intense shift or case',
+      'A blue-collar tradesperson (electrician, plumber, welder, carpenter, ironworker) before a high-stakes job',
+      'A food service worker (chef, line cook, restaurant manager) before a big service',
+      'A teacher, coach, or school administrator before a difficult confrontation or performance',
+      'A young female athlete (swimmer, gymnast, track, volleyball) before a competition',
+      'A service industry worker (retail, ticket agent, customer service) before an overwhelming shift',
+      'A legal or medical professional before a high-pressure procedure or hearing',
+      'A parent or caregiver stepping back into a demanding situation after time away',
+      'A performing artist (musician, actor, dancer, comedian) before going on stage',
+      'A first responder (firefighter, police officer, EMT) before a call or shift',
+      'A competitive high school or college athlete before a game or meet',
+      'A military or ROTC member before a performance evaluation or physical test',
+      'A door-to-door or field salesperson before a crucial pitch or after a cold streak',
+      'A graduate student, resident, or trainee before a high-stakes evaluation',
+      'A small business owner before a critical moment (opening day, big client, bank meeting)',
+      'A manual laborer (construction foreman, warehouse worker, delivery driver) with a high-pressure quota or deadline',
+      'A skilled-trades apprentice being evaluated for the first time on the job site',
+      'A competitive gamer or esports player before a ranked or tournament match',
+      'A social worker, counselor, or mental health worker before a difficult case or session',
+    ];
+
+    const randomSeed = SCENARIO_SEEDS[Math.floor(Math.random() * SCENARIO_SEEDS.length)];
+
     // Build user message with variety hints
-    let userMessage = 'Generate a new test persona and intake questionnaire.';
+    let userMessage = `Generate a new test persona and intake questionnaire.\n\nScenario direction: ${seed || randomSeed}`;
     if (previousPersonas.length > 0) {
-      userMessage += `\n\nAvoid repeating these archetypes/names already used this session: ${previousPersonas.join(', ')}. Pick a different archetype and situation.`;
+      userMessage += `\n\nPersonas already used — pick something DIFFERENT in profession, gender, and name:\n${previousPersonas.join('\n')}`;
     }
-    if (seed) {
-      userMessage += `\n\nDirection hint: ${seed}`;
-    }
+    userMessage += '\n\nIMPORTANT: Do not generate a male entrepreneur or executive. Vary the name ethnicity and gender from the above list.';
 
     const aiResponse = await generateText(userMessage, {
       model: DEFAULT_MODEL,
