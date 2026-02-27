@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import type { LabQuestionnaire } from '@/lib/ai/script-lab-chat';
+import type { LabQuestionnaire, MixResult, MixChanges } from '@/lib/ai/script-lab-chat';
 import type { MeditationPlan } from '@/lib/ai/plan-generator';
 import type { MappedQuestionnaireData } from '@/lib/questionnaire/response-mapper';
 
@@ -33,6 +33,19 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   isStreaming?: boolean;
+}
+
+interface MixLogEntry {
+  id: string;
+  changesId: string;
+  description: string;
+  rationale: string | null;
+  intensity: 'moderate' | 'radical' | 'experimental';
+  changedStages: string[];
+  changes: MixChanges;
+  meditationIds: string[];
+  starred: boolean;
+  createdAt: string;
 }
 
 // ─── Tag parsing ────────────────────────────────────────────────────────────
@@ -278,6 +291,81 @@ function QuestionnaireCard({
   );
 }
 
+// ─── Mix Log Entry Component ─────────────────────────────────────────────────
+
+const INTENSITY_STYLES = {
+  moderate: { badge: 'bg-sky-950/60 text-sky-400 border-sky-700/40', label: 'moderate' },
+  radical: { badge: 'bg-orange-950/60 text-orange-400 border-orange-700/40', label: 'radical' },
+  experimental: { badge: 'bg-fuchsia-950/60 text-fuchsia-400 border-fuchsia-700/40', label: 'experimental' },
+};
+
+function MixLogCard({
+  entry, isActive, onReapply, onToggleStar,
+}: {
+  entry: MixLogEntry;
+  isActive: boolean;
+  onReapply: (entry: MixLogEntry) => void;
+  onToggleStar: (changesId: string) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const style = INTENSITY_STYLES[entry.intensity] || INTENSITY_STYLES.moderate;
+
+  return (
+    <div className={`px-3 py-2.5 border-b border-neutral-800 last:border-0 ${isActive ? 'bg-neutral-800/50' : ''}`}>
+      <div className="flex items-start gap-2">
+        <button
+          onClick={() => onToggleStar(entry.changesId)}
+          className={`mt-0.5 text-sm shrink-0 transition-colors ${entry.starred ? 'text-yellow-400' : 'text-neutral-600 hover:text-yellow-400'}`}
+        >
+          {entry.starred ? '★' : '☆'}
+        </button>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+            <span className="text-xs font-mono font-semibold text-neutral-300">{entry.changesId}</span>
+            <span className={`text-[10px] px-1.5 py-0.5 rounded border ${style.badge}`}>{style.label}</span>
+            {isActive && <span className="text-[10px] text-emerald-400 font-semibold">● ACTIVE</span>}
+          </div>
+          <p className="text-xs text-neutral-400 leading-relaxed mb-1">{entry.description}</p>
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-[10px] text-neutral-600">{entry.changedStages.map(s => s.replace('stage', 'S')).join(', ')}</span>
+            {entry.meditationIds.length > 0 && (
+              <span className="text-[10px] text-neutral-600">{entry.meditationIds.length} script{entry.meditationIds.length !== 1 ? 's' : ''}</span>
+            )}
+            <button
+              onClick={() => setExpanded(v => !v)}
+              className="text-[10px] text-neutral-600 hover:text-neutral-400 transition-colors"
+            >
+              {expanded ? '▲ less' : '▼ details'}
+            </button>
+            {!isActive && (
+              <button
+                onClick={() => onReapply(entry)}
+                className="text-[10px] text-emerald-500 hover:text-emerald-400 font-medium transition-colors"
+              >
+                ↺ Reapply
+              </button>
+            )}
+          </div>
+          {expanded && (
+            <div className="mt-2 space-y-1.5 text-xs text-neutral-500">
+              {entry.rationale && <p className="italic leading-relaxed text-neutral-500">{entry.rationale}</p>}
+              {entry.changes.stage1_interpretation && (
+                <p><span className="text-sky-500/70">S1:</span> {entry.changes.stage1_interpretation.substring(0, 120)}…</p>
+              )}
+              {entry.changes.stage2_plan && (
+                <p><span className="text-amber-500/70">S2:</span> {entry.changes.stage2_plan.approachDescription.substring(0, 120)}…</p>
+              )}
+              {entry.changes.stage3_prompt && (
+                <p><span className="text-purple-500/70">S3:</span> Custom system prompt ({entry.changes.stage3_prompt.length} chars)</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Plan Preview ────────────────────────────────────────────────────────────
 
 function PlanPreview({ plan, mapped }: { plan: MeditationPlan; mapped: MappedQuestionnaireData }) {
@@ -370,6 +458,13 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
   // Plan preview
   const [planPreview, setPlanPreview] = useState<{ plan: MeditationPlan; mapped: MappedQuestionnaireData } | null>(null);
 
+  // Mix state (session-only — clears on refresh)
+  const [activeMix, setActiveMix] = useState<MixResult | null>(null);
+  const [mixLog, setMixLog] = useState<MixLogEntry[]>([]);
+  const [isMixing, setIsMixing] = useState(false);
+  const [mixError, setMixError] = useState<string | null>(null);
+  const [rightTab, setRightTab] = useState<'sessions' | 'mixlog'>('sessions');
+
   // Script method controls
   const [voiceType, setVoiceType] = useState('default');
   const [scriptMethod, setScriptMethod] = useState<string | null>(null);      // [APPROACH]
@@ -441,6 +536,31 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages, streamingContent]);
 
+  // Load mix log on mount
+  useEffect(() => {
+    fetch('/api/admin/script-lab/mix')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.mixLog) {
+          setMixLog(
+            d.mixLog.map((row: any) => ({
+              id: row.id,
+              changesId: row.changes_id,
+              description: row.description,
+              rationale: row.rationale || null,
+              intensity: row.intensity,
+              changedStages: row.changed_stages || [],
+              changes: row.changes || {},
+              meditationIds: row.meditation_ids || [],
+              starred: row.starred || false,
+              createdAt: row.created_at,
+            })),
+          );
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // ─── Generate questionnaire ─────────────────────────────────────────────
 
   const handleGenerateQuestionnaire = async (seed?: string) => {
@@ -484,6 +604,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
           scriptMethod: scriptMethod || undefined,
           customSystemPrompt: customSystemPrompt || undefined,
           userId,
+          activeMix: activeMix || undefined,
         }),
       });
       const data = await res.json();
@@ -598,6 +719,87 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
   const handleUseQuestionnaire = (q: LabQuestionnaire) => {
     setQuestionnaire(q);
     setPreviousPersonas((prev) => [...prev, `${q.persona.name} (${q.persona.archetype})`].slice(-8));
+  };
+
+  // ─── Mix Things Up ────────────────────────────────────────────────────────
+
+  const handleMixThingsUp = async () => {
+    if (!questionnaire) return;
+    setIsMixing(true);
+    setMixError(null);
+    try {
+      const res = await fetch('/api/admin/script-lab/mix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          questionnaire,
+          previousMixes: mixLog.slice(0, 10).map((m) => ({
+            changesId: m.changesId,
+            description: m.description,
+            intensity: m.intensity,
+          })),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.details || data.error || 'Mix generation failed');
+
+      const newMix = data.mix as MixResult;
+      setActiveMix(newMix);
+
+      // Prepend to local mix log
+      const newEntry: MixLogEntry = {
+        id: newMix.changesId,
+        changesId: newMix.changesId,
+        description: newMix.description,
+        rationale: newMix.rationale || null,
+        intensity: newMix.intensity,
+        changedStages: newMix.changedStages,
+        changes: newMix.changes,
+        meditationIds: [],
+        starred: false,
+        createdAt: new Date().toISOString(),
+      };
+      setMixLog((prev) => [newEntry, ...prev]);
+      setRightTab('mixlog');
+      triggerMethodPulse();
+    } catch (err) {
+      setMixError(err instanceof Error ? err.message : 'Unknown error');
+    } finally {
+      setIsMixing(false);
+    }
+  };
+
+  const handleClearMix = () => {
+    setActiveMix(null);
+  };
+
+  const handleReapplyMix = (entry: MixLogEntry) => {
+    const mix: MixResult = {
+      changesId: entry.changesId,
+      description: entry.description,
+      rationale: entry.rationale || '',
+      intensity: entry.intensity,
+      changedStages: entry.changedStages as Array<'stage1' | 'stage2' | 'stage3'>,
+      changes: entry.changes,
+    };
+    setActiveMix(mix);
+    triggerMethodPulse();
+  };
+
+  const handleToggleMixStar = async (changesId: string) => {
+    const entry = mixLog.find((m) => m.changesId === changesId);
+    if (!entry) return;
+    const newStarred = !entry.starred;
+    setMixLog((prev) => prev.map((m) => m.changesId === changesId ? { ...m, starred: newStarred } : m));
+    try {
+      await fetch('/api/admin/script-lab/mix', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ changesId, starred: newStarred }),
+      });
+    } catch {
+      setMixLog((prev) => prev.map((m) => m.changesId === changesId ? { ...m, starred: !newStarred } : m));
+    }
   };
 
   // ─── Text selection ───────────────────────────────────────────────────────
@@ -775,6 +977,7 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
   const durationMin = currentScript ? Math.floor(currentScript.durationSeconds / 60) : 0;
   const durationSec = currentScript ? currentScript.durationSeconds % 60 : 0;
   const activeMethod = customSystemPrompt ? 'Full prompt swap' : scriptMethod ? 'Approach override' : null;
+  const mixIntensityStyle = activeMix ? INTENSITY_STYLES[activeMix.intensity] || INTENSITY_STYLES.moderate : null;
 
   // ─── Render ───────────────────────────────────────────────────────────────
 
@@ -871,6 +1074,44 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
               </button>
             </div>
             {generateError && <p className="mt-2 text-xs text-red-400">{generateError}</p>}
+
+            {/* Active mix indicator */}
+            {activeMix && mixIntensityStyle && (
+              <div className={`mt-3 rounded-lg border px-3 py-2 transition-all duration-300 ${
+                methodPulse
+                  ? 'border-fuchsia-400 shadow-[0_0_12px_rgba(217,70,239,0.35)]'
+                  : 'border-fuchsia-700/40'
+              } bg-fuchsia-950/20`}>
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-xs font-mono font-semibold text-fuchsia-300">{activeMix.changesId}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded border ${mixIntensityStyle.badge}`}>{mixIntensityStyle.label}</span>
+                    </div>
+                    <p className="text-xs text-neutral-400 leading-relaxed truncate">{activeMix.description}</p>
+                    <p className="text-[10px] text-neutral-600 mt-0.5">
+                      Overrides: {activeMix.changedStages.map(s => s.replace('stage', 'Stage ')).join(', ')}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleClearMix}
+                    className="text-xs text-neutral-500 hover:text-neutral-300 shrink-0"
+                  >
+                    ✕ Clear
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Mix Things Up button */}
+            <button
+              onClick={handleMixThingsUp}
+              disabled={isMixing || !questionnaire}
+              className="mt-3 w-full rounded-lg border border-fuchsia-700/40 bg-fuchsia-950/20 px-4 py-2 text-sm font-medium text-fuchsia-300 hover:bg-fuchsia-950/40 hover:border-fuchsia-600/60 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            >
+              {isMixing ? '🎲 Mixing…' : '🎲 Mix Things Up'}
+            </button>
+            {mixError && <p className="mt-1 text-xs text-red-400">{mixError}</p>}
           </div>
 
           {/* Script Display */}
@@ -1005,41 +1246,86 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
             </div>
           </div>
 
-          {/* Session History */}
-          {sessions.length > 0 && (
-            <div className="border-t border-neutral-800 max-h-64 overflow-y-auto">
-              <div className="px-4 py-2 bg-neutral-900 border-b border-neutral-800">
-                <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Session History</p>
+          {/* Sessions / Mix Log tabs */}
+          {(sessions.length > 0 || mixLog.length > 0) && (
+            <div className="border-t border-neutral-800 flex flex-col" style={{ maxHeight: '16rem' }}>
+              {/* Tab bar */}
+              <div className="flex shrink-0 bg-neutral-900 border-b border-neutral-800">
+                <button
+                  onClick={() => setRightTab('sessions')}
+                  className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                    rightTab === 'sessions'
+                      ? 'text-white border-b-2 border-primary'
+                      : 'text-neutral-500 hover:text-neutral-300'
+                  }`}
+                >
+                  Sessions {sessions.length > 0 && `(${sessions.length})`}
+                </button>
+                <button
+                  onClick={() => setRightTab('mixlog')}
+                  className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                    rightTab === 'mixlog'
+                      ? 'text-white border-b-2 border-fuchsia-500'
+                      : 'text-neutral-500 hover:text-neutral-300'
+                  }`}
+                >
+                  Mix Log {mixLog.length > 0 && `(${mixLog.length})`}
+                  {activeMix && <span className="ml-1 text-fuchsia-400">●</span>}
+                </button>
               </div>
-              <div className="divide-y divide-neutral-800">
-                {sessions.map((session) => (
-                  <div
-                    key={session.id}
-                    className={`flex items-start gap-2 px-4 py-3 cursor-default ${
-                      activeSessionId === session.meditationId ? 'bg-neutral-800' : ''
-                    } ${session.starred ? 'bg-yellow-500/5 border-l-2 border-l-yellow-500/50' : ''}`}
-                  >
-                    <button
-                      onClick={() => handleToggleStar(session.meditationId)}
-                      className={`mt-0.5 text-sm shrink-0 transition-colors ${session.starred ? 'text-yellow-400' : 'text-neutral-600 hover:text-yellow-400'}`}
-                    >
-                      {session.starred ? '★' : '☆'}
-                    </button>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-xs font-medium text-neutral-300 truncate">{session.personaName}</span>
-                        <span className="text-xs text-neutral-600">{session.archetype}</span>
-                        {session.hasCustomPrompt && <span className="text-[10px] text-purple-400 bg-purple-950/40 px-1 rounded">prompt</span>}
-                        {session.scriptMethod && !session.hasCustomPrompt && <span className="text-[10px] text-amber-400 bg-amber-950/40 px-1 rounded">approach</span>}
+
+              {/* Tab content */}
+              <div className="flex-1 overflow-y-auto">
+                {rightTab === 'sessions' && (
+                  <div className="divide-y divide-neutral-800">
+                    {sessions.length === 0 ? (
+                      <p className="text-xs text-neutral-600 p-4 text-center">No scripts generated yet</p>
+                    ) : sessions.map((session) => (
+                      <div
+                        key={session.id}
+                        className={`flex items-start gap-2 px-4 py-3 cursor-default ${
+                          activeSessionId === session.meditationId ? 'bg-neutral-800' : ''
+                        } ${session.starred ? 'bg-yellow-500/5 border-l-2 border-l-yellow-500/50' : ''}`}
+                      >
+                        <button
+                          onClick={() => handleToggleStar(session.meditationId)}
+                          className={`mt-0.5 text-sm shrink-0 transition-colors ${session.starred ? 'text-yellow-400' : 'text-neutral-600 hover:text-yellow-400'}`}
+                        >
+                          {session.starred ? '★' : '☆'}
+                        </button>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <span className="text-xs font-medium text-neutral-300 truncate">{session.personaName}</span>
+                            <span className="text-xs text-neutral-600">{session.archetype}</span>
+                            {session.hasCustomPrompt && <span className="text-[10px] text-purple-400 bg-purple-950/40 px-1 rounded">prompt</span>}
+                            {session.scriptMethod && !session.hasCustomPrompt && <span className="text-[10px] text-amber-400 bg-amber-950/40 px-1 rounded">approach</span>}
+                          </div>
+                          <p className="text-xs text-neutral-500 truncate">{session.scriptPreview}</p>
+                          <div className="mt-0.5 flex items-center gap-2">
+                            <span className="text-xs text-neutral-600">{session.wordCount}w</span>
+                            {session.audioUrl && <span className="text-xs text-emerald-500">audio ✓</span>}
+                          </div>
+                        </div>
                       </div>
-                      <p className="text-xs text-neutral-500 truncate">{session.scriptPreview}</p>
-                      <div className="mt-0.5 flex items-center gap-2">
-                        <span className="text-xs text-neutral-600">{session.wordCount}w</span>
-                        {session.audioUrl && <span className="text-xs text-emerald-500">audio ✓</span>}
-                      </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
+                )}
+
+                {rightTab === 'mixlog' && (
+                  <div>
+                    {mixLog.length === 0 ? (
+                      <p className="text-xs text-neutral-600 p-4 text-center">No mixes yet — click Mix Things Up</p>
+                    ) : mixLog.map((entry) => (
+                      <MixLogCard
+                        key={entry.changesId}
+                        entry={entry}
+                        isActive={activeMix?.changesId === entry.changesId}
+                        onReapply={handleReapplyMix}
+                        onToggleStar={handleToggleMixStar}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}

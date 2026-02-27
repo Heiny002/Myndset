@@ -230,6 +230,45 @@ export type Database = {
           },
         ];
       };
+      lab_mix_log: {
+        Row: {
+          id: string;
+          changes_id: string;
+          description: string;
+          rationale: string | null;
+          intensity: string;
+          changed_stages: string[];
+          changes: Json;
+          meditation_ids: string[];
+          starred: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          changes_id: string;
+          description: string;
+          rationale?: string | null;
+          intensity: string;
+          changed_stages: string[];
+          changes: Json;
+          meditation_ids?: string[];
+          starred?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          changes_id?: string;
+          description?: string;
+          rationale?: string | null;
+          intensity?: string;
+          changed_stages?: string[];
+          changes?: Json;
+          meditation_ids?: string[];
+          starred?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       lab_chat_sessions: {
         Row: {
           id: string;

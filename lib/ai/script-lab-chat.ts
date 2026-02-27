@@ -107,6 +107,139 @@ Respond with ONLY valid JSON in this exact structure:
 Output ONLY valid JSON. No text before or after.`;
 }
 
+// ─── Mix Types ────────────────────────────────────────────────────────────────
+
+export interface MixPlanComponent {
+  componentId: string;
+  componentName: string;
+  rationale: string;
+  durationMinutes: number;
+  evidenceLevel: string;
+}
+
+export interface MixPlanOverride {
+  approachDescription: string;
+  components: MixPlanComponent[];
+  phases: Array<{ name: string; durationMinutes: number }>;
+}
+
+export interface MixChanges {
+  stage1_interpretation?: string;
+  stage2_plan?: MixPlanOverride;
+  stage3_prompt?: string;
+}
+
+export interface MixResult {
+  changesId: string;
+  description: string;
+  rationale: string;
+  intensity: 'moderate' | 'radical' | 'experimental';
+  changedStages: Array<'stage1' | 'stage2' | 'stage3'>;
+  changes: MixChanges;
+}
+
+// ─── Mix Generator Prompt ─────────────────────────────────────────────────────
+
+export function buildMixGeneratorPrompt(
+  questionnaire: LabQuestionnaire,
+  previousMixes: Array<{ changesId: string; description: string; intensity: string }>,
+): string {
+  const totalMinutes = questionnaire.sessionLength === 'ultra_quick' ? 2 : 4;
+
+  const qBlock = `**${questionnaire.persona.name}** (${questionnaire.persona.archetype})
+${questionnaire.persona.background}
+
+Key answers:
+${questionnaire.questions.map((q) => `  [${q.category}] ${q.answer.substring(0, 120)}`).join('\n')}`;
+
+  const prevBlock =
+    previousMixes.length > 0
+      ? `\nPreviously tried this session — go in a DIFFERENT direction:\n${previousMixes.map((m) => `  ${m.changesId} [${m.intensity}]: ${m.description}`).join('\n')}\n`
+      : '';
+
+  return `You are a pipeline architect for Myndset — a performance psychology audio platform.
+
+The standard 3-stage script generation pipeline:
+
+== STAGE 1: QUESTIONNAIRE INTERPRETATION ==
+All 10 Q&A answers serialized equally into an "immediateSituation" context block.
+Standard weighting: mental_state + immediate_situation dominate. Other categories support.
+The block is passed verbatim to the script generator as primary persona context.
+
+== STAGE 2: GENERATION PLAN ==
+Hardcoded Self-Rally Arc technique stack:
+  Ultra-quick (2min): Identity-Based Self-Talk (1m) + Physiological Activation Cue (1m)
+  Quick (4min): Cognitive Reappraisal (1m) + Identity-Based Self-Talk (2m) + Implementation Intentions (1m)
+Approach: "Direct confrontation arc — spiral to lock-in via identity-based self-speech"
+
+== STAGE 3: SCRIPT GENERATION ==
+Self-Rally Arc format:
+  1. Pattern interrupt (grab attention fast)
+  2. Reality confrontation (brutal truth about current state)
+  3. Identity reframe (who they actually are, not who fear says they are)
+  4. Evidence lock (past success, proof of capability)
+  5. Commitment anchor (physical cue + verbal declaration)
+Style: Second-person self-address ("You don't get to quit here"). Aggressive, direct, no fluff.
+
+== CURRENT PERSONA ==
+${qBlock}
+${prevBlock}
+== YOUR JOB ==
+Override 1, 2, or all 3 stages. Radically vary intensity across iterations.
+
+Intensity levels:
+  moderate — tweak emphasis/weighting within the same paradigm
+  radical — different psychological model or structural arc entirely
+  experimental — intentionally break conventions, test extreme hypotheses
+
+Directions to consider:
+Stage 1: Weight somatic answers 3x over mental state; build from body not mind
+Stage 1: Focus exclusively on the fear answer; start from the darkest point
+Stage 1: Reframe all answers as third-person observer narration
+Stage 2: Acceptance & Commitment Therapy (defusion, values clarification, not confrontation)
+Stage 2: Narrative therapy (story reauthoring — the protagonist rewrites the plot)
+Stage 2: Stoic philosophy (memento mori, premeditatio malorum, amor fati)
+Stage 2: Somatic activation first (body state → breath → posture → THEN mental frame)
+Stage 3: Military briefing structure (situation / mission / execution / commander's intent)
+Stage 3: Hemingway dialogue style (terse declaratives, zero psychology jargon)
+Stage 3: Tonal inversion (soft, accepting, compassionate — opposite of current aggression)
+Stage 3: Scientific frame (probabilistic thinking, base rates, expected value calculus)
+Stage 3: Theatrical monologue addressed TO the fear, not to the listener
+Stage 3: Three-act story — listener as protagonist, fear as antagonist, moment as climax
+Stage 3: Pure sensory/physical anchoring — no abstract concepts, only body states and actions
+
+Output ONLY valid JSON:
+{
+  "changesId": "MIX-XXXX",
+  "description": "1-2 sentence description of changes made",
+  "rationale": "What hypothesis does this test? What might it reveal?",
+  "intensity": "moderate|radical|experimental",
+  "changedStages": ["stage1"],
+  "changes": {
+    "stage1_interpretation": "Optional. 2-4 sentences specifying how to weight/prioritize/reframe the Q&A differently from standard.",
+    "stage2_plan": {
+      "approachDescription": "New approach description replacing Self-Rally Arc framing",
+      "components": [
+        {
+          "componentId": "snake_case_id",
+          "componentName": "Technique name",
+          "rationale": "What this does psychologically and why it fits this persona",
+          "durationMinutes": 1,
+          "evidenceLevel": "strong|moderate|experimental"
+        }
+      ],
+      "phases": [
+        { "name": "Phase name", "durationMinutes": ${totalMinutes} }
+      ]
+    },
+    "stage3_prompt": "Optional. Complete replacement system prompt. Must be fully self-contained — generator uses ONLY this, not the standard Self-Rally Arc instructions."
+  }
+}
+
+Total durationMinutes across all phases must equal ${totalMinutes}.
+Output ONLY JSON. No text before or after.`;
+}
+
 // ─── Map AI questionnaire → MeditationPlan + MappedQuestionnaireData ─────────
 
 function getAnswerByCategory(questions: LabQuestion[], category: QuestionCategory): string {
@@ -180,15 +313,37 @@ function buildSessionStructure(sessionLength: 'ultra_quick' | 'quick') {
 
 /**
  * Build MeditationPlan from an AI-generated questionnaire — no AI call.
+ * If planOverride is provided (from a mix), use its components/structure instead of defaults.
  */
 export function buildPlanFromQuestionnaire(
   q: LabQuestionnaire,
   userId: string,
   questionnaireId: string,
+  planOverride?: MixPlanOverride,
 ): MeditationPlan {
   const { archetype } = q.persona;
-  const components = buildLabComponents(q.sessionLength);
-  const sessionStructure = buildSessionStructure(q.sessionLength);
+
+  const components: MeditationPlanComponent[] = planOverride
+    ? planOverride.components.map((c) => ({
+        componentId: c.componentId,
+        componentName: c.componentName,
+        rationale: c.rationale,
+        durationMinutes: c.durationMinutes,
+        evidenceLevel: c.evidenceLevel as MeditationPlanComponent['evidenceLevel'],
+      }))
+    : buildLabComponents(q.sessionLength);
+
+  const sessionStructure = planOverride
+    ? {
+        duration: q.sessionLength,
+        totalMinutes: q.sessionLength === 'ultra_quick' ? 2 : 4,
+        phases: planOverride.phases.map((p, i) => ({
+          name: p.name,
+          durationMinutes: p.durationMinutes,
+          components: [planOverride.components[i]?.componentId].filter(Boolean) as string[],
+        })),
+      }
+    : buildSessionStructure(q.sessionLength);
 
   const audienceMap: Record<UserType, string> = {
     entrepreneur: 'Entrepreneur/Founder', sales: 'Sales Professional',
@@ -220,7 +375,9 @@ export function buildPlanFromQuestionnaire(
     messagingFramework: {
       audienceType: audienceMap[archetype],
       keyValues: keyValuesMap[archetype],
-      approachDescription: `Direct confrontation arc for ${audienceMap[archetype].toLowerCase()} — spiral to lock-in via identity-based self-speech`,
+      approachDescription: planOverride
+        ? planOverride.approachDescription
+        : `Direct confrontation arc for ${audienceMap[archetype].toLowerCase()} — spiral to lock-in via identity-based self-speech`,
     },
     overallRationale,
     status: 'approved',
@@ -237,10 +394,12 @@ export function buildPlanFromQuestionnaire(
 /**
  * Build MappedQuestionnaireData from an AI-generated questionnaire.
  * If scriptMethod is provided, it's appended to immediateSituation as an override instruction.
+ * If stage1Override is provided (from a mix), it's prepended as an interpretation instruction.
  */
 export function buildMappedDataFromQuestionnaire(
   q: LabQuestionnaire,
   scriptMethod?: string,
+  stage1Override?: string,
 ): MappedQuestionnaireData {
   const { archetype } = q.persona;
 
@@ -250,9 +409,13 @@ export function buildMappedDataFromQuestionnaire(
     .join('\n\n');
 
   const personaHeader = `Persona: ${q.persona.name} — ${q.persona.background}`;
-  const immediateSituation = scriptMethod
+  const baseContext = scriptMethod
     ? `${personaHeader}\n\n${qaContext}\n\n[SCRIPT METHOD OVERRIDE]: ${scriptMethod}`
     : `${personaHeader}\n\n${qaContext}`;
+
+  const immediateSituation = stage1Override
+    ? `[INTERPRETATION OVERRIDE]: ${stage1Override}\n\n${baseContext}`
+    : baseContext;
 
   // Extract specific fields from categorized answers
   const mentalStateAnswer = getAnswerByCategory(q.questions, 'mental_state');

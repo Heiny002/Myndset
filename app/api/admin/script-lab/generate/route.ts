@@ -7,6 +7,7 @@ import {
   buildPlanFromQuestionnaire,
   buildMappedDataFromQuestionnaire,
   type LabQuestionnaire,
+  type MixResult,
 } from '@/lib/ai/script-lab-chat';
 
 export async function POST(request: NextRequest) {
@@ -20,12 +21,14 @@ export async function POST(request: NextRequest) {
       scriptMethod,
       customSystemPrompt,
       userId,
+      activeMix,
     } = body as {
       labQuestionnaire: LabQuestionnaire;
       voiceType?: string;
       scriptMethod?: string;
       customSystemPrompt?: string;
       userId: string;
+      activeMix?: MixResult;
     };
 
     if (!labQuestionnaire || !userId) {
@@ -40,9 +43,9 @@ export async function POST(request: NextRequest) {
     const adminClient = createAdminClient();
 
     // Step 1: Build mapped questionnaire data (no AI)
-    const labQData = buildMappedDataFromQuestionnaire(labQuestionnaire, scriptMethod);
-
-    // Step 2: Insert questionnaire_responses record
+    // Apply stage 1 interpretation override from mix if active
+    const stage1Override = activeMix?.changes?.stage1_interpretation;
+    const labQData = buildMappedDataFromQuestionnaire(labQuestionnaire, scriptMethod, stage1Override);
     const { data: questionnaireData, error: questionnaireError } = await adminClient
       .from('questionnaire_responses')
       .insert({
@@ -65,7 +68,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 3: Build plan (no AI)
-    const labPlan = buildPlanFromQuestionnaire(labQuestionnaire, userId, questionnaireData.id);
+    // Apply stage 2 plan override from mix if active
+    const planOverride = activeMix?.changes?.stage2_plan;
+    const labPlan = buildPlanFromQuestionnaire(labQuestionnaire, userId, questionnaireData.id, planOverride);
 
     // Step 4: Insert meditation_plans record (pre-approved)
     const { data: planData, error: planError } = await adminClient
@@ -85,6 +90,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 5: Generate script (single AI call)
+    // Stage 3: manual customSystemPrompt takes priority over mix stage3_prompt
+    const finalSystemPrompt = customSystemPrompt || activeMix?.changes?.stage3_prompt;
+
     console.log('[script-lab/generate] Generating script...', {
       persona: labQuestionnaire.persona.name,
       archetype: labQuestionnaire.persona.archetype,
@@ -92,13 +100,14 @@ export async function POST(request: NextRequest) {
       voiceType,
       hasScriptMethod: !!scriptMethod,
       hasCustomPrompt: !!customSystemPrompt,
+      activeMix: activeMix?.changesId || null,
     });
 
     const { script: energizingScript, aiResponse: scriptAiResponse } = await generateEnergizingScript(
       labPlan,
       labQData,
       voiceType,
-      customSystemPrompt,
+      finalSystemPrompt,
     );
 
     const scriptText = energizingScript.scriptText;
@@ -132,6 +141,7 @@ export async function POST(request: NextRequest) {
           has_custom_prompt: !!customSystemPrompt,
           voice_type: voiceType,
           elevenlabs_guidance: energizingScript.elevenLabsGuidance,
+          mix_changes_id: activeMix?.changesId || null,
         },
         generation_cost_cents: Math.round(scriptAiResponse.costCents),
       })
@@ -141,6 +151,25 @@ export async function POST(request: NextRequest) {
     if (meditationError) {
       console.error('[script-lab/generate] Meditation error:', meditationError);
       return NextResponse.json({ error: 'Failed to save meditation', details: meditationError.message }, { status: 500 });
+    }
+
+    // If a mix was active, append this meditationId to the mix log entry
+    if (activeMix?.changesId && meditationData.id) {
+      const { data: mixRow } = await adminClient
+        .from('lab_mix_log')
+        .select('meditation_ids')
+        .eq('changes_id', activeMix.changesId)
+        .single();
+
+      if (mixRow) {
+        const currentIds: string[] = mixRow.meditation_ids || [];
+        if (!currentIds.includes(meditationData.id)) {
+          await adminClient
+            .from('lab_mix_log')
+            .update({ meditation_ids: [...currentIds, meditationData.id] })
+            .eq('changes_id', activeMix.changesId);
+        }
+      }
     }
 
     // Log usage
