@@ -128,7 +128,7 @@ Respond with ONLY valid JSON in this exact structure:
 - Cover at least 7 different categories
 - Answers must be SPECIFIC and VISCERAL — not "I'm nervous" but "My stomach is in knots and I haven't been able to eat since this morning"
 - The persona must have a CONCRETE performance moment happening SOON (within the next hour)
-- sessionLength: "ultra_quick" when the moment is under 5 minutes away, "quick" otherwise
+- sessionLength: always use "ultra_quick" — lab scripts are capped at ~2 minutes for testing efficiency
 - Questions must match the profession — a chef's questions sound different from a wrestler's
 - Do NOT use corporate jargon for blue-collar personas. Do NOT use gym-bro language for professionals.
 

@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
 
       questionnaire = {
         ...parsed,
+        sessionLength: 'ultra_quick', // Hard cap: lab scripts max ~2 min during testing
         generatedAt: new Date().toISOString(),
       };
     } catch (parseError) {
