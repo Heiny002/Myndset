@@ -837,7 +837,17 @@ export default function ScriptLabClient({ userId }: { userId: string }) {
         body: JSON.stringify({ scriptId: currentScript.meditationId, voiceType }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Audio generation failed');
+      if (!res.ok) {
+        // "Audio already exists" — the URL is in the error response, just use it
+        if (data.audioUrl) {
+          setAudioUrl(data.audioUrl);
+          setSessions((prev) =>
+            prev.map((s) => s.meditationId === currentScript.meditationId ? { ...s, audioUrl: data.audioUrl } : s)
+          );
+          return;
+        }
+        throw new Error(data.details ? `${data.error}: ${data.details}` : data.error || 'Audio generation failed');
+      }
       setAudioUrl(data.audioUrl);
       setSessions((prev) =>
         prev.map((s) => s.meditationId === currentScript.meditationId ? { ...s, audioUrl: data.audioUrl } : s)

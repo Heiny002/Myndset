@@ -4,6 +4,25 @@
  */
 
 import { ElevenLabsClient } from '@elevenlabs/elevenlabs-js';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+// WORKAROUND: Next.js Turbopack doesn't load .env.local for API routes
+if (!process.env.ELEVENLABS_API_KEY) {
+  try {
+    const envPath = resolve(process.cwd(), '.env.local');
+    const envFile = readFileSync(envPath, 'utf8');
+    for (const line of envFile.split('\n')) {
+      const match = line.match(/^ELEVENLABS_API_KEY=(.+)$/);
+      if (match) {
+        process.env.ELEVENLABS_API_KEY = match[1].trim();
+        break;
+      }
+    }
+  } catch {
+    // Not in local dev — env var must come from the platform
+  }
+}
 
 // Voice configurations for different meditation styles
 // Note: eleven_v3 requires stability to be 0.0, 0.5, or 1.0 (0.0=Creative, 0.5=Natural, 1.0=Robust)
